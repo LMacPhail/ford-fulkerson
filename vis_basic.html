@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+    
+  <a href="sigma_basic.html">View in sigma</a>
+  <script type="text/javascript" src="node_modules/vis/dist/vis.js"></script>
+  <link href="node_modules/vis/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 1px solid lightgray;
+      top: 100;
+      bottom: 100;
+      left: 100;
+      right: 100;
+      position: center;
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    var i, s, N = 5, E = 10, nodes = [], edges = [];
+  // create an array with nodes
+  for (i = 0; i < N; i++)
+    nodes.push({
+    id: 'n' + i,
+    // label: 'Node ' + i,
+    x: Math.random(),
+    y: Math.random(),
+  });
+
+for (i = 0; i < E; i++)
+  edges.push({
+    id: 'e' + i,
+    from: 'n' + (Math.random() * N | 0),
+    to: 'n' + (Math.random() * N | 0),
+  });
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {};
+  var network = new vis.Network(container, data, options);
+</script>
+
+
+</body>
+</html>
