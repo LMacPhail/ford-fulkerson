@@ -26,22 +26,27 @@
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
-    var i, s, N = 5, E = 10, nodes = [], edges = [];
-  // create an array with nodes
-  for (i = 0; i < N; i++)
-    nodes.push({
-    id: 'n' + i,
-    // label: 'Node ' + i,
-    x: Math.random(),
-    y: Math.random(),
-  });
+ 
+  var nodes = new vis.DataSet([
+    {id: 0, label: 'S', x: Math.random(), y: Math.random(),},
+    {id: 1, label: 'a', x: Math.random(), y: Math.random(),},
+    {id: 2, label: 'b', x: Math.random(), y: Math.random(),},
+    {id: 3, label: 'c', x: Math.random(), y: Math.random(),},
+    {id: 4, label: 'd', x: Math.random(), y: Math.random(),},
+    {id: 5, label: 'T', x: Math.random(), y: Math.random(),}
+  ]);
 
-for (i = 0; i < E; i++)
-  edges.push({
-    id: 'e' + i,
-    from: 'n' + (Math.random() * N | 0),
-    to: 'n' + (Math.random() * N | 0),
-  });
+  var edges = new vis.DataSet([
+    {id: 0, label: '2/2', from: 0, to: 1},
+    {id: 1, label: '4/2', from: 0, to: 3},
+    {id: 2, label: '1/1', from: 1, to: 2},
+    {id: 3, label: '3/1', from: 1, to: 4},
+    {id: 8, label: '2/2', from: 2, to: 5},
+    {id: 4, label: '3/1', from: 3, to: 2},
+    {id: 5, label: '1/1', from: 3, to: 4},
+    {id: 6, label: '1/0', from: 4, to: 3},
+    {id: 7, label: '4/2', from: 4, to: 5},
+  ]);
 
   // create a network
   var container = document.getElementById('mynetwork');

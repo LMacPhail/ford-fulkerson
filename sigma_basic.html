@@ -74,36 +74,32 @@
  * The simple instance of sigma is enough to make it render the graph on the on
  * the screen, since the graph is given directly to the constructor.
  */
- var i,
-    s,
-    N = 5,
-    E = 10,
-    g = {
+ var g = {
       nodes: [],
       edges: []
     };
 
 // Generate a random graph:
-for (i = 0; i < N; i++)
-  g.nodes.push({
-    id: 'n' + i,
-    // label: 'Node ' + i,
-    x: Math.random(),
-    y: Math.random(),
-    size: (Math.random() * 10 | 0),
-    color: '#666'
-  });
+g.nodes.push(
+  {id: 0, label: 'S', x: Math.random(), y: Math.random(), size: 5,}, 
+  {id: 1, label: 'a', x: Math.random(), y: Math.random(), size: 5,},
+  {id: 2, label: 'b', x: Math.random(), y: Math.random(), size: 5,},
+  {id: 3, label: 'c', x: Math.random(), y: Math.random(), size: 5,},
+  {id: 4, label: 'd', x: Math.random(), y: Math.random(), size: 5,},
+  {id: 5, label: 'T', x: Math.random(), y: Math.random(), size: 5,}
+);
 
-for (i = 0; i < E; i++)
-  g.edges.push({
-    id: 'e' + i,
-    label: 'Edge ' + i,
-    source: 'n' + (Math.random() * N | 0),
-    target: 'n' + (Math.random() * N | 0),
-    size: Math.random(),
-    color: '#ccc',
-    type: ['line', 'curve', 'arrow', 'curvedArrow'][Math.random() * 4 | 0]
-  });
+g.edges.push(
+  {id: 0, label: '2/2', source: 0, target: 1, size: Math.random(),},
+  {id: 1, label: '4/2', source: 0, target: 3, size: Math.random(),},
+  {id: 2, label: '1/1', source: 1, target: 2, size: Math.random(),},
+  {id: 3, label: '3/1', source: 1, target: 4, size: Math.random(),},
+  {id: 8, label: '2/2', source: 2, target: 5, size: Math.random(),},
+  {id: 4, label: '3/1', source: 3, target: 2, size: Math.random(),},
+  {id: 5, label: '1/1', source: 3, target: 4, size: Math.random(), type: 'curve'},
+  {id: 6, label: '1/0', source: 4, target: 3, size: Math.random(), type: 'curve'},
+  {id: 7, label: '4/2', source: 4, target: 5, size: Math.random(),}
+);
 
 // Instantiate sigma:
 s = new sigma({
