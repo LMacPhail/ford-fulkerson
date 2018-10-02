@@ -27,26 +27,45 @@
 
 <script type="text/javascript">
  
-  var nodes = new vis.DataSet([
-    {id: 0, label: 'S', x: Math.random(), y: Math.random(),},
-    {id: 1, label: 'a', x: Math.random(), y: Math.random(),},
-    {id: 2, label: 'b', x: Math.random(), y: Math.random(),},
-    {id: 3, label: 'c', x: Math.random(), y: Math.random(),},
-    {id: 4, label: 'd', x: Math.random(), y: Math.random(),},
-    {id: 5, label: 'T', x: Math.random(), y: Math.random(),}
-  ]);
+  // var nodes = new vis.DataSet([
+  //   {id: 0, label: 'S', x: 10, y: 50,},
+  //   {id: 1, label: 'a', x: 30, y: 30,},
+  //   {id: 2, label: 'b', x: 70, y: 30,},
+  //   {id: 3, label: 'c', x: 30, y: 70,},
+  //   {id: 4, label: 'd', x: 70, y: 70,},
+  //   {id: 5, label: 'T', x: 90, y: 50,}
+  // ]);
+  var   i,
+        N = 6,
+        E = 12,
+        nodes = [],
+        edges = [];
+  nodes.push(
+    {id: 0, label: 'S'},
+    {id: N, label: 'T',}
+  );
 
-  var edges = new vis.DataSet([
-    {id: 0, label: '2/2', from: 0, to: 1},
-    {id: 1, label: '4/2', from: 0, to: 3},
-    {id: 2, label: '1/1', from: 1, to: 2},
-    {id: 3, label: '3/1', from: 1, to: 4},
-    {id: 8, label: '2/2', from: 2, to: 5},
-    {id: 4, label: '3/1', from: 3, to: 2},
-    {id: 5, label: '1/1', from: 3, to: 4},
-    {id: 6, label: '1/0', from: 4, to: 3},
-    {id: 7, label: '4/2', from: 4, to: 5},
-  ]);
+  for(i = 1; i < N -1 ; i++){
+    nodes.push({
+      id: i,
+      label: 'n' + i
+    });
+  }
+
+  for (i = 0; i < E; i++){
+    var f = (Math.random() * (N + 1) | 0), 
+        t = (Math.random() * (N + 1) | 0);
+    
+    while(f == t){
+      t = (Math.random() * (N + 1) | 0);
+    }
+    edges.push({
+      id: i,
+      label: 0 + '/' + (Math.random() * 10 | 1),
+      from: f,
+      to: t,
+    });
+  }
 
   // create a network
   var container = document.getElementById('mynetwork');
@@ -55,6 +74,21 @@
     edges: edges
   };
   var options = {
+    layout: {
+      improvedLayout:true,
+      hierarchical: {
+        enabled: false,
+        nodeSpacing: 200,
+        direction: 'LR',
+      }
+    },
+    physics: {
+      stabilization: {
+        // onlyDynamicEdges: true,
+        fit: true,
+      }
+    }
+    // physics: false,
   };
   var network = new vis.Network(container, data, options);
 </script>
