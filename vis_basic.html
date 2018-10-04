@@ -36,31 +36,74 @@
   //   {id: 5, label: 'T', x: 90, y: 50,}
   // ]);
   var   i,
+        edge_id = 0,
         N = 6,
         E = 12,
         nodes = [],
         edges = [];
   nodes.push(
-    {id: 0, label: 'S'},
-    {id: N, label: 'T',}
+    {id: 0, label: 'S',
+      physics: false},
+    {id: N, label: 'T',
+      physics: false}
   );
 
-  for(i = 1; i < N -1 ; i++){
+  for(i = 1; i < N - 1 ; i++){
     nodes.push({
       id: i,
-      label: 'n' + i
+      label: 'n' + i,
+      physics: false
     });
   }
 
-  for (i = 0; i < E; i++){
-    var f = (Math.random() * (N + 1) | 0), 
-        t = (Math.random() * (N + 1) | 0);
+  for(i = 0; i < N; i++){
+    var j, from, to;
+    for(j = 0; j < 2; j++){
+      if(i == 0){
+        from = 0;
+        to = (Math.random() * N + 1 | 0);
+      } else if (i == N){
+        from = (Math.random() * N | 0); 
+        to = N;
+      } else {
+        /*
+        either: from = current node, to = random (ex. S)
+        or: from = random (ex. T), to = current node
+        */
+        var rand_int = (Math.random() * 100 | 0);
+        if (rand_int < 50){
+          from = i;
+          to = (Math.random() * N + 1 | 0);
+        } else {
+          from = (Math.random() * N | 0); 
+          to = i;
+        }
+      }
+    
+      edges.push({
+        id: edge_id++,
+        arrows: {
+          to : {enabled: true}
+        },
+        label: 'e' + i,//0 + '/' + (Math.random() * 10 | 1),
+        from: from,
+        to: to,
+      });
+    }
+  }
+
+  for (i = N; i < E; i++){
+    var f = (Math.random() * N | 0), 
+        t = (Math.random() * N + 1 | 0);
     
     while(f == t){
       t = (Math.random() * (N + 1) | 0);
     }
     edges.push({
-      id: i,
+      id: edge_id++,
+      arrows: {
+        to : {enabled: true}
+      },
       label: 0 + '/' + (Math.random() * 10 | 1),
       from: f,
       to: t,
