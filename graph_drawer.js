@@ -76,8 +76,8 @@ while(left_nodes.length > 2){
         from = (Math.random() * N | 0);
     } while (left_nodes[rand_id] == from);
     
-    console.log("from: " + from);
-    console.log("to: " + left_nodes[rand_id]);
+    // console.log("from: " + from);
+    // console.log("to: " + left_nodes[rand_id]);
 
     edges.push({
         id: edge_id++,
@@ -92,6 +92,7 @@ while(left_nodes.length > 2){
     left_nodes.splice(rand_id, 1);
 }
 
+// Make sure S has at least 2 outgoing nodes
 for(i = 0; i < 2; i++){
     edges.push({
         id: edge_id++,
@@ -104,9 +105,24 @@ for(i = 0; i < 2; i++){
     });
 }
 
-// for(i = 0; i < N; i++){
-    
-// }
+// add remaining edges
+for (i = edge_id; i < E; i++)
+    do {
+        from = (Math.random() * N | 0);
+        console.log("from: "+ from);
+        to = (Math.random() * N + 1 | 0);
+        console.log("to: "+ to);
+    }
+    while (edges.includes({from:from, to:to}) && (from == to)); // there exists an edge with from == from and to == to
+    edges.push({
+        id: edge_id++,
+        arrows: {
+            to : {enabled: true}
+        },
+        label: 0 + '/' + (Math.random() * 10 | 1),
+        from: from,
+        to: to,
+    });
 
 // for (i = edge_id; i < E; i++){
 //     var from = (Math.random() * N | 0), 
