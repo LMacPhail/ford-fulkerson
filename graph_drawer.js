@@ -11,110 +11,121 @@ var   i,
       N = 6,
       E = 12,
       nodes = [],
-      edges = [];
+      edges = [],
+      nodes_to_sink = [],
+      left_nodes = [];
+
+/* initialise nodes */
 nodes.push(
-  {id: 0, label: 'S',
-    physics: false},
-  {id: N, label: 'T',
-    physics: false}
+    {id: 0, label: 'S',
+        x: -250, // y: Math.random() * 220 + 180, 
+        physics: false},
+    {id: N, label: 'T',
+        x: 300, // y: Math.random() * 220 + 180, 
+        physics: false},
 );
 
-for(i = 1; i < N - 1 ; i++){
-  nodes.push({
-    id: i,
-    label: 'n' + i,
-    physics: false
-  });
+for(i = 1; i < N; i++){
+    nodes.push({
+        id: i,
+        label: 'n' + i,
+        physics: false,
+       // x: (Math.random() * 490 - 230),
+    });
+}
+nodes_to_sink.push(N);
+var rand_id, from, to;
+
+for(i = N - 1; i >= 1; i--){ // go backwards to do S last
+    rand_id = (Math.random() * nodes_to_sink.length | 0);
+    // connect node to node in nodes_to_sink or T
+    // console.log("from: " + i);
+    // console.log("to: " + nodes_to_sink[rand_id]);
+    edges.push({
+        id: edge_id++,
+        arrows: {
+          to : {enabled: true}
+        },
+        label: 0 + '/' + (Math.random() * 10 | 1),
+        from: i,
+        to: nodes_to_sink[rand_id],
+    });
+    
+    // add 'from' node to left_nodes
+    left_nodes.push(i);
+    
+    // if connecting to !T remove 'to' node from left_nodes
+    if((nodes_to_sink[rand_id] != N) && (left_nodes.indexOf(nodes_to_sink[rand_id]) != -1)){
+        left_nodes.splice(left_nodes.indexOf(nodes_to_sink[rand_id]), 1);
+    }
+
+    // add node to nodes_to_sink
+    nodes_to_sink.push(i);
+
+    //also make node.x < T.x
 }
 
-for(i = 0; i <= N; i++){
-  var j, f1, f2, to1, to2;
-    if(i == 0){
-      f1 = 0;
-      f2 = 0;
-      to1 = (Math.random() * N + 1 | 0);
-      // console.log("to1: " + to1);
-      do {
-        to2 = (Math.random() * N + 1 | 0);
-        // console.log("to2: " + to2);
-      } while (to1==to2);
+console.log(left_nodes);
 
-    } else if (i == N){
-      f1 = (Math.random() * N | 0); 
-      do {
-        f2 = (Math.random() * N | 0);
-      } while (f1 == f2);
-      to1 = N;
-      to2 = N;
+// positions = getPositions(nodes.id);
+while(left_nodes.length > 2){
+    
+    rand_id = (Math.random() * left_nodes.length + 1 | 0);
 
-    } else {
-      /*
-      either: from = current node, to = random (ex. S)
-      or: from = random (ex. T), to = current node
-      */
-      var rand_int = (Math.random() * 100 | 0);
-      if (rand_int < 50){
-        f1 = i;
-        do {
-          to1 = (Math.random() * N + 1 | 0);
-        } while(f1 == to1);
-      } else {
-        to1 = i;
-        do {
-          f1 = (Math.random() * N | 0);
-        } while(f1 == to1);
-      }
-      rand_int = (Math.random() * 100 | 0);
-      if (rand_int < 50){
-        f2 = i;
-        do {
-          to2 = (Math.random() * N + 1 | 0);
-        } while(f2 == to2);
-      } else {
-        to2 = i;
-        do {
-          f2 = (Math.random() * N | 0);
-        } while(f2 == to2);
-      }
-    }
-    console.log("edge number: " + edge_id);
-  
+    do {
+        from = (Math.random() * N | 0);
+    } while (left_nodes[rand_id] == from);
+    
+    console.log("from: " + from);
+    console.log("to: " + left_nodes[rand_id]);
+
     edges.push({
-      id: edge_id++,
-      arrows: {
-        to : {enabled: true}
-      },
-      label: 0 + '/' + (Math.random() * 10 | 1),
-      from: f1,
-      to: to1,
-    },{
-      id: edge_id++,
-      arrows: {
-        to : {enabled: true}
-      },
-      label:  0 + '/' + (Math.random() * 10 | 1),
-      from: f2,
-      to: to2,
+        id: edge_id++,
+        arrows: {
+            to: { enabled: true }
+        },
+        label: 0 + '/' + (Math.random() * 10 | 1),
+        from: from,
+        to: left_nodes[rand_id],
+    });
+
+    left_nodes.splice(rand_id, 1);
+}
+
+for(i = 0; i < 2; i++){
+    edges.push({
+        id: edge_id++,
+        arrows: {
+            to: { enabled: true }
+        },
+        label: 0 + '/' + (Math.random() * 10 | 1),
+        from: 0,
+        to: left_nodes[i],
     });
 }
 
-for (i = edge_id; i < E; i++){
-  var f = (Math.random() * N | 0), 
-      t = (Math.random() * N + 1 | 0);
+// for(i = 0; i < N; i++){
+    
+// }
+
+// for (i = edge_id; i < E; i++){
+//     var from = (Math.random() * N | 0), 
+//         to = (Math.random() * N + 1 | 0);
   
-  while(f == t){
-    t = (Math.random() * (N + 1) | 0);
-  }
-  edges.push({
-    id: edge_id++,
-    arrows: {
-      to : {enabled: true}
-    },
-    label: 0 + '/' + (Math.random() * 10 | 1),
-    from: f,
-    to: t,
-  });
-}
+//     do {
+//         to = (Math.random() * N + 1 | 0);
+//     } while(from == to);
+
+//     edges.push({
+//         id: edge_id++,
+//         arrows: {
+//         to : {enabled: true}
+//         },
+//         label: 0 + '/' + (Math.random() * 10 | 1),
+//         from: from,
+//         to: to,
+//     });
+// }
 
 // create a network
 var container = document.getElementById('mynetwork');
@@ -127,8 +138,8 @@ var options = {
     improvedLayout:true,
     hierarchical: {
       enabled: false,
-      nodeSpacing: 200,
-      direction: 'LR',
+      nodeSpacing: 300,
+    //   direction: 'LR',
     }
   },
   physics: {
@@ -140,3 +151,5 @@ var options = {
   // physics: false,
 };
 var network = new vis.Network(container, data, options);
+
+console.log(network.getPositions(nodes.id));
