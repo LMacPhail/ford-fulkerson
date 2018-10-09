@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ford Fulkerson</title>
+  <script type="text/javascript" src="node_modules/vis/dist/vis.js"></script>
+  <link href="node_modules/vis/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="styles.css" type="text/css"/>
+</head>
+<body>
+
+<div id="info_bar">
+  <div class="info_bar" id="alg_title"></div>
+  <div class="info_bar" id="playback">
+    <div id="pb_controls"></div>
+    <div id="pb_slider"></div>
+  </div>
+  <div class="info_bar" id="new_graph">
+    <div id="gen_graph"></div>
+    <div id="draw_graph"></div>
+  </div>
+  <div class="info_bar" id="pseudocode">
+    <!-- <div id="step1">
+      <p>set all flows to 0</p>
+    </div>
+    <div id="step2">
+      <p>for(;;)</p>
+    </div>
+    <div id="step3">
+      <p> build residual graph</p>
+    </div>
+    <div id="step4">
+      <p>   search for path from S to T</p>
+    </div>
+    <div id="step5">
+      <p>   if such a path exists</p>
+    </div>
+    <div id="step6">
+      <p>     for all edges</p>
+    </div>
+    <div id="step7">
+      <p>       if edge is forwards</p>
+    </div>
+    <div id="step8">
+      <p>         augment flow along edge</p>
+    </div>
+    <div id="step9">
+      <p>       else</p>
+    </div>
+    <div id="step10">
+      <p>         decrease flow along edge</p>
+    </div>
+    <div id="step11">
+      <p>   else</p>
+    </div>
+    <div id="step5">
+      <p>     break (maximum flow has been found)</p>
+    </div> -->
+  </div>
+  <div id="flow_counter"></div>
+</div>
+<div id="mynetwork"></div>
+<script type="text/javascript" src="graph_drawer.js"></script>
+
+</body>
+</html>
