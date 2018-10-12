@@ -1,7 +1,5 @@
-
-
 function default_graph_data(){
-    var nodes = new vis.DataSet([
+    var nodes = [
         {
             id: 0, label: 'S', x: -300, y: 0, physics: false
         },{
@@ -15,9 +13,9 @@ function default_graph_data(){
         },{
             id: 5, label: 'T', x: 300, y: 0, physics: false
         }
-    ]);
+    ];
 
-    var edges = new vis.DataSet([
+    var edges = [
         {
             id: 0, label: '0/2', from: 0, to: 1,
             arrows: {
@@ -64,7 +62,7 @@ function default_graph_data(){
                 to : {enabled: true}
             },
         },
-    ]);
+    ];
 
     var graph_data = {
         nodes: nodes,
@@ -215,28 +213,3 @@ function generate_graph_data(N, E){
     };
     return graph_data;
 }
-// create a network
-var container = document.getElementById('mynetwork');
- 
-// var data = generate_graph_data(6, 12);
-var data = default_graph_data();
-var options = {
-  layout: {
-    improvedLayout:true,
-    hierarchical: {
-      enabled: false,
-      nodeSpacing: 300,
-    //   direction: 'LR',
-    }
-  },
-  physics: {
-    stabilization: {
-      // onlyDynamicEdges: true,
-      fit: true,
-    }
-  }
-  // physics: false,
-};
-var network = new vis.Network(container, data, options);
-
-console.log(network.getPositions(data.nodes.id));
