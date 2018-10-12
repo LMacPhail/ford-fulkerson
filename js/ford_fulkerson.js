@@ -1,5 +1,4 @@
 function getCapacity(label){
-    console.log("label: " + label)
     var capacity = label.split('/')[1];
     return capacity;
 }
@@ -23,7 +22,8 @@ function buildResidualGraph(data){
   for(i = 0; i < edges.length; i++){
     cap = getCapacity(edges[i].label);
     flow = getFlow(edges[i].label);
-    if(0 < flow <= cap){
+    if((flow > 0) && (flow <= cap)){
+      console.log("capacity: " + cap + ", flow: " + flow);
       resEdges.push({
         id: edgeID++, label: flow, from: edges[i].to, to: edges[i].from,
         arrows: {
@@ -31,9 +31,10 @@ function buildResidualGraph(data){
         },
       });
     }
-    if(0 <= flow < cap){
+    if((0 <= flow) && (flow < cap)){
+      console.log("capacity: " + cap + ", flow: " + flow + ", cap - flow: " + (cap-flow));
       resEdges.push({
-        id: edgeID++, label:(cap - flow), from: edges[i].from, to: edges[i].to,
+        id: edgeID++, label: (cap - flow).toString(), from: edges[i].from, to: edges[i].to,
         arrows: {
             to : {enabled: true}
         },
