@@ -41,12 +41,7 @@ function buildResidualGraph(data){
       });
     }
   }
-  // for edges:
-  //    cap = getCapacity(edge.label);
-  //    flow = getCapacity(edge.label);
-  //    if(0 < flow <= cap) add backwards edge w/ flow = flow
-  //    if(0 <= flow < cap) add forwards edge w/ flow = cap-flow
-  // return residualGraphData
+
   var graphData = {
       nodes: resNodes,
       edges: resEdges,
@@ -55,7 +50,37 @@ function buildResidualGraph(data){
   return graphData;
 }
 
-function fordFulkerson(){
+
+/*
+Find a path from S to T
+
+If successful, returns an array of node IDs (in order of the path)
+If unsuccessful, returns -1
+*/
+
+function findPath(data){
+
+}
+
+
+function fordFulkerson(data){
+  var nodes = data.nodes, edges = data.edges, resEdges = [];
+  var resData, path;
+  var i;
+
+  for(i = 0; i < edges.length; i++){
+    edges[i].label = setFlow(edges[i].label, 0);
+  }
+
+  while(true){
+    resData = buildResidualGraph(data);
+    path = findPath(resData);
+    if(path == -1){
+      break;
+    } else {
+
+    }
+  }
   // set all edges flow to 0
   // while(){
   //    build residual graph

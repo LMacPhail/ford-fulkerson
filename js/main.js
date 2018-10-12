@@ -23,6 +23,7 @@ var options = {
   // physics: false,
 };
 var network = new vis.Network(mainContainer, data, options);
+network.storePositions();
 
 var newFlow, capacity;
 
