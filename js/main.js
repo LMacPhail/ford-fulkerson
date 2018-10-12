@@ -1,9 +1,9 @@
 
 // create a network
 var container = document.getElementById('mynetwork');
- 
-// var data = generate_graph_data(6, 12);
-var data = default_graph_data();
+
+// var data = generateGraphData(6, 12);
+var data = defaultGraphData();
 var options = {
   layout: {
     improvedLayout:true,
@@ -23,14 +23,15 @@ var options = {
 };
 var network = new vis.Network(container, data, options);
 
-var new_flow;
+var newFlow, capacity;
 
 for(i = 0; i < data.edges.length; i++){
-    new_flow = Math.random() * 10 | 0;
-    data.edges[i].label = setFlow(data.edges[i].label, new_flow);
+    capacity = getCapacity(data.edges[i].label);
+    newFlow = Math.random() * capacity | 0;
+    data.edges[i].label = setFlow(data.edges[i].label, newFlow);
     // console.log("edge " + i + " new flow: " + data.edges[i].label);
 }
 
-console.log(data.edges);
-network.setData(data);
+var resGraphData = buildResidualGraph(data);
 
+network.setData(resGraphData);

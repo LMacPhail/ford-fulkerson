@@ -1,4 +1,4 @@
-function default_graph_data(){
+function defaultGraphData(){
     var nodes = [
         {
             id: 0, label: 'S', x: -300, y: 0, physics: false
@@ -64,29 +64,29 @@ function default_graph_data(){
         },
     ];
 
-    var graph_data = {
+    var graphData = {
         nodes: nodes,
         edges: edges,
     }
 
-    return graph_data;
+    return graphData;
 }
 
-function generate_graph_data(N, E){
+function generateGraphData(N, E){
     var   i,
         edge_id = 0,
         nodes = [],
         edges = [],
-        nodes_to_sink = [],
-        left_nodes = [];
+        nodesToSink = [],
+        leftNodes = [];
 
     /* initialise nodes */
     nodes.push(
         {id: 0, label: 'S',
-            x: -250, // y: Math.random() * 220 + 180, 
+            x: -250, // y: Math.random() * 220 + 180,
             physics: false},
         {id: N, label: 'T',
-            x: 300, // y: Math.random() * 220 + 180, 
+            x: 300, // y: Math.random() * 220 + 180,
             physics: false},
     );
 
@@ -98,14 +98,14 @@ function generate_graph_data(N, E){
         // x: (Math.random() * 490 - 230),
         });
     }
-    nodes_to_sink.push(N);
+    nodesToSink.push(N);
     var rand_id, from, to;
 
     for(i = N - 1; i >= 1; i--){ // go backwards to do S last
-        rand_id = (Math.random() * nodes_to_sink.length | 0);
-        // connect node to node in nodes_to_sink or T
+        rand_id = (Math.random() * nodesToSink.length | 0);
+        // connect node to node in nodesToSink or T
         // console.log("from: " + i);
-        // console.log("to: " + nodes_to_sink[rand_id]);
+        // console.log("to: " + nodesToSink[rand_id]);
         edges.push({
             id: edge_id++,
             arrows: {
@@ -113,36 +113,36 @@ function generate_graph_data(N, E){
             },
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: i,
-            to: nodes_to_sink[rand_id],
+            to: nodesToSink[rand_id],
         });
-        
-        // add 'from' node to left_nodes
-        left_nodes.push(i);
-        
-        // if connecting to !T remove 'to' node from left_nodes
-        if((nodes_to_sink[rand_id] != N) && (left_nodes.indexOf(nodes_to_sink[rand_id]) != -1)){
-            left_nodes.splice(left_nodes.indexOf(nodes_to_sink[rand_id]), 1);
+
+        // add 'from' node to leftNodes
+        leftNodes.push(i);
+
+        // if connecting to !T remove 'to' node from leftNodes
+        if((nodesToSink[rand_id] != N) && (leftNodes.indexOf(nodesToSink[rand_id]) != -1)){
+            leftNodes.splice(leftNodes.indexOf(nodesToSink[rand_id]), 1);
         }
 
-        // add node to nodes_to_sink
-        nodes_to_sink.push(i);
+        // add node to nodesToSink
+        nodesToSink.push(i);
 
         //also make node.x < T.x
     }
 
-    console.log(left_nodes);
+    console.log(leftNodes);
 
     // positions = getPositions(nodes.id);
-    while(left_nodes.length > 2){
-        
-        rand_id = (Math.random() * left_nodes.length + 1 | 0);
+    while(leftNodes.length > 2){
+
+        rand_id = (Math.random() * leftNodes.length + 1 | 0);
 
         do {
             from = (Math.random() * N | 0);
-        } while (left_nodes[rand_id] == from);
-        
+        } while (leftNodes[rand_id] == from);
+
         // console.log("from: " + from);
-        // console.log("to: " + left_nodes[rand_id]);
+        // console.log("to: " + leftNodes[rand_id]);
 
         edges.push({
             id: edge_id++,
@@ -151,10 +151,10 @@ function generate_graph_data(N, E){
             },
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: from,
-            to: left_nodes[rand_id],
+            to: leftNodes[rand_id],
         });
 
-        left_nodes.splice(rand_id, 1);
+        leftNodes.splice(rand_id, 1);
     }
 
     // Make sure S has at least 2 outgoing nodes
@@ -166,7 +166,7 @@ function generate_graph_data(N, E){
             },
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: 0,
-            to: left_nodes[i],
+            to: leftNodes[i],
         });
     }
 
@@ -190,9 +190,9 @@ function generate_graph_data(N, E){
         });
 
     // for (i = edge_id; i < E; i++){
-    //     var from = (Math.random() * N | 0), 
+    //     var from = (Math.random() * N | 0),
     //         to = (Math.random() * N + 1 | 0);
-    
+
     //     do {
     //         to = (Math.random() * N + 1 | 0);
     //     } while(from == to);
@@ -207,9 +207,9 @@ function generate_graph_data(N, E){
     //         to: to,
     //     });
     // }
-    var graph_data = {
+    var graphData = {
         nodes: nodes,
         edges: edges
     };
-    return graph_data;
+    return graphData;
 }
