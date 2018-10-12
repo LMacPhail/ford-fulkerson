@@ -35,6 +35,5 @@ for(i = 0; i < data.edges.length; i++){
 }
 network.setData(data);
 
-var resGraphData = buildResidualGraph(data);
 
-var residualGraph = new vis.Network(resContainer, resGraphData, options);
+fordFulkerson(data);
