@@ -23,7 +23,6 @@ function buildResidualGraph(data){
         cap = getCapacity(edges[i].label);
         flow = getFlow(edges[i].label);
         if((flow > 0) && (flow <= cap)){
-        console.log("capacity: " + cap + ", flow: " + flow);
         resEdges.push({
             id: edgeID++, label: flow, from: edges[i].to, to: edges[i].from,
             arrows: {
@@ -32,7 +31,6 @@ function buildResidualGraph(data){
         });
         }
         if((0 <= flow) && (flow < cap)){
-        console.log("capacity: " + cap + ", flow: " + flow + ", cap - flow: " + (cap-flow));
         resEdges.push({
             id: edgeID++, label: (cap - flow).toString(), from: edges[i].from, to: edges[i].to,
             arrows: {
@@ -149,44 +147,26 @@ function fordFulkerson(data){
         resData = buildResidualGraph(data);
         residualGraph = new vis.Network(resContainer, resData, options);
         for(i in visited) visited[i] = 0;
-        path = findPath(resData, visited, 0, 5);
+        path = findPath(resData, visited, 0, nodes.length - 1);
         console.log("path: " + path);
-        // break;
         if(path == -1){
             break;
         } else {
             for(i = 1; i < path.length; i++){
-                console.log("node1: " + path[i-1] + " node2: " + path[i]);
                 var edgeData = findEdgeID(data, path[i-1], path[i]);
-                console.log(edgeData);
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    console.log("forwards edge");
                     var flow = parseInt(getFlow(edges[id].label)) + 1;
                     data.edges[id].label = setFlow(edges[id].label, flow);
-                    console.log("new label: " + data.edges[id].label);
+                    console.log("forwards, new label: " + data.edges[id].label);
                 }
-                if(edgeData.direction == 0){                    
-                    console.log("backwards edge");
+                if(edgeData.direction == 0){                 
                     var flow = parseInt(getFlow(edges[id].label)) - 1;
                     data.edges[id].label = setFlow(edges[id].label, flow);
-                    console.log("new label: " + data.edges[id].label);
+                    console.log("backwards, new label: " + data.edges[id].label);
                 }
             }
-
- //         m = minimum capacity of edges in path
-    //      for edges in path:
-    //      if edge is forwards, capacity += m
-    //      if edge is backwards, capacity -= m
         }
+        network.setData(data);
     }
-    // set all edges flow to 0
-    // while(){
-    //    build residual graph
-    //    find path from S to T
-    //    if(path exists)
-   
-    //    else
-    //      break;
-    //  }
 }

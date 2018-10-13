@@ -3,8 +3,10 @@
 var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
-// var data = generateGraphData(6, 12);
-var data = defaultGraphData();
+var N = 6, E = 12;
+
+var data = generateGraphData(N, E);
+// var data = defaultGraphData();
 var options = {
   layout: {
     improvedLayout:true,
@@ -27,15 +29,14 @@ network.storePositions();
 
 var newFlow, capacity;
 
-for(i = 0; i < data.edges.length; i++){
-    capacity = getCapacity(data.edges[i].label);
-    newFlow = Math.random() * capacity | 0;
-    data.edges[i].label = setFlow(data.edges[i].label, newFlow);
-    // console.log("edge " + i + " new flow: " + data.edges[i].label);
-}
-network.setData(data);
+// for(i = 0; i < data.edges.length; i++){
+//     capacity = getCapacity(data.edges[i].label);
+//     newFlow = Math.random() * capacity | 0;
+//     data.edges[i].label = setFlow(data.edges[i].label, newFlow);
+//     // console.log("edge " + i + " new flow: " + data.edges[i].label);
+// }
 
 
-fordFulkerson(data);
 
-network.setData(data);
+// fordFulkerson(data);
+

@@ -3,13 +3,13 @@ function defaultGraphData(){
         {
             id: 0, label: 'S', x: -300, y: 0, physics: false
         },{
-            id: 1, label: 'a', x: -150, y: -140, physics: false
+            id: 1, label: 'n1', x: -150, y: -140, physics: false
         },{
-            id: 2, label: 'b', x: 130, y: -130, physics: false
+            id: 2, label: 'n2', x: 130, y: -130, physics: false
         },{
-            id: 3, label: 'c', x: -150, y: 130, physics: false
+            id: 3, label: 'n3', x: -150, y: 130, physics: false
         },{
-            id: 4, label: 'd', x: 150, y: 140, physics: false
+            id: 4, label: 'n4', x: 150, y: 140, physics: false
         },{
             id: 5, label: 'T', x: 300, y: 0, physics: false
         }
@@ -85,9 +85,6 @@ function generateGraphData(N, E){
         {id: 0, label: 'S',
             x: -250, // y: Math.random() * 220 + 180,
             physics: false},
-        {id: N, label: 'T',
-            x: 300, // y: Math.random() * 220 + 180,
-            physics: false},
     );
 
     for(i = 1; i < N; i++){
@@ -95,14 +92,15 @@ function generateGraphData(N, E){
             id: i,
             label: 'n' + i,
             physics: false,
-        // x: (Math.random() * 490 - 230),
         });
     }
     nodesToSink.push(N);
     var rand_id, from, to;
 
     for(i = N - 1; i >= 1; i--){ // go backwards to do S last
-        rand_id = (Math.random() * nodesToSink.length | 0);
+        do{
+            rand_id = (Math.random() * nodesToSink.length | 0);
+        } while (i == nodesToSink[rand_id]);
         // connect node to node in nodesToSink or T
         // console.log("from: " + i);
         // console.log("to: " + nodesToSink[rand_id]);
@@ -124,13 +122,13 @@ function generateGraphData(N, E){
             leftNodes.splice(leftNodes.indexOf(nodesToSink[rand_id]), 1);
         }
 
+        console.log("leftNodes: " + leftNodes);
+
         // add node to nodesToSink
         nodesToSink.push(i);
-
         //also make node.x < T.x
     }
 
-    console.log(leftNodes);
 
     // positions = getPositions(nodes.id);
     while(leftNodes.length > 2){
@@ -141,8 +139,8 @@ function generateGraphData(N, E){
             from = (Math.random() * N | 0);
         } while (leftNodes[rand_id] == from);
 
-        // console.log("from: " + from);
-        // console.log("to: " + leftNodes[rand_id]);
+        console.log("from: " + from);
+        console.log("to: " + leftNodes[rand_id]);
 
         edges.push({
             id: edge_id++,
@@ -159,6 +157,8 @@ function generateGraphData(N, E){
 
     // Make sure S has at least 2 outgoing nodes
     for(i = 0; i < 2; i++){
+        // console.log("from: " + 0);
+        // console.log("to: " + leftNodes[i]);
         edges.push({
             id: edge_id++,
             arrows: {
@@ -171,14 +171,14 @@ function generateGraphData(N, E){
     }
 
     // add remaining edges
-    for (i = edge_id; i < E; i++)
+    for (i = edge_id; i < E; i++){
         do {
             from = (Math.random() * N | 0);
-            console.log("from: "+ from);
+            // console.log("from: "+ from);
             to = (Math.random() * N + 1 | 0);
-            console.log("to: "+ to);
+            // console.log("to: "+ to);
         }
-        while (edges.includes({from:from, to:to}) && (from == to)); // there exists an edge with from == from and to == to
+        while (from == to); // there exists an edge with from == from and to == to
         edges.push({
             id: edge_id++,
             arrows: {
@@ -188,25 +188,17 @@ function generateGraphData(N, E){
             from: from,
             to: to,
         });
+    }
+    
+    nodes.push({
+        id: N, label: 'T',
+        x: 300, // y: Math.random() * 220 + 180,
+        physics: false
+    });
+    
 
-    // for (i = edge_id; i < E; i++){
-    //     var from = (Math.random() * N | 0),
-    //         to = (Math.random() * N + 1 | 0);
-
-    //     do {
-    //         to = (Math.random() * N + 1 | 0);
-    //     } while(from == to);
-
-    //     edges.push({
-    //         id: edge_id++,
-    //         arrows: {
-    //         to : {enabled: true}
-    //         },
-    //         label: 0 + '/' + (Math.random() * 10 | 1),
-    //         from: from,
-    //         to: to,
-    //     });
-    // }
+    console.log(nodes);
+    console.log(edges);
     var graphData = {
         nodes: nodes,
         edges: edges
