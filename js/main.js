@@ -37,3 +37,5 @@ network.setData(data);
 
 
 fordFulkerson(data);
+
+network.setData(data);

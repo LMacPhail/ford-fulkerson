@@ -76,6 +76,27 @@ function getConnectedNodes(data, nodeId, direction) {
     return nodeList;
 }
 
+/* 
+Takes 2 node ids and finds the id of the edge between them and its direction 
+direction 0 if backwards, 1 if forwards
+*/
+
+function findEdgeID(data, node1, node2){
+    var edge;
+    var edgeData = {};
+    for (var i = 0; i < data.edges.length; i++){
+        edge = data.edges[i];
+        if((edge.from == node1) && (edge.to == node2)){
+            edgeData = {id: edge.id, direction: 1}
+            return edgeData;
+        }
+        if((edge.from == node2) && (edge.to == node1)){
+            edgeData = {id: edge.id, direction: 0}
+            return edgeData;
+        } 
+    }
+}
+
 /*
 Find a path from S to T
 
@@ -84,11 +105,10 @@ If unsuccessful, returns -1
 */
 
 function findPath(resData, visited, from, to){
-    var i;
+    var i, j;
     visited[from] = 1;
     var path = [from];
     var toVisit = getConnectedNodes(resData, from, 'to');
-    console.log("to visit: " + toVisit);
 
     if(toVisit.length == 0){
         return -1;
@@ -99,12 +119,15 @@ function findPath(resData, visited, from, to){
         for(i in toVisit){
             if(visited[toVisit[i]] == 1) continue;
             if((next = findPath(resData, visited, toVisit[i], to)) != -1) {
-                path.push(next);
+                for(j in next){
+                    path.push(next[j]);
+                }
                 return path;
             } else {
-                return -1;
+                continue;
             }
         }
+        return -1;
     }
 
 }
@@ -113,7 +136,7 @@ function findPath(resData, visited, from, to){
 function fordFulkerson(data){
     var nodes = data.nodes, edges = data.edges, resEdges = [];
     var resData, residualGraph, path, visited = [];
-    var i;
+    var i, id;
 
     for(i = 0; i < edges.length; i++){
         edges[i].label = setFlow(edges[i].label, 0);
@@ -128,11 +151,33 @@ function fordFulkerson(data){
         for(i in visited) visited[i] = 0;
         path = findPath(resData, visited, 0, 5);
         console.log("path: " + path);
-        break;
+        // break;
         if(path == -1){
             break;
         } else {
+            for(i = 1; i < path.length; i++){
+                console.log("node1: " + path[i-1] + " node2: " + path[i]);
+                var edgeData = findEdgeID(data, path[i-1], path[i]);
+                console.log(edgeData);
+                id = edgeData.id;
+                if(edgeData.direction == 1){
+                    console.log("forwards edge");
+                    var flow = parseInt(getFlow(edges[id].label)) + 1;
+                    data.edges[id].label = setFlow(edges[id].label, flow);
+                    console.log("new label: " + data.edges[id].label);
+                }
+                if(edgeData.direction == 0){                    
+                    console.log("backwards edge");
+                    var flow = parseInt(getFlow(edges[id].label)) - 1;
+                    data.edges[id].label = setFlow(edges[id].label, flow);
+                    console.log("new label: " + data.edges[id].label);
+                }
+            }
 
+ //         m = minimum capacity of edges in path
+    //      for edges in path:
+    //      if edge is forwards, capacity += m
+    //      if edge is backwards, capacity -= m
         }
     }
     // set all edges flow to 0
@@ -140,10 +185,7 @@ function fordFulkerson(data){
     //    build residual graph
     //    find path from S to T
     //    if(path exists)
-    //        m = minimum capacity of edges in path
-    //        for edges in path:
-    //            if edge is forwards, capacity += m
-    //            if edge is backwards, capacity -= m
+   
     //    else
     //      break;
     //  }
