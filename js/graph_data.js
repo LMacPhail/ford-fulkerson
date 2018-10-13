@@ -101,9 +101,8 @@ function generateGraphData(N, E){
         do{
             rand_id = (Math.random() * nodesToSink.length | 0);
         } while (i == nodesToSink[rand_id]);
+
         // connect node to node in nodesToSink or T
-        // console.log("from: " + i);
-        // console.log("to: " + nodesToSink[rand_id]);
         edges.push({
             id: edge_id++,
             arrows: {
@@ -117,59 +116,50 @@ function generateGraphData(N, E){
         // add 'from' node to leftNodes
         leftNodes.push(i);
 
-        // if connecting to !T remove 'to' node from leftNodes
+        // if 'to' not != T remove it from leftNodes
         if((nodesToSink[rand_id] != N) && (leftNodes.indexOf(nodesToSink[rand_id]) != -1)){
             leftNodes.splice(leftNodes.indexOf(nodesToSink[rand_id]), 1);
         }
-
-        console.log("leftNodes: " + leftNodes);
-
         // add node to nodesToSink
         nodesToSink.push(i);
-        //also make node.x < T.x
+        
     }
 
 
     // positions = getPositions(nodes.id);
-    while(leftNodes.length > 2){
+    for(i in leftNodes){
+        rand_id = (Math.random() * (leftNodes.length - 1) + 1 | 0);
 
-        rand_id = (Math.random() * leftNodes.length + 1 | 0);
+        if(i < 2) {
+            edges.push({
+                id: edge_id++,
+                arrows: {
+                    to: { enabled: true }
+                },
+                label: 0 + '/' + (Math.random() * 10 | 1),
+                from: 0,
+                to: leftNodes[rand_id],
+            });
+        } else {
+            do {
+                from = (Math.random() * N | 0);
+            } while (leftNodes[rand_id] == from);
 
-        do {
-            from = (Math.random() * N | 0);
-        } while (leftNodes[rand_id] == from);
-
-        console.log("from: " + from);
-        console.log("to: " + leftNodes[rand_id]);
-
-        edges.push({
-            id: edge_id++,
-            arrows: {
-                to: { enabled: true }
-            },
-            label: 0 + '/' + (Math.random() * 10 | 1),
-            from: from,
-            to: leftNodes[rand_id],
-        });
-
+            edges.push({
+                id: edge_id++,
+                arrows: {
+                    to: { enabled: true }
+                },
+                label: 0 + '/' + (Math.random() * 10 | 1),
+                from: from,
+                to: leftNodes[rand_id],
+            });
+    
+            
+        }
         leftNodes.splice(rand_id, 1);
     }
-
-    // Make sure S has at least 2 outgoing nodes
-    for(i = 0; i < 2; i++){
-        // console.log("from: " + 0);
-        // console.log("to: " + leftNodes[i]);
-        edges.push({
-            id: edge_id++,
-            arrows: {
-                to: { enabled: true }
-            },
-            label: 0 + '/' + (Math.random() * 10 | 1),
-            from: 0,
-            to: leftNodes[i],
-        });
-    }
-
+   
     // add remaining edges
     for (i = edge_id; i < E; i++){
         do {
@@ -189,7 +179,7 @@ function generateGraphData(N, E){
             to: to,
         });
     }
-    
+
     nodes.push({
         id: N, label: 'T',
         x: 300, // y: Math.random() * 220 + 180,
