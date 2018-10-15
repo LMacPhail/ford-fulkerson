@@ -14,18 +14,21 @@
 <div id="info_bar">
   <div class="info_bar" id="alg_title"></div>
   <div class="info_bar" id="playback">
-    <div id="pb_controls">
-      <button onclick="fordFulkerson(data)">Run FF</button>
-    </div>
+      <button class="button" id="run_algorithm"
+        onclick="fordFulkerson(data)">
+        Run
+      </button>
     <div id="pb_slider"></div>
   </div>
   <div class="info_bar" id="new_graph">
-      <div id="default_graph">
-          <button onclick="data = defaultGraphData(); network.setData(data);">Load Default Graph</button>
-        </div>
-    <div id="gen_graph">
-      <button onclick="data = generateGraphData(N,E); network.setData(data);">Generate Random Graph</button>
-    </div>
+      <button class="button" id="load_default_graph"
+        onclick="data = defaultGraphData(); network.setData(data);">
+        Load Default Graph
+      </button>
+      <button class="button" id="generate_random_graph"
+          onclick="data = generateGraphData(N,E); network.setData(data);">
+          Generate Random Graph
+      </button>
     <div id="draw_graph"></div>
   </div>
   <div class="info_bar" id="pseudocode">

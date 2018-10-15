@@ -17,35 +17,58 @@
 #residual_graph {
   width: 100%;
   height: 50%;
-  bottom: 0; 
+  bottom: 0;
 
 }
 #info_bar {
-width: 25%;
-height: 100%;
-position: fixed;
-z-index: 1;
-top: 0;
-overflow-x: hidden;
-left:0;
-background-color: #f69278
+  width: 25%;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  left:0;
+  background-color: #f69278
 }
 .info_bar {
-width: 100%;
+  width: 100%;
 }
 #alg_title {
 /* width: 100%; */
-height: 10%;
-background-color: #e03c4c;
+  height: 10%;
+  background-color: #e03c4c;
 }
 #playback {
-height: 20%;
-background-color: #f69278;
+  height: 20%;
+  background-color: #f69278;
+  align-items: center;
+  display: flex;
 }
-
+.button{
+  padding: 15px 32px;
+  background-color: inherit;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+#run_algorithm {
+  color: white;
+}
+#load_default_graph {
+  width: 50%;
+  left:0;
+}
+#generate_random_graph {
+  background-color: #c0d6ba;
+  width: 50%;
+  right:0;
+}
 #new_graph {
-height: 10%;
-background-color: #f7d4a5;
+  height: 10%;
+  background-color: #f7d4a5;
+  display: flex;
 }
 
 /* #gen_graph {
@@ -61,11 +84,11 @@ background-color: #c0d6ba;
 } */
 
 #pseudocode {
-height: 50%;
-background-color: #308c92;
+  height: 50%;
+  background-color: #308c92;
 }
 
 #flow_counter {
-height: 10%;
-background-color: #c0d6ba;
+  height: 10%;
+  background-color: #c0d6ba;
 }

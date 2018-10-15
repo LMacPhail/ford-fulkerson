@@ -29,6 +29,7 @@ network.storePositions();
 
 var newFlow, capacity;
 
+
 // for(i = 0; i < data.edges.length; i++){
 //     capacity = getCapacity(data.edges[i].label);
 //     newFlow = Math.random() * capacity | 0;
@@ -39,4 +40,3 @@ var newFlow, capacity;
 
 
 // fordFulkerson(data);
-
