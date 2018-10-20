@@ -3,8 +3,11 @@
 var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
-var N = 6, E = 13;
+var animationSteps;
 
+var nodes = [], edges = [];
+var N = 6, E = 13;
+// var residualGraph = new vis.Network(mainContainer, null, options);
 var data = generateGraphData(N, E);
 // var data = defaultGraphData();
 var options = {
@@ -27,16 +30,5 @@ var options = {
 var network = new vis.Network(mainContainer, data, options);
 network.storePositions();
 
-var newFlow, capacity;
-
-
-// for(i = 0; i < data.edges.length; i++){
-//     capacity = getCapacity(data.edges[i].label);
-//     newFlow = Math.random() * capacity | 0;
-//     data.edges[i].label = setFlow(data.edges[i].label, newFlow);
-//     // console.log("edge " + i + " new flow: " + data.edges[i].label);
-// }
-
-
-
-// fordFulkerson(data);
+var resData = {nodes: nodes, edges:edges};
+var residualGraph = new vis.Network(resContainer, resData, options);

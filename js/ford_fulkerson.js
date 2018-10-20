@@ -74,8 +74,8 @@ function getConnectedNodes(data, nodeId, direction) {
     return nodeList;
 }
 
-/* 
-Takes 2 node ids and finds the id of the edge between them and its direction 
+/*
+Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
 
@@ -91,7 +91,7 @@ function findEdgeID(data, node1, node2){
         if((edge.from == node2) && (edge.to == node1)){
             edgeData = {id: edge.id, direction: 0}
             return edgeData;
-        } 
+        }
     }
 }
 
@@ -134,7 +134,8 @@ function findPath(resData, visited, from, to){
 function fordFulkerson(data){
     var nodes = data.nodes, edges = data.edges, resEdges = [];
     var resData, residualGraph, path, visited = [];
-    var i, id, interval = setInterval(frame, 2000);
+    var animationSteps = [];
+    var i, id;
 
     for(i = 0; i < edges.length; i++){
         edges[i].label = setFlow(edges[i].label, 0);
@@ -143,13 +144,24 @@ function fordFulkerson(data){
         visited.push(0);
     }
     function frame(){
+        if(path == -1){
+            clearInterval(interval);
+        } else {
+
+        }
+    }
+    while(true){
         resData = buildResidualGraph(data);
-        residualGraph = new vis.Network(resContainer, resData, options);
+        // residualGraph = new vis.Network(resContainer, resData, options);
+        animationSteps.push({
+          "network": "residualGraph",
+          "data": resData,
+        });
         for(i in visited) visited[i] = 0;
         path = findPath(resData, visited, 0, nodes.length - 1);
         console.log("path: " + path);
         if(path == -1){
-            clearInterval(interval);
+            break;
         } else {
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(data, path[i-1], path[i]);
@@ -157,41 +169,20 @@ function fordFulkerson(data){
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(edges[id].label)) + 1;
                     data.edges[id].label = setFlow(edges[id].label, flow);
-                    console.log("forwards, new label: " + data.edges[id].label);
+                    // console.log("forwards, new label: " + data.edges[id].label);
                 }
-                if(edgeData.direction == 0){                 
+                if(edgeData.direction == 0){
                     var flow = parseInt(getFlow(edges[id].label)) - 1;
                     data.edges[id].label = setFlow(edges[id].label, flow);
-                    console.log("backwards, new label: " + data.edges[id].label);
+                    // console.log("backwards, new label: " + data.edges[id].label);
                 }
             }
         }
-        network.setData(data);
+        animationSteps.push({
+          "network": "network",
+          "data": data,
+        });
+        // network.setData(data);
     }
-    // while(true){
-    //     resData = buildResidualGraph(data);
-    //     residualGraph = new vis.Network(resContainer, resData, options);
-    //     for(i in visited) visited[i] = 0;
-    //     path = findPath(resData, visited, 0, nodes.length - 1);
-    //     console.log("path: " + path);
-    //     if(path == -1){
-    //         break;
-    //     } else {
-    //         for(i = 1; i < path.length; i++){
-    //             var edgeData = findEdgeID(data, path[i-1], path[i]);
-    //             id = edgeData.id;
-    //             if(edgeData.direction == 1){
-    //                 var flow = parseInt(getFlow(edges[id].label)) + 1;
-    //                 data.edges[id].label = setFlow(edges[id].label, flow);
-    //                 console.log("forwards, new label: " + data.edges[id].label);
-    //             }
-    //             if(edgeData.direction == 0){                 
-    //                 var flow = parseInt(getFlow(edges[id].label)) - 1;
-    //                 data.edges[id].label = setFlow(edges[id].label, flow);
-    //                 console.log("backwards, new label: " + data.edges[id].label);
-    //             }
-    //         }
-    //     }
-    //     network.setData(data);
-    // }
+    animate(animationSteps);
 }
