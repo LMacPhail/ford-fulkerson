@@ -36,6 +36,18 @@ function defaultGraphData(){
     return graphData;
 }
 
+function findDuplicateEdges(edges, from, to){
+    // console.log("in find duplicate edges. from: " + from + " to: " + to);
+    var i;
+    for(i = 0; i < edges.length; i++){
+        // console.log("edges[i].from: " + from + " edges[i].to: " + to);
+        if((edges[i].from == from) && (edges[i].to == to)){
+            return 1;
+        } 
+    }
+    return -1;
+}
+
 function generateGraphData(N, E){
     var   i,
         edge_id = 0,
@@ -60,9 +72,12 @@ function generateGraphData(N, E){
     }
     nodesToSink.push(N);
     var rand_id, from, to;
-
+    console.log("constructing network backwards from T");
     for(i = N - 1; i > 0; i--){ // go backwards to do S last
+        
         if(i > N-3){
+        // console.log("from: " + i);
+        // console.log("to: " + N);
           edges.push({
               id: edge_id++,
               arrows: {to : {enabled: true}},
@@ -75,8 +90,8 @@ function generateGraphData(N, E){
               rand_id = (Math.random() * nodesToSink.length | 0);
           } while (i == nodesToSink[rand_id]);
 
-          console.log("from: " + i);
-          console.log("to: " + nodesToSink[rand_id]);
+        //   console.log("from: " + i);
+        //   console.log("to: " + nodesToSink[rand_id]);
 
           // connect node to node in nodesToSink or T
           edges.push({
@@ -103,14 +118,12 @@ function generateGraphData(N, E){
 
     }
 
-
-    // positions = getPositions(nodes.id);
-    for(i in leftNodes){
-        // rand_id = (Math.random() * (leftNodes.length - 1) + 1 | 0);
-
-        if(i < 2) {
-            console.log("from: " + 0);
-            console.log("to: " + leftNodes[i]);
+    console.log("Connecting left nodes");
+    while(leftNodes.length > 0){
+        if(edge_id == E){break;}
+        if(i < 2){  
+            // console.log("from: " + 0);
+            // console.log("to: " + leftNodes[i]);
             edges.push({
                 id: edge_id++,
                 arrows: {to: { enabled: true }},
@@ -121,16 +134,16 @@ function generateGraphData(N, E){
         } else {
             do {
                 from = (Math.random() * N | 0);
-            } while (leftNodes[o] == from);
+            } while (leftNodes[i] == from);
 
-            console.log("from: " + from);
-            console.log("to: " + leftNodes[i]);
+            // console.log("from: " + from);
+            // console.log("to: " + leftNodes[i]);
             edges.push({
                 id: edge_id++,
                 arrows: {to: { enabled: true }},
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: from,
-                to: leftNodes[rand_id],
+                to: leftNodes[i],
             });
 
 
@@ -139,15 +152,17 @@ function generateGraphData(N, E){
         console.log("leftNodes: " + leftNodes);
     }
 
+
+    console.log("add remaining edges");
     // add remaining edges
     for (i = edge_id; i < E; i++){
         do {
             from = (Math.random() * N | 0);
-            console.log("from: "+ from);
+            // console.log("from: "+ from);
             to = (Math.random() * N + 1 | 0);
-            console.log("to: "+ to);
+            // console.log("to: "+ to);
         }
-        while (from == to); // there exists an edge with from == from and to == to
+        while ((from == to) || (findDuplicateEdges(edges, from, to) == 1)); // there exists an edge with from == from and to == to
         edges.push({
             id: edge_id++,
             arrows: {to : {enabled: true}},

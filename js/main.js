@@ -3,7 +3,7 @@
 var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
-var N = 6, E = 10;
+var N = 6, E = 13;
 
 var data = generateGraphData(N, E);
 // var data = defaultGraphData();
