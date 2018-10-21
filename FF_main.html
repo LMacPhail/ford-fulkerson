@@ -22,11 +22,11 @@
   </div>
   <div class="info_bar" id="new_graph">
       <button class="button" id="load_default_graph"
-        onclick="data = defaultGraphData(); network.setData(data);">
+        onclick="data = defaultGraphData(); network.setData(data); residualGraph.setData(emptyData);">
         Load Default Graph
       </button>
       <button class="button" id="generate_random_graph"
-          onclick="data = generateGraphData(N,E); network.setData(data);">
+          onclick="data = generateGraphData(N,E); network.setData(data); residualGraph.setData(emptyData);">
           Generate Random Graph
       </button>
     <div id="draw_graph"></div>

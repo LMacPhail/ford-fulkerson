@@ -1,4 +1,5 @@
 function defaultGraphData(){
+    N = 5;
     var nodes = [
         {id: 0, label: 'S', x: -300, y: 0, physics: false},
         {id: 1, label: 'n1', x: -150, y: -140, physics: false},

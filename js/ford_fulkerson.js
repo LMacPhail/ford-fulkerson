@@ -102,32 +102,98 @@ If successful, returns an array of node IDs (in order of the path)
 If unsuccessful, returns -1
 */
 
-function findPath(resData, visited, from, to){
-    var i, j;
-    visited[from] = 1;
-    var path = [from];
-    var toVisit = getConnectedNodes(resData, from, 'to');
+function findPath(resData, visited){
+    var i, j, parents = [], queue = [];
+    var nodes = resData.nodes;
+    var x, y;
 
-    if(toVisit.length == 0){
-        return -1;
-    } else if ( toVisit.indexOf(to) > -1 ) {
-        path.push(to);
-        return path;
-    } else {
-        for(i in toVisit){
-            if(visited[toVisit[i]] == 1) continue;
-            if((next = findPath(resData, visited, toVisit[i], to)) != -1) {
-                for(j in next){
-                    path.push(next[j]);
+    for(i = 0; i < nodes.length; i++){
+        parents.push({
+            node: i,
+            parent: i,
+        });
+    }
+    console.log(parents);
+
+    for(i = 0; i < nodes.length; i++){
+        visited[i] = 1;
+        queue.push(i);
+        while(queue.length > 0){
+            x = queue.pop();
+            var L = getConnectedNodes(resData, x, 'to');
+            for(j = 0; j < L.length; j++){
+                y = L[j];
+                if(visited[y] == 0){
+                    visited[y] = 1;
+                    parents[y].parent = x;
+                    queue.push(y);
                 }
-                return path;
-            } else {
-                continue;
             }
         }
-        return -1;
     }
+    if(parents[N].parent == N){
+        return -1;
+    } else {
+        var path = [];
+        x = N;
+        while(true){
+            path.push(x);
+            console.log("path " + path);
+            if(x == 0){
+                break;
+            } else {
+                y = parents[x].parent;
+                if( y == x){
+                    return -1;
+                } else { 
+                    x=y;
+                }
+            }
+        }
+    }
+    return path.reverse();
 
+    // visited[from] = 1;
+    // var path = [from];
+    // var toVisit = getConnectedNodes(resData, from, 'to');
+
+    // if(toVisit.length == 0){
+    //     return -1;
+    // } else if ( toVisit.indexOf(to) > -1 ) {
+    //     path.push(to);
+    //     return path;
+    // } else {
+    //     for(i in toVisit){
+    //         if(visited[toVisit[i]] == 1) continue;
+    //         if((next = findPath(resData, visited, toVisit[i], to)) != -1) {
+    //             for(j in next){
+    //                 path.push(next[j]);
+    //             }
+    //             return path;
+    //         } else {
+    //             continue;
+    //         }
+    //     }
+    //     return -1;
+    // }
+}
+
+function findMinimumCapacity(data, path){
+    console.log("in minimum capacity");
+    var i, j, minCap = 0, capacity, edge;
+    var from, to;
+    for(i = 1; i < path.length; i++){
+        from = path[i-1];
+        to = path[i];
+        for(j = 0; j < data.edges.length; j++){
+            edge = data.edges[j];
+            if((edge.from == from) && (edge.to == to)){
+                capacity = parseInt(edge.label);
+                if((minCap == 0)||(capacity < minCap)) minCap = capacity;
+            }
+        }
+    }
+    return minCap;
 }
 
 
@@ -136,19 +202,13 @@ function fordFulkerson(data){
     var resData, residualGraph, path, visited = [];
     var animationSteps = [];
     var i, id;
+    var counter = 0;
 
     for(i = 0; i < edges.length; i++){
         edges[i].label = setFlow(edges[i].label, 0);
     }
     for(i in nodes){
         visited.push(0);
-    }
-    function frame(){
-        if(path == -1){
-            clearInterval(interval);
-        } else {
-
-        }
     }
     while(true){
         resData = buildResidualGraph(data);
@@ -158,21 +218,23 @@ function fordFulkerson(data){
           "data": resData,
         });
         for(i in visited) visited[i] = 0;
-        path = findPath(resData, visited, 0, nodes.length - 1);
+        path = findPath(resData, visited);
         console.log("path: " + path);
         if(path == -1){
             break;
         } else {
+            var m = findMinimumCapacity(resData, path);
+            console.log("m: " + m);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(data, path[i-1], path[i]);
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    var flow = parseInt(getFlow(edges[id].label)) + 1;
+                    var flow = parseInt(getFlow(edges[id].label)) + m;
                     data.edges[id].label = setFlow(edges[id].label, flow);
                     // console.log("forwards, new label: " + data.edges[id].label);
                 }
                 if(edgeData.direction == 0){
-                    var flow = parseInt(getFlow(edges[id].label)) - 1;
+                    var flow = parseInt(getFlow(edges[id].label)) - m;
                     data.edges[id].label = setFlow(edges[id].label, flow);
                     // console.log("backwards, new label: " + data.edges[id].label);
                 }
@@ -182,6 +244,10 @@ function fordFulkerson(data){
           "network": "network",
           "data": data,
         });
+        if(counter >= 5){
+            break;
+        }
+        counter++;
         // network.setData(data);
     }
     animate(animationSteps);

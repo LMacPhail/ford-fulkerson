@@ -30,5 +30,5 @@ var options = {
 var network = new vis.Network(mainContainer, data, options);
 network.storePositions();
 
-var resData = {nodes: nodes, edges:edges};
-var residualGraph = new vis.Network(resContainer, resData, options);
+var emptyData = {nodes: nodes, edges:edges};
+var residualGraph = new vis.Network(resContainer, emptyData, options);
