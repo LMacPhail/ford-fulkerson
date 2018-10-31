@@ -49,51 +49,6 @@ function buildResidualGraph(data){
 }
 
 
-function getConnectedNodes(data, nodeId, direction) {
-    var nodeList = [];
-    if (data.nodes[nodeId] !== undefined) {
-      var node = data.nodes[nodeId];
-      var nodeObj = {}; // used to quickly check if node already exists
-      for (var i = 0; i < data.edges.length; i++) {
-        var edge = data.edges[i];
-        if (direction !== 'to' && edge.to == node.id) {
-          // these are double equals since ids can be numeric or string
-          if (nodeObj[edge.from] === undefined) {
-            nodeList.push(edge.from);
-            nodeObj[edge.from] = true;
-          }
-        } else if (direction !== 'from' && edge.from == node.id) {
-          // these are double equals since ids can be numeric or string
-          if (nodeObj[edge.to] === undefined) {
-            nodeList.push(edge.to);
-            nodeObj[edge.to] = true;
-          }
-        }
-      }
-    }
-    return nodeList;
-}
-
-/*
-Takes 2 node ids and finds the id of the edge between them and its direction
-direction 0 if backwards, 1 if forwards
-*/
-
-function findEdgeID(data, node1, node2){
-    var edge;
-    var edgeData = {};
-    for (var i = 0; i < data.edges.length; i++){
-        edge = data.edges[i];
-        if((edge.from == node1) && (edge.to == node2)){
-            edgeData = {id: edge.id, direction: 1}
-            return edgeData;
-        }
-        if((edge.from == node2) && (edge.to == node1)){
-            edgeData = {id: edge.id, direction: 0}
-            return edgeData;
-        }
-    }
-}
 
 /*
 Find a path from S to T
@@ -138,7 +93,6 @@ function findPath(resData, visited){
         x = N;
         while(true){
             path.push(x);
-            console.log("path " + path);
             if(x == 0){
                 break;
             } else {
@@ -152,34 +106,9 @@ function findPath(resData, visited){
         }
     }
     return path.reverse();
-
-    // visited[from] = 1;
-    // var path = [from];
-    // var toVisit = getConnectedNodes(resData, from, 'to');
-
-    // if(toVisit.length == 0){
-    //     return -1;
-    // } else if ( toVisit.indexOf(to) > -1 ) {
-    //     path.push(to);
-    //     return path;
-    // } else {
-    //     for(i in toVisit){
-    //         if(visited[toVisit[i]] == 1) continue;
-    //         if((next = findPath(resData, visited, toVisit[i], to)) != -1) {
-    //             for(j in next){
-    //                 path.push(next[j]);
-    //             }
-    //             return path;
-    //         } else {
-    //             continue;
-    //         }
-    //     }
-    //     return -1;
-    // }
 }
 
 function findMinimumCapacity(data, path){
-    console.log("in minimum capacity");
     var i, j, minCap = 0, capacity, edge;
     var from, to;
     for(i = 1; i < path.length; i++){
@@ -199,8 +128,8 @@ function findMinimumCapacity(data, path){
 
 function fordFulkerson(data){
     var nodes = data.nodes, edges = data.edges, resEdges = [];
-    var resData, residualGraph, path, visited = [];
-    var animationSteps = [];
+    var residualGraph, path, visited = [];
+    var animationStep;
     var i, id;
     var counter = 0;
 
@@ -212,19 +141,18 @@ function fordFulkerson(data){
     }
     while(true){
         resData = buildResidualGraph(data);
-        // residualGraph = new vis.Network(resContainer, resData, options);
-        animationSteps.push({
-          "network": "residualGraph",
-          "data": resData,
-        });
+        residualGraph = new vis.Network(resContainer, resData, options);
+       
         for(i in visited) visited[i] = 0;
         path = findPath(resData, visited);
         console.log("path: " + path);
+        residualGraph.setData(highlightAugmentingPath(path));
+        // animationSteps.concat(highlightAugmentingPath(path));
         if(path == -1){
             break;
         } else {
             var m = findMinimumCapacity(resData, path);
-            console.log("m: " + m);
+            // console.log("m: " + m);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(data, path[i-1], path[i]);
                 id = edgeData.id;
@@ -240,15 +168,7 @@ function fordFulkerson(data){
                 }
             }
         }
-        animationSteps.push({
-          "network": "network",
-          "data": data,
-        });
-        if(counter >= 5){
-            break;
-        }
-        counter++;
-        // network.setData(data);
+        network.setData(data);
+        break;
     }
-    animate(animationSteps);
 }

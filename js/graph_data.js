@@ -1,3 +1,7 @@
+var animationSteps = [];
+var nodes = [], edges = [];
+var N = 8, E = 13;
+
 function defaultGraphData(){
     N = 5;
     var nodes = [
@@ -10,23 +14,23 @@ function defaultGraphData(){
     ];
 
     var edges = [
-        { id: 0, label: '0/2', from: 0, to: 1,
+        { id: 0, label: '0/2', from: 0, to: 1, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 1, label: '0/4', from: 0, to: 3,
+        },{ id: 1, label: '0/4', from: 0, to: 3, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 2, label: '0/1', from: 1, to: 2,
+        },{ id: 2, label: '0/1', from: 1, to: 2, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 3, label: '0/3', from: 1, to: 4,
+        },{ id: 3, label: '0/3', from: 1, to: 4, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 4, label: '0/3', from: 3, to: 2,
+        },{ id: 4, label: '0/3', from: 3, to: 2, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 5, label: '0/1', from: 3, to: 4,
+        },{ id: 5, label: '0/1', from: 3, to: 4, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 6, label: '0/1', from: 4, to: 3,
+        },{ id: 6, label: '0/1', from: 4, to: 3, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 7, label: '0/2', from: 2, to: 5,
+        },{ id: 7, label: '0/2', from: 2, to: 5, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
-        },{ id: 8, label: '0/4', from: 4, to: 5,
+        },{ id: 8, label: '0/4', from: 4, to: 5, color: {color: '#41f447'},
             arrows: { to : {enabled: true}},
         },
     ];
@@ -71,7 +75,7 @@ function generateGraphData(N, E){
     }
     nodesToSink.push(N);
     var rand_id, from, to;
-    console.log("constructing network backwards from T");
+    // console.log("constructing network backwards from T");
     for(i = N - 1; i > 0; i--){ // go backwards to do S last
 
         if(i > N-3){
@@ -83,6 +87,7 @@ function generateGraphData(N, E){
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: N,
+              color: {color: '#41f447'},
           });
         } else {
           do{
@@ -99,6 +104,7 @@ function generateGraphData(N, E){
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: nodesToSink[rand_id],
+              color: {color: '#41f447'},
           });
         }
         // add 'from' node to leftNodes
@@ -109,11 +115,11 @@ function generateGraphData(N, E){
         }
         // add node to nodesToSink
         nodesToSink.push(i);
-        console.log("leftNodes: " + leftNodes);
-        console.log("nodesToSink: " + nodesToSink);
+        // console.log("leftNodes: " + leftNodes);
+        // console.log("nodesToSink: " + nodesToSink);
     }
 
-    console.log("Connecting left nodes");
+    // console.log("Connecting left nodes");
     while(leftNodes.length > 0){
         if(edge_id == E){break;}
         if(i < 2){
@@ -125,6 +131,7 @@ function generateGraphData(N, E){
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: 0,
                 to: leftNodes[i],
+                color: {color: '#41f447'},
             });
         } else {
             do {
@@ -139,15 +146,16 @@ function generateGraphData(N, E){
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: from,
                 to: leftNodes[i],
+                color: {color: '#41f447'},
             });
 
 
         }
         leftNodes.splice(i, 1);
-        console.log("leftNodes: " + leftNodes);
+        // console.log("leftNodes: " + leftNodes);
     }
 
-    console.log("add remaining edges");
+    // console.log("add remaining edges");
     // add remaining edges
     for (i = edge_id; i < E; i++){
         do {
@@ -163,6 +171,7 @@ function generateGraphData(N, E){
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: from,
             to: to,
+            color: {color: '#41f447'},
         });
     }
 
@@ -172,11 +181,58 @@ function generateGraphData(N, E){
         physics: false
     });
 
-    console.log(nodes);
-    console.log(edges);
+    // console.log(nodes);
+    // console.log(edges);
     var graphData = {
         nodes: nodes,
         edges: edges
     };
     return graphData;
+}
+
+
+function getConnectedNodes(data, nodeId, direction) {
+    var nodeList = [];
+    if (data.nodes[nodeId] !== undefined) {
+      var node = data.nodes[nodeId];
+      var nodeObj = {}; // used to quickly check if node already exists
+      for (var i = 0; i < data.edges.length; i++) {
+        var edge = data.edges[i];
+        if (direction !== 'to' && edge.to == node.id) {
+          // these are double equals since ids can be numeric or string
+          if (nodeObj[edge.from] === undefined) {
+            nodeList.push(edge.from);
+            nodeObj[edge.from] = true;
+          }
+        } else if (direction !== 'from' && edge.from == node.id) {
+          // these are double equals since ids can be numeric or string
+          if (nodeObj[edge.to] === undefined) {
+            nodeList.push(edge.to);
+            nodeObj[edge.to] = true;
+          }
+        }
+      }
+    }
+    return nodeList;
+}
+
+/*
+Takes 2 node ids and finds the id of the edge between them and its direction
+direction 0 if backwards, 1 if forwards
+*/
+
+function findEdgeID(data, node1, node2){
+    var edge;
+    var edgeData = {};
+    for (var i = 0; i < data.edges.length; i++){
+        edge = data.edges[i];
+        if((edge.from == node1) && (edge.to == node2)){
+            edgeData = {id: edge.id, direction: 1}
+            return edgeData;
+        }
+        if((edge.from == node2) && (edge.to == node1)){
+            edgeData = {id: edge.id, direction: 0}
+            return edgeData;
+        }
+    }
 }

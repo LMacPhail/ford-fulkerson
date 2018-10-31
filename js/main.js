@@ -1,13 +1,7 @@
-
-// create a network
 var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
-var animationSteps;
 
-var nodes = [], edges = [];
-var N = 6, E = 13;
-// var residualGraph = new vis.Network(mainContainer, null, options);
 var data = generateGraphData(N, E);
 // var data = defaultGraphData();
 var options = {
@@ -30,5 +24,10 @@ var options = {
 var network = new vis.Network(mainContainer, data, options);
 network.storePositions();
 
-var emptyData = {nodes: nodes, edges:edges};
-var residualGraph = new vis.Network(resContainer, emptyData, options);
+var resData = {nodes: nodes, edges:edges};
+var residualGraph = new vis.Network(resContainer, resData, options);
+
+function run(){
+  fordFulkerson(data);
+  // animate(animationSteps);
+}
