@@ -1,51 +1,56 @@
+
 function getCapacity(label){
+    console.log("in get capacity");
     var capacity = label.split('/')[1];
+    console.log("capacity: " + capacity);
     return capacity;
 }
 
 function getFlow(label){
+    console.log("in get flow");
     var flow = label.split('/')[0];
+    console.log("flow: "+ flow);
     return flow;
 }
 
 function setFlow(label, new_flow){
+    console.log("in set flow");
     var capacity = getCapacity(label);
     var label = new_flow + '/' + capacity;
+    console.log("new label: " + label);
     return label;
 }
 
-function buildResidualGraph(data){
-    var resNodes = data.nodes, edges = data.edges, resEdges = [];
+function buildResidualGraph(){
+    var edges = [];
     var cap, flow, edgeID = 0, i;
 
     // build edges
-    for(i = 0; i < edges.length; i++){
-        cap = getCapacity(edges[i].label);
-        flow = getFlow(edges[i].label);
+    for(i = 0; i < topEdges.length; i++){
+        var edge = topEdges.get(i);
+        cap = getCapacity(edge.label);
+        flow = getFlow(edge.label);
+        console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
         if((flow > 0) && (flow <= cap)){
-        resEdges.push({
-            id: edgeID++, label: flow, from: edges[i].to, to: edges[i].from,
-            arrows: {
-                to : {enabled: true}
-            },
-        });
+            edges.push({
+                id: edgeID++, label: flow, from: edge.to, to: edge.from,
+                arrows: {
+                    to : {enabled: true}
+                },
+            });
         }
         if((0 <= flow) && (flow < cap)){
-        resEdges.push({
-            id: edgeID++, label: (cap - flow).toString(), from: edges[i].from, to: edges[i].to,
-            arrows: {
-                to : {enabled: true}
-            },
-        });
+            edges.push({
+                id: edgeID++, label: (cap - flow).toString(), from: edge.from, to: edge.to,
+                arrows: {
+                    to : {enabled: true}
+                },
+            });
         }
     }
-
-    var graphData = {
-        nodes: resNodes,
-        edges: resEdges,
-    }
-
-    return graphData;
+    resNodes.update(nodes);
+    resEdges.update(edges);
+    
 }
 
 
@@ -57,9 +62,9 @@ If successful, returns an array of node IDs (in order of the path)
 If unsuccessful, returns -1
 */
 
-function findPath(resData, visited){
+function findPath(visited){
     var i, j, parents = [], queue = [];
-    var nodes = resData.nodes;
+    var nodes = resNodes;
     var x, y;
 
     for(i = 0; i < nodes.length; i++){
@@ -69,6 +74,7 @@ function findPath(resData, visited){
         });
     }
     console.log(parents);
+    console.log(nodes.length);
 
     for(i = 0; i < nodes.length; i++){
         visited[i] = 1;
@@ -115,7 +121,7 @@ function findMinimumCapacity(data, path){
         from = path[i-1];
         to = path[i];
         for(j = 0; j < data.edges.length; j++){
-            edge = data.edges[j];
+            edge = data.edges.get(j);
             if((edge.from == from) && (edge.to == to)){
                 capacity = parseInt(edge.label);
                 if((minCap == 0)||(capacity < minCap)) minCap = capacity;
@@ -126,49 +132,52 @@ function findMinimumCapacity(data, path){
 }
 
 
-function fordFulkerson(data){
-    var nodes = data.nodes, edges = data.edges, resEdges = [];
-    var residualGraph, path, visited = [];
-    var animationStep;
+function fordFulkerson(){
+    var path, visited = [];
     var i, id;
-    var counter = 0;
+    var count = 0;
 
-    for(i = 0; i < edges.length; i++){
-        edges[i].label = setFlow(edges[i].label, 0);
+    for(i = 0; i < topEdges.length; i++){
+        topEdges.update([{id: i, label: setFlow(topEdges.get(i).label, 0)}]);
     }
-    for(i in nodes){
+    for(i in topNodes){
         visited.push(0);
     }
     while(true){
-        resData = buildResidualGraph(data);
-        residualGraph = new vis.Network(resContainer, resData, options);
+        buildResidualGraph();
+        // residualGraph = new vis.Network(resContainer, resData, options);
        
         for(i in visited) visited[i] = 0;
-        path = findPath(resData, visited);
+        path = findPath(visited);
         console.log("path: " + path);
-        residualGraph.setData(highlightAugmentingPath(path));
-        // animationSteps.concat(highlightAugmentingPath(path));
+        highlightAugmentingPath(path);
+
         if(path == -1){
             break;
         } else {
             var m = findMinimumCapacity(resData, path);
             // console.log("m: " + m);
             for(i = 1; i < path.length; i++){
-                var edgeData = findEdgeID(data, path[i-1], path[i]);
+                var edgeData = findEdgeID(topData, path[i-1], path[i]);
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    var flow = parseInt(getFlow(edges[id].label)) + m;
-                    data.edges[id].label = setFlow(edges[id].label, flow);
-                    // console.log("forwards, new label: " + data.edges[id].label);
+                    var flow = parseInt(getFlow(topEdges.get(i).label)) + m;
+                    topEdges.update([{id: id, label: setFlow(topEdges.get(i).label, flow)}]);
+                    // console.log("forwards, new label: " + topEdges.get(i).label);
                 }
                 if(edgeData.direction == 0){
-                    var flow = parseInt(getFlow(edges[id].label)) - m;
-                    data.edges[id].label = setFlow(edges[id].label, flow);
-                    // console.log("backwards, new label: " + data.edges[id].label);
+                    var flow = parseInt(getFlow(topEdges.get(i).label)) - m;
+                    topEdges.update([{id: id, label: setFlow(topEdges.get(i).label, flow)}]);
+                    // console.log("backwards, new label: " + topEdges.get(i).label);
                 }
             }
         }
-        network.setData(data);
-        break;
+        // network.setData(data);
+        console.log(animationSteps);
+        if(count == 5) {
+            break;
+        } else {
+            count++;
+        }
     }
 }

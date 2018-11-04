@@ -1,10 +1,12 @@
 var animationSteps = [];
-var nodes = [], edges = [];
+var nodes, edges, topNodes, topEdges, resNodes, resEdges;
+var topData, resData;
+
 var N = 8, E = 13;
 
 function defaultGraphData(){
     N = 5;
-    var nodes = [
+    nodes = [
         {id: 0, label: 'S', x: -300, y: 0, physics: false},
         {id: 1, label: 'n1', x: -150, y: -140, physics: false},
         {id: 2, label: 'n2', x: 130, y: -130, physics: false},
@@ -13,32 +15,41 @@ function defaultGraphData(){
         {id: 5, label: 'T', x: 300, y: 0, physics: false}
     ];
 
-    var edges = [
-        { id: 0, label: '0/2', from: 0, to: 1, color: {color: '#41f447'},
+    topNodes = new vis.DataSet(nodes);
+
+    edges = [
+        { id: 0, label: '0/2', from: 0, to: 1,
             arrows: { to : {enabled: true}},
-        },{ id: 1, label: '0/4', from: 0, to: 3, color: {color: '#41f447'},
+        },{ id: 1, label: '0/4', from: 0, to: 3,
             arrows: { to : {enabled: true}},
-        },{ id: 2, label: '0/1', from: 1, to: 2, color: {color: '#41f447'},
+        },{ id: 2, label: '0/1', from: 1, to: 2,
             arrows: { to : {enabled: true}},
-        },{ id: 3, label: '0/3', from: 1, to: 4, color: {color: '#41f447'},
+        },{ id: 3, label: '0/3', from: 1, to: 4, 
             arrows: { to : {enabled: true}},
-        },{ id: 4, label: '0/3', from: 3, to: 2, color: {color: '#41f447'},
+        },{ id: 4, label: '0/3', from: 3, to: 2,
             arrows: { to : {enabled: true}},
-        },{ id: 5, label: '0/1', from: 3, to: 4, color: {color: '#41f447'},
+        },{ id: 5, label: '0/1', from: 3, to: 4,
             arrows: { to : {enabled: true}},
-        },{ id: 6, label: '0/1', from: 4, to: 3, color: {color: '#41f447'},
+        },{ id: 6, label: '0/1', from: 4, to: 3,
             arrows: { to : {enabled: true}},
-        },{ id: 7, label: '0/2', from: 2, to: 5, color: {color: '#41f447'},
+        },{ id: 7, label: '0/2', from: 2, to: 5,
             arrows: { to : {enabled: true}},
-        },{ id: 8, label: '0/4', from: 4, to: 5, color: {color: '#41f447'},
+        },{ id: 8, label: '0/4', from: 4, to: 5,
             arrows: { to : {enabled: true}},
         },
     ];
-    var graphData = {
-        nodes: nodes,
-        edges: edges,
-    }
-    return graphData;
+    topEdges = new vis.DataSet(edges);
+    topData = {
+        nodes: topNodes,
+        edges: topEdges
+    };
+    resNodes = new vis.DataSet([]);
+    resEdges = new vis.DataSet([]);
+    resData = {
+        nodes: resNodes,
+        edges: resEdges
+    };
+
 }
 
 function findDuplicateEdges(edges, from, to){
@@ -54,11 +65,10 @@ function findDuplicateEdges(edges, from, to){
 function generateGraphData(N, E){
     var   i,
         edge_id = 0,
-        nodes = [],
-        edges = [],
         nodesToSink = [],
         leftNodes = [];
-
+    nodes = [];
+    edges = [];
     /* initialise nodes */
     nodes.push(
         {id: 0, label: 'S',
@@ -87,7 +97,6 @@ function generateGraphData(N, E){
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: N,
-              color: {color: '#41f447'},
           });
         } else {
           do{
@@ -104,7 +113,6 @@ function generateGraphData(N, E){
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: nodesToSink[rand_id],
-              color: {color: '#41f447'},
           });
         }
         // add 'from' node to leftNodes
@@ -131,7 +139,6 @@ function generateGraphData(N, E){
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: 0,
                 to: leftNodes[i],
-                color: {color: '#41f447'},
             });
         } else {
             do {
@@ -146,7 +153,6 @@ function generateGraphData(N, E){
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: from,
                 to: leftNodes[i],
-                color: {color: '#41f447'},
             });
 
 
@@ -171,7 +177,6 @@ function generateGraphData(N, E){
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: from,
             to: to,
-            color: {color: '#41f447'},
         });
     }
 
@@ -183,21 +188,28 @@ function generateGraphData(N, E){
 
     // console.log(nodes);
     // console.log(edges);
-    var graphData = {
-        nodes: nodes,
-        edges: edges
+    topNodes = new vis.DataSet(nodes);
+    topEdges = new vis.DataSet(edges);
+    topData = {
+        nodes: topNodes,
+        edges: topEdges
     };
-    return graphData;
+    resNodes = new vis.DataSet([]);
+    resEdges = new vis.DataSet([]);
+    resData = {
+        nodes: resNodes,
+        edges: resEdges
+    };
 }
 
 
 function getConnectedNodes(data, nodeId, direction) {
     var nodeList = [];
-    if (data.nodes[nodeId] !== undefined) {
-      var node = data.nodes[nodeId];
+    if (data.nodes.get(nodeId) !== undefined) {
+      var node = data.nodes.get(nodeId);
       var nodeObj = {}; // used to quickly check if node already exists
       for (var i = 0; i < data.edges.length; i++) {
-        var edge = data.edges[i];
+        var edge = data.edges.get(i);
         if (direction !== 'to' && edge.to == node.id) {
           // these are double equals since ids can be numeric or string
           if (nodeObj[edge.from] === undefined) {
@@ -225,7 +237,7 @@ function findEdgeID(data, node1, node2){
     var edge;
     var edgeData = {};
     for (var i = 0; i < data.edges.length; i++){
-        edge = data.edges[i];
+        edge = data.edges.get(i);
         if((edge.from == node1) && (edge.to == node2)){
             edgeData = {id: edge.id, direction: 1}
             return edgeData;

@@ -2,8 +2,8 @@ var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
 
-var data = generateGraphData(N, E);
-// var data = defaultGraphData();
+// generateGraphData(N, E);
+defaultGraphData();
 var options = {
   layout: {
     improvedLayout:true,
@@ -21,13 +21,8 @@ var options = {
   }
   // physics: false,
 };
-var network = new vis.Network(mainContainer, data, options);
-network.storePositions();
+console.log(topData);
+var topGraph = new vis.Network(mainContainer, topData, options);
+topGraph.storePositions();
 
-var resData = {nodes: nodes, edges:edges};
 var residualGraph = new vis.Network(resContainer, resData, options);
-
-function run(){
-  fordFulkerson(data);
-  // animate(animationSteps);
-}
