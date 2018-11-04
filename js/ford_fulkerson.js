@@ -1,23 +1,23 @@
 
 function getCapacity(label){
-    console.log("in get capacity");
+    // console.log("in get capacity");
     var capacity = label.split('/')[1];
-    console.log("capacity: " + capacity);
+    // console.log("capacity: " + capacity);
     return capacity;
 }
 
 function getFlow(label){
-    console.log("in get flow");
+    // console.log("in get flow");
     var flow = label.split('/')[0];
-    console.log("flow: "+ flow);
+    // console.log("flow: "+ flow);
     return flow;
 }
 
 function setFlow(label, new_flow){
-    console.log("in set flow");
+    // console.log("in set flow");
     var capacity = getCapacity(label);
     var label = new_flow + '/' + capacity;
-    console.log("new label: " + label);
+    // console.log("new label: " + label);
     return label;
 }
 
@@ -161,23 +161,19 @@ function fordFulkerson(){
                 var edgeData = findEdgeID(topData, path[i-1], path[i]);
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    var flow = parseInt(getFlow(topEdges.get(i).label)) + m;
-                    topEdges.update([{id: id, label: setFlow(topEdges.get(i).label, flow)}]);
+                    var flow = parseInt(getFlow(topEdges.get(id).label)) + m;
+                    topEdges.update([{id: id, label: setFlow(topEdges.get(id).label, flow)}]);
                     // console.log("forwards, new label: " + topEdges.get(i).label);
                 }
                 if(edgeData.direction == 0){
                     var flow = parseInt(getFlow(topEdges.get(i).label)) - m;
-                    topEdges.update([{id: id, label: setFlow(topEdges.get(i).label, flow)}]);
+                    topEdges.update([{id: id, label: setFlow(topEdges.get(id).label, flow)}]);
                     // console.log("backwards, new label: " + topEdges.get(i).label);
                 }
             }
         }
         // network.setData(data);
-        console.log(animationSteps);
-        if(count == 5) {
-            break;
-        } else {
-            count++;
-        }
+        // console.log(animationSteps);
+        count++;
     }
 }
