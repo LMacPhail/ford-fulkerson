@@ -9,13 +9,12 @@ function animateGraph(steps){
       clearInterval(id);
     } else {
       var edge_id = steps[i].edge_id;
+      var edge_color = steps[i].colour;
       var changingNetwork = steps[i].network;
       if(changingNetwork == "network"){
-        data.edges.update([{id:edge_id, color:{color:steps[i].colour}}])
+        topEdges.update([{id:edge_id, color:{color: 'red'}}]);
       } else if (changingNetwork == "residualGraph"){
-        resData.edges.update([{id:edge_id, color:{color:steps[i].colour}}])
-        // resData.edges[edge_id].label = "0";
-        console.log(resData);
+        resEdges.update([{id:edge_id, color:{color: 'red'}}]);
         // residualGraph.setData(resData);
       }
       i++;
@@ -25,6 +24,7 @@ function animateGraph(steps){
 
 function highlightAugmentingPath(path){
   var edge_id, colour;
+  console.log("in highlight path");
  
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(resData, path[i-1], path[i]);

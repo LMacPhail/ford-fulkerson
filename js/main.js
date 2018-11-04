@@ -26,3 +26,5 @@ var topGraph = new vis.Network(mainContainer, topData, options);
 topGraph.storePositions();
 
 var residualGraph = new vis.Network(resContainer, resData, options);
+
+fordFulkerson();

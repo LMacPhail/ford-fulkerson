@@ -15,18 +15,18 @@
   <div class="info_bar" id="alg_title"></div>
   <div class="info_bar" id="playback">
       <button class="button" id="run_algorithm"
-        onclick="fordFulkerson()">
+        onclick="animateGraph(animationSteps);">
         Run
       </button>
     <div id="pb_slider"></div>
   </div>
   <div class="info_bar" id="new_graph">
       <button class="button" id="load_default_graph"
-        onclick="defaultGraphData(); topGraph.setData(topData); residualGraph.setData(resData);">
+        onclick="defaultGraphData(); topGraph.setData(topData); residualGraph.setData(resData); fordFulkerson();">
         Load Default Graph
       </button>
       <button class="button" id="generate_random_graph"
-          onclick="generateGraphData(N,E); topGraph.setData(topData); residualGraph.setData(resData);">
+          onclick="generateGraphData(N,E); topGraph.setData(topData); residualGraph.setData(resData); fordFulkerson();">
           Generate Random Graph
       </button>
     <div id="draw_graph"></div>

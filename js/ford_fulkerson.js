@@ -30,7 +30,7 @@ function buildResidualGraph(){
         var edge = topEdges.get(i);
         cap = getCapacity(edge.label);
         flow = getFlow(edge.label);
-        console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
+        // console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
         if((flow > 0) && (flow <= cap)){
             edges.push({
                 id: edgeID++, label: flow, from: edge.to, to: edge.from,
@@ -151,7 +151,7 @@ function fordFulkerson(){
         path = findPath(visited);
         console.log("path: " + path);
         highlightAugmentingPath(path);
-
+        console.log(animationSteps);
         if(path == -1){
             break;
         } else {
@@ -174,6 +174,6 @@ function fordFulkerson(){
         }
         // network.setData(data);
         // console.log(animationSteps);
-        count++;
+        break;
     }
 }
