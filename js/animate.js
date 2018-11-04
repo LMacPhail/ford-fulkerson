@@ -1,22 +1,69 @@
 
 function animateGraph(steps){
   console.log("animating...");
-  var i = 0, id = setInterval(frame, 2000);
+  var i = 0, id = setInterval(frame, 1000);
   console.log(steps);
   function frame() {
-    console.log(steps[i]);
+    // console.log(steps[i]);
     if(i == steps.length){
       clearInterval(id);
     } else {
+
       var edge_id = steps[i].edge_id;
-      var edge_color = steps[i].colour;
       var changingNetwork = steps[i].network;
-      if(changingNetwork == "network"){
-        topEdges.update([{id:edge_id, color:{color: 'red'}}]);
-      } else if (changingNetwork == "residualGraph"){
-        resEdges.update([{id:edge_id, color:{color: 'red'}}]);
-        // residualGraph.setData(resData);
+
+      switch(steps[i].action){
+        // case("buildRes"):
+        //   resNodes.update(nodes);
+        //   break;
+        case("destroyRes"):
+          resEdges.clear();
+          break;
+        case("highlight"):
+          var edge_color = steps[i].colour;
+          if(changingNetwork == "topGraph"){
+            topEdges.update([{id:edge_id, color:edge_color}]);
+          } else if (changingNetwork == "residualGraph"){
+            resEdges.update([{id:edge_id, color:edge_color}]);
+          }
+          break;
+        case("label"):
+          var label = steps[i].label;
+          topEdges.update([{id: edge_id, label: label}]);
+          break;
+        case("add"):
+          var label = steps[i].label, from = steps[i].from, to = steps[i].to;
+          resEdges.add([{
+            id: edge_id,
+            label: label,
+            from: from,
+            to: to,
+            arrows: {
+              to: {enabled: true}
+            }
+          }]);
+          break;
       }
+
+      // if(changingNetwork == "topGraph"){
+      //   topEdges.update([{id:edge_id, color:edge_color}]);
+      // } else if (changingNetwork == "residualGraph"){
+      //   var action = steps[i].action;
+      //   if(action == "highlight"){
+      //     resEdges.update([{id:edge_id, color:edge_color}]);
+      //   } else if(action == "add"){
+      //     var label = steps[i].label, from = steps[i].from, to = steps[i].to;
+      //     resEdges.add([{
+      //       id: edge_id,
+      //       label: label,
+      //       from: from,
+      //       to: to,
+      //       arrows: {
+      //         to: {enabled: true}
+      //       }
+      //     }]);
+      //   }
+      // }
       i++;
     }
   }
@@ -27,7 +74,7 @@ function highlightAugmentingPath(path){
   console.log("in highlight path");
  
   for(i = 1; i < path.length; i++){
-    var edgeData = findEdgeID(resData, path[i-1], path[i]);
+    var edgeData = findEdgeID(algResData, path[i-1], path[i]);
     edge_id = edgeData.id;
     if(edgeData.direction == 1){
       colour = {color:'red'};

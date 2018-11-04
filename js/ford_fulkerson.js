@@ -22,34 +22,73 @@ function setFlow(label, new_flow){
 }
 
 function buildResidualGraph(){
+    console.log("\nBuilding residual graph");
+    console.log(algResData);
     var edges = [];
-    var cap, flow, edgeID = 0, i;
-
+    var cap, flow, algEdgeID = 0, edgeID = 0, i;
+    animationSteps.push({
+        network: "residualGraph",
+        action: "destroyRes"
+    });
     // build edges
-    for(i = 0; i < topEdges.length; i++){
-        var edge = topEdges.get(i);
+    for(i = 0; i < algTopEdges.length; i++){
+        var edge = algTopEdges.get(i);
+
+        animationSteps.push({
+            network: "topGraph",
+            action: "highlight",
+            edge_id: i,
+            colour: {color: 'red'}
+        });
+
         cap = getCapacity(edge.label);
         flow = getFlow(edge.label);
         // console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
         if((flow > 0) && (flow <= cap)){
+
+            animationSteps.push({
+                network: "residualGraph",
+                action: "add",
+                label: flow,
+                edge_id: edgeID++,
+                from: edge.to,
+                to: edge.from
+            });
+
             edges.push({
-                id: edgeID++, label: flow, from: edge.to, to: edge.from,
+                id: algEdgeID++, label: flow, from: edge.to, to: edge.from,
                 arrows: {
                     to : {enabled: true}
                 },
             });
         }
         if((0 <= flow) && (flow < cap)){
+
+            animationSteps.push({
+                network: "residualGraph",
+                action: "add",
+                label: (cap - flow).toString(),
+                edge_id: edgeID++,
+                from: edge.from,
+                to: edge.to
+            });
+
             edges.push({
-                id: edgeID++, label: (cap - flow).toString(), from: edge.from, to: edge.to,
+                id: algEdgeID++, label: (cap - flow).toString(), from: edge.from, to: edge.to,
                 arrows: {
                     to : {enabled: true}
                 },
             });
         }
+        animationSteps.push({
+            network: "topGraph",
+            action: "highlight",
+            edge_id: i,
+            colour: {color: 'blue'}
+        });
     }
-    resNodes.update(nodes);
-    resEdges.update(edges);
+    // algResNodes.update(nodes);
+    algResEdges.update(edges);
     
 }
 
@@ -64,7 +103,7 @@ If unsuccessful, returns -1
 
 function findPath(visited){
     var i, j, parents = [], queue = [];
-    var nodes = resNodes;
+    var nodes = topNodes;
     var x, y;
 
     for(i = 0; i < nodes.length; i++){
@@ -81,7 +120,7 @@ function findPath(visited){
         queue.push(i);
         while(queue.length > 0){
             x = queue.pop();
-            var L = getConnectedNodes(resData, x, 'to');
+            var L = getConnectedNodes(algResData, x, 'to');
             for(j = 0; j < L.length; j++){
                 y = L[j];
                 if(visited[y] == 0){
@@ -133,47 +172,54 @@ function findMinimumCapacity(data, path){
 
 
 function fordFulkerson(){
+    console.log(algTopData);
+    console.log(algResData);
     var path, visited = [];
     var i, id;
     var count = 0;
 
-    for(i = 0; i < topEdges.length; i++){
-        topEdges.update([{id: i, label: setFlow(topEdges.get(i).label, 0)}]);
-    }
+    // for(i = 0; i < algTopEdges.length; i++){
+    //     algTopEdges.update([{id: i, label: setFlow(algTopEdges.get(i).label, 0)}]);
+    // }
     for(i in topNodes){
         visited.push(0);
     }
     while(true){
         buildResidualGraph();
-        // residualGraph = new vis.Network(resContainer, resData, options);
+        // residualGraph = new vis.Network(resContainer, algResData, options);
        
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
         console.log("path: " + path);
         highlightAugmentingPath(path);
-        console.log(animationSteps);
         if(path == -1){
             break;
         } else {
-            var m = findMinimumCapacity(resData, path);
+            var m = findMinimumCapacity(algResData, path);
             // console.log("m: " + m);
             for(i = 1; i < path.length; i++){
-                var edgeData = findEdgeID(topData, path[i-1], path[i]);
+                var edgeData = findEdgeID(algTopData, path[i-1], path[i]);
+                
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    var flow = parseInt(getFlow(topEdges.get(id).label)) + m;
-                    topEdges.update([{id: id, label: setFlow(topEdges.get(id).label, flow)}]);
-                    // console.log("forwards, new label: " + topEdges.get(i).label);
+                    var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
+                    // console.log("forwards, new label: " + algTopEdges.get(i).label);
                 }
                 if(edgeData.direction == 0){
-                    var flow = parseInt(getFlow(topEdges.get(i).label)) - m;
-                    topEdges.update([{id: id, label: setFlow(topEdges.get(id).label, flow)}]);
-                    // console.log("backwards, new label: " + topEdges.get(i).label);
+                    var flow = parseInt(getFlow(algTopEdges.get(i).label)) - m;      // console.log("backwards, new label: " + algTopEdges.get(i).label);
                 }
+                var label = setFlow(algTopEdges.get(id).label, flow)
+                algTopEdges.update([{id: id, label: label}]);
+                animationSteps.push({
+                    network: "topGraph",
+                    action: "label",
+                    edge_id: id,
+                    label: label
+                });
             }
         }
         // network.setData(data);
         // console.log(animationSteps);
-        break;
+        // break;
     }
 }

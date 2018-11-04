@@ -1,6 +1,7 @@
 var animationSteps = [];
 var nodes, edges, topNodes, topEdges, resNodes, resEdges;
-var topData, resData;
+var algTopEdges, algResEdges;
+var topData, resData, algTopData, algResData;
 
 var N = 8, E = 13;
 
@@ -43,12 +44,23 @@ function defaultGraphData(){
         nodes: topNodes,
         edges: topEdges
     };
-    resNodes = new vis.DataSet([]);
+
+    algTopEdges = new vis.DataSet(edges);
+    algTopData = {
+        nodes: topNodes,
+        edges: algTopEdges
+    }
+    // resNodes = new vis.DataSet([]);
     resEdges = new vis.DataSet([]);
     resData = {
-        nodes: resNodes,
+        nodes: topNodes,
         edges: resEdges
     };
+    algResEdges = new vis.DataSet([]);
+    algResData = {
+        nodes: topNodes,
+        edges: algResEdges
+    }
 
 }
 
@@ -194,12 +206,22 @@ function generateGraphData(N, E){
         nodes: topNodes,
         edges: topEdges
     };
-    resNodes = new vis.DataSet([]);
+    algTopEdges = new vis.DataSet(edges);
+    algTopData = {
+        nodes: topNodes,
+        edges: topEdges
+    };
+    // resNodes = new vis.DataSet([]);
     resEdges = new vis.DataSet([]);
     resData = {
-        nodes: resNodes,
+        nodes: topNodes,
         edges: resEdges
     };
+    algResEdges = new vis.DataSet([]);
+    algResData = {
+        nodes: topNodes,
+        edges: algResEdges
+    }
 }
 
 
