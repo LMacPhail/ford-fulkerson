@@ -1,7 +1,7 @@
 
 function animateGraph(steps){
   console.log("animating...");
-  var i = 0, id = setInterval(frame, 1000);
+  var i = 0, id = setInterval(frame, 500);
   console.log(steps);
   function frame() {
     // console.log(steps[i]);

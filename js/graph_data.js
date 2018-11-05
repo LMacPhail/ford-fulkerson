@@ -3,7 +3,7 @@ var nodes, edges, topNodes, topEdges, resNodes, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
 
-var N = 8, E = 13;
+var N = 6, E = 10;
 
 function defaultGraphData(){
     N = 5;
@@ -74,7 +74,7 @@ function findDuplicateEdges(edges, from, to){
     return -1;
 }
 
-function generateGraphData(N, E){
+function generateGraphData(){
     var   i,
         edge_id = 0,
         nodesToSink = [],
@@ -201,16 +201,18 @@ function generateGraphData(N, E){
     // console.log(nodes);
     // console.log(edges);
     topNodes = new vis.DataSet(nodes);
+   
     topEdges = new vis.DataSet(edges);
     topData = {
         nodes: topNodes,
         edges: topEdges
     };
+
     algTopEdges = new vis.DataSet(edges);
     algTopData = {
         nodes: topNodes,
-        edges: topEdges
-    };
+        edges: algTopEdges
+    }
     // resNodes = new vis.DataSet([]);
     resEdges = new vis.DataSet([]);
     resData = {
@@ -222,6 +224,7 @@ function generateGraphData(N, E){
         nodes: topNodes,
         edges: algResEdges
     }
+
 }
 
 
