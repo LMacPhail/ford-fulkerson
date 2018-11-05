@@ -1,10 +1,47 @@
-var animationSteps = [];
+/*****************************************************************************
+
+  File for generating data to populate graphs with
+
+  Variables:
+    nodes:    array to temporarily store nodes
+    edges:    array to temporarily store edges
+
+    topNodes: vis DataSet representing the nodes in the top graph
+    topEdges: vis DataSet representing the edges in the top graph
+    topData:  combination of top graph nodes and edges
+
+    resNodes: vis DataSet representing the nodes in the residual graph
+    resEdges: vis DataSet representing the edges in the residual graph
+    resData:  combination of residual graph nodes and edges
+
+    algTopData: A copy of top data for the algorithm to run on
+    algResData: A copy of the residual data for the algorithm to run on
+
+    N:  int, number of nodes in the graph (when generated)
+    E:  int, number of edges in the graph (when generated)
+
+  Functions:
+
+    (40)    defaultGraphData()
+
+    (100)   findDuplicateEdges(edges, from, to)
+
+    (110)      generateGraphData()
+
+    (270)      getConnectedNodes(data, nodeId, direction)
+
+    (300)      findEdgeID(data, node1, node2)
+
+******************************************************************************/
+
 var nodes, edges, topNodes, topEdges, resNodes, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
-
 var N = 6, E = 10;
 
+/*
+Generates a graph with default valuse
+*/
 function defaultGraphData(){
     console.log("default graph data");
     N = 5;
@@ -51,7 +88,7 @@ function defaultGraphData(){
         edges: algTopEdges
     }
     // resNodes = new vis.DataSet([]);
-    
+
     resEdges = new vis.DataSet([]);
     resData = {
         nodes: topNodes,
@@ -62,21 +99,13 @@ function defaultGraphData(){
         nodes: topNodes,
         edges: algResEdges
     }
-    console.log("nodes");
-    console.log(nodes);
-    console.log("edges");
-    console.log(edges);
-    console.log("topData");
-    console.log(topData);
-    console.log("resData");
-    console.log(resData);
-    console.log("algTopData");
-    console.log(algTopData);
-    console.log("algResData");
-    console.log(algResData);
 
 }
 
+/*
+Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
+is already an edge with these nodes and -1 if there is not
+*/
 function findDuplicateEdges(edges, from, to){
     var i;
     for(i = 0; i < edges.length; i++){
@@ -87,12 +116,19 @@ function findDuplicateEdges(edges, from, to){
     return -1;
 }
 
+
+/*
+Generates a graph using N and E, such that:
+    - There is a source node S and a sink node T
+    - S is the leftmost node and T is the rightmost
+    - There are no loops or dead ends (all nodes are on a path from S to T)
+*/
 function generateGraphData(){
     console.log("generate graph data");
     var   i,
         edge_id = 0,
-        nodesToSink = [],
-        leftNodes = [];
+        nodesToSink = [], //  Nodes that are connected to T (or T itself)
+        leftNodes = [];   //  Nodes that are in nodesToSink but have no incoming edges
     nodes = [];
     edges = [];
     /* initialise nodes */
@@ -101,7 +137,6 @@ function generateGraphData(){
             x: -250, // y: Math.random() * 220 + 180,
             physics: false},
     );
-
     for(i = 1; i < N; i++){
         nodes.push({
             id: i,
@@ -109,14 +144,15 @@ function generateGraphData(){
             physics: false,
         });
     }
+
     nodesToSink.push(N);
     var rand_id, from, to;
-    // console.log("constructing network backwards from T");
-    for(i = N - 1; i > 0; i--){ // go backwards to do S last
+
+    // Construct graph from right to left, beginning at T
+    for(i = N - 1; i > 0; i--){
 
         if(i > N-3){
-        // console.log("from: " + i);
-        // console.log("to: " + N);
+          // To ensure that T has at least 2 incoming edges
           edges.push({
               id: edge_id++,
               arrows: {to : {enabled: true}},
@@ -125,14 +161,10 @@ function generateGraphData(){
               to: N,
           });
         } else {
+          // Connect to either T or one of the nodes already connected to T
           do{
               rand_id = (Math.random() * nodesToSink.length | 0);
           } while (i == nodesToSink[rand_id]);
-
-        //   console.log("from: " + i);
-        //   console.log("to: " + nodesToSink[rand_id]);
-
-          // connect node to node in nodesToSink or T
           edges.push({
               id: edge_id++,
               arrows: {to : {enabled: true}},
@@ -149,16 +181,13 @@ function generateGraphData(){
         }
         // add node to nodesToSink
         nodesToSink.push(i);
-        // console.log("leftNodes: " + leftNodes);
-        // console.log("nodesToSink: " + nodesToSink);
     }
 
-    // console.log("Connecting left nodes");
+    // Ensure that all nodes in leftNodes have an incoming edge from S
     while(leftNodes.length > 0){
         if(edge_id == E){break;}
         if(i < 2){
-            // console.log("from: " + 0);
-            // console.log("to: " + leftNodes[i]);
+            // To ensure that S has at least 2 outgoing edges
             edges.push({
                 id: edge_id++,
                 arrows: {to: { enabled: true }},
@@ -171,8 +200,6 @@ function generateGraphData(){
                 from = (Math.random() * N | 0);
             } while (leftNodes[i] == from);
 
-            // console.log("from: " + from);
-            // console.log("to: " + leftNodes[i]);
             edges.push({
                 id: edge_id++,
                 arrows: {to: { enabled: true }},
@@ -184,19 +211,16 @@ function generateGraphData(){
 
         }
         leftNodes.splice(i, 1);
-        // console.log("leftNodes: " + leftNodes);
     }
 
-    // console.log("add remaining edges");
-    // add remaining edges
+    // Once all nodes are connected, add remaining edges
     for (i = edge_id; i < E; i++){
         do {
+            // prevents loops and duplicate parallel edges
             from = (Math.random() * N | 0);
-            // console.log("from: "+ from);
             to = (Math.random() * N + 1 | 0);
-            // console.log("to: "+ to);
         }
-        while ((from == to) || (findDuplicateEdges(edges, from, to) == 1)); // there exists an edge with from == from and to == to
+        while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
         edges.push({
             id: edge_id++,
             arrows: {to : {enabled: true}},
@@ -212,8 +236,6 @@ function generateGraphData(){
         physics: false
     });
 
-    // console.log(nodes);
-    // console.log(edges);
     topNodes = new vis.DataSet(nodes);
     topEdges = new vis.DataSet(edges);
     topData = {
@@ -237,19 +259,15 @@ function generateGraphData(){
         nodes: topNodes,
         edges: algResEdges
     }
-    algResEdges.clear();
-    console.log("topData");
-    console.log(topData);
-    console.log("algTopData");
-    console.log(algTopData);
-    console.log("resData");
-    console.log(resData);
-    console.log("algResData");
-    console.log(algResData);
 
 }
 
+/*
+Given a node id and a direction:
 
+direction = 'to' - returns array of nodeIds that node connects to
+direction = 'from' - returns array of nodeIds that connect to node
+*/
 function getConnectedNodes(data, nodeId, direction) {
     var nodeList = [];
     if (data.nodes.get(nodeId) !== undefined) {
@@ -275,11 +293,11 @@ function getConnectedNodes(data, nodeId, direction) {
     return nodeList;
 }
 
+
 /*
 Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
-
 function findEdgeID(data, node1, node2){
     var edge;
     var edgeData = {};

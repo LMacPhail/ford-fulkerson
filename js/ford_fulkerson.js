@@ -1,23 +1,17 @@
 
 function getCapacity(label){
-    // console.log("in get capacity");
     var capacity = label.split('/')[1];
-    // console.log("capacity: " + capacity);
     return capacity;
 }
 
 function getFlow(label){
-    // console.log("in get flow");
     var flow = label.split('/')[0];
-    // console.log("flow: "+ flow);
     return flow;
 }
 
 function setFlow(label, new_flow){
-    // console.log("in set flow");
     var capacity = getCapacity(label);
     var label = new_flow + '/' + capacity;
-    // console.log("new label: " + label);
     return label;
 }
 
@@ -87,7 +81,6 @@ function buildResidualGraph(){
             colour: {color: 'blue'}
         });
     }
-    // algResNodes.update(nodes);
     algResEdges.update(edges);
 
 }
@@ -100,7 +93,6 @@ Find a path from S to T
 If successful, returns an array of node IDs (in order of the path)
 If unsuccessful, returns -1
 */
-
 function findPath(visited){
     var i, j, parents = [], queue = [];
     var nodes = topNodes;
@@ -112,8 +104,6 @@ function findPath(visited){
             parent: i,
         });
     }
-    //console.log(parents);
-    //console.log(nodes.length);
 
     for(i = 0; i < nodes.length; i++){
         visited[i] = 1;
@@ -172,8 +162,7 @@ function findMinimumCapacity(data, path){
 
 
 function fordFulkerson(){
-    //console.log(algTopData);
-    //console.log(algResData);
+    console.log("Running Ford Fulkerson...");
     var path, visited = [];
     var i, id;
     var count = 0;
@@ -181,35 +170,35 @@ function fordFulkerson(){
     // for(i = 0; i < algTopEdges.length; i++){
     //     algTopEdges.update([{id: i, label: setFlow(algTopEdges.get(i).label, 0)}]);
     // }
-    algResEdges.clear();
     for(i in topNodes){
         visited.push(0);
     }
     while(true){
         buildResidualGraph();
-        // residualGraph = new vis.Network(resContainer, algResData, options);
-
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
-        //console.log("path: " + path);
+        console.log("path: " + path);
         highlightAugmentingPath(path);
         if(path == -1){
             break;
         } else {
             var m = findMinimumCapacity(algResData, path);
-            // //console.log("m: " + m);
+            console.log("minimum capacity: " + m);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(algTopData, path[i-1], path[i]);
 
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
-                    // console.log("forwards, new label: " + algTopEdges.get(i).label);
                 }
                 if(edgeData.direction == 0){
-                    var flow = parseInt(getFlow(algTopEdges.get(i).label)) - m;      // console.log("backwards, new label: " + algTopEdges.get(i).label);
+                    var flow = parseInt(getFlow(algTopEdges.get(id).label)) - m;
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
+                console.log("Updating edge: from = " + path[i-1]
+                            + ", to = " + path[i]
+                            + ", old flow: " + algTopEdges.get(id).label
+                            + ", new flow: " + label);
                 algTopEdges.update([{id: id, label: label}]);
                 animationSteps.push({
                     network: "topGraph",
@@ -219,8 +208,6 @@ function fordFulkerson(){
                 });
             }
         }
-        // network.setData(data);
-        // console.log(animationSteps);
         // break;
     }
 }

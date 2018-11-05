@@ -25,7 +25,7 @@
         onclick="defaultGraphData();
                 topGraph.setData(topData);
                 resGraph.setData(resData);
-                //algResEdges.clear();
+                animationSteps = [];
                 fordFulkerson();">
         Load Default Graph
       </button>
@@ -34,7 +34,7 @@
                   topGraph.setData(topData);
                   topGraph.storePositions();
                   resGraph.setData(resData);
-                  //algResEdges.clear();
+                  animationSteps = [];
                   fordFulkerson();">
           Generate Random Graph
       </button>
