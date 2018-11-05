@@ -21,10 +21,9 @@ var options = {
   }
   // physics: false,
 };
-console.log(topData);
 var topGraph = new vis.Network(mainContainer, topData, options);
 topGraph.storePositions();
 
-var residualGraph = new vis.Network(resContainer, resData, options);
+var resGraph = new vis.Network(resContainer, resData, options);
 
 fordFulkerson();

@@ -22,8 +22,8 @@ function setFlow(label, new_flow){
 }
 
 function buildResidualGraph(){
-    console.log("\nBuilding residual graph");
-    console.log(algResData);
+    // console.log("\nBuilding residual graph");
+    // console.log(algResData);
     var edges = [];
     var cap, flow, algEdgeID = 0, edgeID = 0, i;
     animationSteps.push({
@@ -89,7 +89,7 @@ function buildResidualGraph(){
     }
     // algResNodes.update(nodes);
     algResEdges.update(edges);
-    
+
 }
 
 
@@ -112,8 +112,8 @@ function findPath(visited){
             parent: i,
         });
     }
-    console.log(parents);
-    console.log(nodes.length);
+    //console.log(parents);
+    //console.log(nodes.length);
 
     for(i = 0; i < nodes.length; i++){
         visited[i] = 1;
@@ -144,7 +144,7 @@ function findPath(visited){
                 y = parents[x].parent;
                 if( y == x){
                     return -1;
-                } else { 
+                } else {
                     x=y;
                 }
             }
@@ -172,8 +172,8 @@ function findMinimumCapacity(data, path){
 
 
 function fordFulkerson(){
-    console.log(algTopData);
-    console.log(algResData);
+    //console.log(algTopData);
+    //console.log(algResData);
     var path, visited = [];
     var i, id;
     var count = 0;
@@ -181,25 +181,26 @@ function fordFulkerson(){
     // for(i = 0; i < algTopEdges.length; i++){
     //     algTopEdges.update([{id: i, label: setFlow(algTopEdges.get(i).label, 0)}]);
     // }
+    algResEdges.clear();
     for(i in topNodes){
         visited.push(0);
     }
     while(true){
         buildResidualGraph();
         // residualGraph = new vis.Network(resContainer, algResData, options);
-       
+
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
-        console.log("path: " + path);
+        //console.log("path: " + path);
         highlightAugmentingPath(path);
         if(path == -1){
             break;
         } else {
             var m = findMinimumCapacity(algResData, path);
-            // console.log("m: " + m);
+            // //console.log("m: " + m);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(algTopData, path[i-1], path[i]);
-                
+
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;

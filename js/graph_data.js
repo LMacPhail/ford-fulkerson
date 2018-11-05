@@ -6,6 +6,7 @@ var topData, resData, algTopData, algResData;
 var N = 6, E = 10;
 
 function defaultGraphData(){
+    console.log("default graph data");
     N = 5;
     nodes = [
         {id: 0, label: 'S', x: -300, y: 0, physics: false},
@@ -25,7 +26,7 @@ function defaultGraphData(){
             arrows: { to : {enabled: true}},
         },{ id: 2, label: '0/1', from: 1, to: 2,
             arrows: { to : {enabled: true}},
-        },{ id: 3, label: '0/3', from: 1, to: 4, 
+        },{ id: 3, label: '0/3', from: 1, to: 4,
             arrows: { to : {enabled: true}},
         },{ id: 4, label: '0/3', from: 3, to: 2,
             arrows: { to : {enabled: true}},
@@ -44,13 +45,13 @@ function defaultGraphData(){
         nodes: topNodes,
         edges: topEdges
     };
-
     algTopEdges = new vis.DataSet(edges);
     algTopData = {
         nodes: topNodes,
         edges: algTopEdges
     }
     // resNodes = new vis.DataSet([]);
+    
     resEdges = new vis.DataSet([]);
     resData = {
         nodes: topNodes,
@@ -61,6 +62,18 @@ function defaultGraphData(){
         nodes: topNodes,
         edges: algResEdges
     }
+    console.log("nodes");
+    console.log(nodes);
+    console.log("edges");
+    console.log(edges);
+    console.log("topData");
+    console.log(topData);
+    console.log("resData");
+    console.log(resData);
+    console.log("algTopData");
+    console.log(algTopData);
+    console.log("algResData");
+    console.log(algResData);
 
 }
 
@@ -75,6 +88,7 @@ function findDuplicateEdges(edges, from, to){
 }
 
 function generateGraphData(){
+    console.log("generate graph data");
     var   i,
         edge_id = 0,
         nodesToSink = [],
@@ -201,7 +215,6 @@ function generateGraphData(){
     // console.log(nodes);
     // console.log(edges);
     topNodes = new vis.DataSet(nodes);
-   
     topEdges = new vis.DataSet(edges);
     topData = {
         nodes: topNodes,
@@ -224,6 +237,15 @@ function generateGraphData(){
         nodes: topNodes,
         edges: algResEdges
     }
+    algResEdges.clear();
+    console.log("topData");
+    console.log(topData);
+    console.log("algTopData");
+    console.log(algTopData);
+    console.log("resData");
+    console.log(resData);
+    console.log("algResData");
+    console.log(algResData);
 
 }
 

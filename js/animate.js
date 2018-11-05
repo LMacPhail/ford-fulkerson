@@ -44,26 +44,6 @@ function animateGraph(steps){
           }]);
           break;
       }
-
-      // if(changingNetwork == "topGraph"){
-      //   topEdges.update([{id:edge_id, color:edge_color}]);
-      // } else if (changingNetwork == "residualGraph"){
-      //   var action = steps[i].action;
-      //   if(action == "highlight"){
-      //     resEdges.update([{id:edge_id, color:edge_color}]);
-      //   } else if(action == "add"){
-      //     var label = steps[i].label, from = steps[i].from, to = steps[i].to;
-      //     resEdges.add([{
-      //       id: edge_id,
-      //       label: label,
-      //       from: from,
-      //       to: to,
-      //       arrows: {
-      //         to: {enabled: true}
-      //       }
-      //     }]);
-      //   }
-      // }
       i++;
     }
   }
@@ -71,8 +51,8 @@ function animateGraph(steps){
 
 function highlightAugmentingPath(path){
   var edge_id, colour;
-  console.log("in highlight path");
- 
+  // console.log("in highlight path");
+
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(algResData, path[i-1], path[i]);
     edge_id = edgeData.id;

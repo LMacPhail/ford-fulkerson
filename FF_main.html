@@ -22,11 +22,20 @@
   </div>
   <div class="info_bar" id="new_graph">
       <button class="button" id="load_default_graph"
-        onclick="defaultGraphData(); fordFulkerson();">
+        onclick="defaultGraphData();
+                topGraph.setData(topData);
+                resGraph.setData(resData);
+                //algResEdges.clear();
+                fordFulkerson();">
         Load Default Graph
       </button>
       <button class="button" id="generate_random_graph"
-          onclick="generateGraphData(); fordFulkerson();">
+          onclick="generateGraphData();
+                  topGraph.setData(topData);
+                  topGraph.storePositions();
+                  resGraph.setData(resData);
+                  //algResEdges.clear();
+                  fordFulkerson();">
           Generate Random Graph
       </button>
     <div id="draw_graph"></div>
