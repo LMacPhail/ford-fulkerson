@@ -53,7 +53,10 @@
   display: inline-block;
   font-size: 16px;
 }
-#run_algorithm {
+#play_algorithm {
+  color: white;
+}
+#pause_algorithm {
   color: white;
 }
 #load_default_graph {

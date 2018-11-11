@@ -14,9 +14,13 @@
 <div id="info_bar">
   <div class="info_bar" id="alg_title"></div>
   <div class="info_bar" id="playback">
-      <button class="button" id="run_algorithm"
-        onclick="animateGraph(animationSteps);">
-        Run
+      <button class="button" id="play_algorithm"
+        onclick="animateGraph(animationSteps);play = 1;">
+        Play
+      </button>
+      <button class="button" id="pause_algorithm"
+        onclick="animateGraph(animationSteps);play = 0;">
+        Pause
       </button>
     <div id="pb_slider"></div>
   </div>

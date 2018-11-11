@@ -11,6 +11,7 @@
 ******************************************************************************/
 
 var animationSteps = [];
+var play = 1;
 
 
 /*
@@ -24,7 +25,7 @@ function animateGraph(steps){
   console.log("animating...");
   var i = 0, id = setInterval(frame, 500);
   function frame() {
-    if(i == steps.length){
+    if(i == steps.length || play == 0){
       clearInterval(id);
     } else {
       var edge_id = steps[i].edge_id,
