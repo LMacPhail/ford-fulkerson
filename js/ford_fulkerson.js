@@ -22,7 +22,8 @@ function buildResidualGraph(){
     var cap, flow, algEdgeID = 0, edgeID = 0, i;
     animationSteps.push({
         network: "residualGraph",
-        action: "destroyRes"
+        action: "destroyRes",
+        pStep: "step3",
     });
     // build edges
     for(i = 0; i < algTopEdges.length; i++){
@@ -190,9 +191,11 @@ function fordFulkerson(){
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
+                    var highlightStep = "step7";
                 }
                 if(edgeData.direction == 0){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) - m;
+                    var highlightStep = "step7";
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 console.log("Updating edge: from = " + path[i-1]
@@ -204,7 +207,8 @@ function fordFulkerson(){
                     network: "topGraph",
                     action: "label",
                     edge_id: id,
-                    label: label
+                    label: label,
+                    pStep: highlightStep,
                 });
             }
         }

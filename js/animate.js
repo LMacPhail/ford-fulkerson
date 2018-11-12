@@ -12,6 +12,7 @@
 
 var animationSteps = [];
 var play = 1;
+step = 0;
 
 
 /*
@@ -23,37 +24,39 @@ var play = 1;
 */
 function animateGraph(steps){
   console.log("animating...");
-  var i = 0, id = setInterval(frame, 500);
+  var id = setInterval(frame, 500);
   function frame() {
-    if(i == steps.length || play == 0){
+    if(step == steps.length || play == 0){
       clearInterval(id);
     } else {
-      var edge_id = steps[i].edge_id,
-          network = steps[i].network;
+      var edge_id = steps[step].edge_id,
+          network = steps[step].network;
 
-      switch(steps[i].action){
+      switch(steps[step].action){
         case("destroyRes"):
           resEdges.clear();
           break;
 
         case("highlight"):
-          var edge_color = steps[i].colour;
+          var edge_color = steps[step].colour;
           if(network == "topGraph"){
             topEdges.update([{id:edge_id, color:edge_color}]);
           } else if (network == "residualGraph"){
             resEdges.update([{id:edge_id, color:edge_color}]);
           }
+          document.getElementById("step3").style.color = "black";
+          document.getElementById("step2").style.color = "#c0d6ba";
           break;
 
         case("label"):
-          var label = steps[i].label;
+          var label = steps[step].label;
           topEdges.update([{id: edge_id, label: label}]);
           break;
 
         case("add"):
-          var label = steps[i].label,
-              from = steps[i].from,
-              to = steps[i].to;
+          var label = steps[step].label,
+              from = steps[step].from,
+              to = steps[step].to;
           resEdges.add([{
             id: edge_id,
             label: label,
@@ -63,13 +66,15 @@ function animateGraph(steps){
               to: {enabled: true}
             }
           }]);
+          document.getElementById("step2").style.color = "black";
+          document.getElementById("step3").style.color = "#c0d6ba";
           break;
 
         default:
           console.log("Error: Invalid animation step");
           clearInterval(id);
       }
-      i++;
+      step++;
     }
   }
 }
@@ -88,19 +93,20 @@ function highlightAugmentingPath(path){
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(algResData, path[i-1], path[i]);
     edge_id = edgeData.id;
-    if(edgeData.direction == 1){
-      colour = {color:'red'};
-    }
+    // if(edgeData.direction == 1){
+    //   colour = {color:'red'};
+    // }
 
-    if(edgeData.direction == 0){
-      colour = {color:'green'};
-    }
+    // if(edgeData.direction == 0){
+    //   colour = {color:'green'};
+    // }
 
     animationSteps.push({
       network: "residualGraph",
       action: "highlight",
       edge_id: edge_id,
-      colour: colour,
+      colour: {color:'red'},
+      pStep: "step4",
     });
   }
 }

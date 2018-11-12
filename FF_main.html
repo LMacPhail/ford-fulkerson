@@ -30,7 +30,8 @@
                 topGraph.setData(topData);
                 resGraph.setData(resData);
                 animationSteps = [];
-                fordFulkerson();">
+                fordFulkerson();
+                step = 0;">
         Load Default Graph
       </button>
       <button class="button" id="generate_random_graph"
@@ -39,13 +40,14 @@
                   topGraph.storePositions();
                   resGraph.setData(resData);
                   animationSteps = [];
-                  fordFulkerson();">
+                  fordFulkerson();
+                  step = 0;">
           Generate Random Graph
       </button>
     <div id="draw_graph"></div>
   </div>
   <div class="info_bar" id="pseudocode">
-    <!-- <div id="step1">
+    <div class="pseudocode_step" id="step1">
       <p>set all flows to 0</p>
     </div>
     <div id="step2">
@@ -75,12 +77,12 @@
     <div id="step10">
       <p>         decrease flow along edge</p>
     </div>
-    <div id="step11">
+    <!--<div id="step11">
       <p>   else</p>
     </div>
-    <div id="step5">
+    <div id="step12">
       <p>     break (maximum flow has been found)</p>
-    </div> -->
+    </div>-->
   </div>
   <div id="flow_counter"></div>
 </div>

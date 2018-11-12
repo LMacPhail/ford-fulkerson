@@ -39,7 +39,7 @@
   background-color: #e03c4c;
 }
 #playback {
-  height: 20%;
+  height: 15%;
   background-color: #f69278;
   align-items: center;
   display: flex;
@@ -90,6 +90,16 @@ background-color: #c0d6ba;
   height: 50%;
   background-color: #308c92;
 }
+.pseudocode_step {
+  height: 10%;
+}
+/* #step1 {
+  height: 10%;
+}
+
+#step2 {
+  height:10%;
+} */
 
 #flow_counter {
   height: 10%;

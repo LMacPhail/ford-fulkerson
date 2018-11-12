@@ -37,7 +37,7 @@
 var nodes, edges, topNodes, topEdges, resNodes, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
-var N = 6, E = 10;
+var N = 8, E = 12;
 
 /*
 Generates a graph with default valuse
