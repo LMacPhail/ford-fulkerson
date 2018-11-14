@@ -24,7 +24,7 @@ step = 0;
 */
 function animateGraph(steps){
   console.log("animating...");
-  var id = setInterval(frame, 500);
+  var id = setInterval(frame, 1000);
   function frame() {
     if(step == steps.length || play == 0){
       clearInterval(id);
