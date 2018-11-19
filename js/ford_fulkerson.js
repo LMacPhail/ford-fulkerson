@@ -20,35 +20,37 @@ function buildResidualGraph(){
     // console.log(algResData);
     var edges = [];
     var cap, flow, algEdgeID = 0, edgeID = 0, i;
-    animationSteps.push({
-        network: "residualGraph",
-        action: "destroyRes",
-        pStep: "step3",
-    });
+    // animationSteps.push({
+    //     network: "residualGraph",
+    //     action: "destroyRes",
+    //     old_edges: algResData.edges,
+    //     pStep: "step3",
+    // });
     // build edges
     for(i = 0; i < algTopEdges.length; i++){
         var edge = algTopEdges.get(i);
 
-        animationSteps.push({
-            network: "topGraph",
-            action: "highlight",
-            edge_id: i,
-            colour: {color: 'red'}
-        });
+        // animationSteps.push({
+        //     network: "topGraph",
+        //     action: "highlight",
+        //     edge_id: i,
+        //     colour: {color: 'red'},
+        //     orig_colour: {color: 'blue'}
+        // });
 
         cap = getCapacity(edge.label);
         flow = getFlow(edge.label);
         // console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
         if((flow > 0) && (flow <= cap)){
 
-            animationSteps.push({
-                network: "residualGraph",
-                action: "add",
-                label: flow,
-                edge_id: edgeID++,
-                from: edge.to,
-                to: edge.from
-            });
+            // animationSteps.push({
+            //     network: "residualGraph",
+            //     action: "add",
+            //     label: flow,
+            //     edge_id: edgeID++,
+            //     from: edge.to,
+            //     to: edge.from
+            // });
 
             edges.push({
                 id: algEdgeID++, label: flow, from: edge.to, to: edge.from,
@@ -59,14 +61,14 @@ function buildResidualGraph(){
         }
         if((0 <= flow) && (flow < cap)){
 
-            animationSteps.push({
-                network: "residualGraph",
-                action: "add",
-                label: (cap - flow).toString(),
-                edge_id: edgeID++,
-                from: edge.from,
-                to: edge.to
-            });
+            // animationSteps.push({
+            //     network: "residualGraph",
+            //     action: "add",
+            //     label: (cap - flow).toString(),
+            //     edge_id: edgeID++,
+            //     from: edge.from,
+            //     to: edge.to
+            // });
 
             edges.push({
                 id: algEdgeID++, label: (cap - flow).toString(), from: edge.from, to: edge.to,
@@ -75,12 +77,13 @@ function buildResidualGraph(){
                 },
             });
         }
-        animationSteps.push({
-            network: "topGraph",
-            action: "highlight",
-            edge_id: i,
-            colour: {color: 'blue'}
-        });
+        // animationSteps.push({
+        //     network: "topGraph",
+        //     action: "highlight",
+        //     edge_id: i,
+        //     orig_colour: {color: 'red'},
+        //     colour: {color: 'blue'}
+        // });
     }
     algResEdges.update(edges);
 
@@ -187,6 +190,7 @@ function fordFulkerson(){
             console.log("minimum capacity: " + m);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(algTopData, path[i-1], path[i]);
+                var orig_label = algTopEdges.get(id).label;
 
                 id = edgeData.id;
                 if(edgeData.direction == 1){
@@ -203,13 +207,14 @@ function fordFulkerson(){
                             + ", old flow: " + algTopEdges.get(id).label
                             + ", new flow: " + label);
                 algTopEdges.update([{id: id, label: label}]);
-                animationSteps.push({
-                    network: "topGraph",
-                    action: "label",
-                    edge_id: id,
-                    label: label,
-                    pStep: highlightStep,
-                });
+                // animationSteps.push({
+                //     network: "topGraph",
+                //     action: "label",
+                //     edge_id: id,
+                //     label: label,
+                //     orig_label: algTopEdges.get(id).label,
+                //     pStep: highlightStep,
+                // });
             }
         }
         // break;

@@ -38,6 +38,8 @@ var nodes, edges, topNodes, topEdges, resNodes, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
 var N = 8, E = 12;
+var resAdjMatrix = [], topAdjMatrix = [];
+
 
 /*
 Generates a graph with default valuse
@@ -77,6 +79,8 @@ function defaultGraphData(){
             arrows: { to : {enabled: true}},
         },
     ];
+
+
     topEdges = new vis.DataSet(edges);
     topData = {
         nodes: topNodes,
@@ -99,6 +103,21 @@ function defaultGraphData(){
         nodes: topNodes,
         edges: algResEdges
     }
+    // Adjacency matrix initialising
+
+    for(var y = 0; y <= N; y++){
+      topAdjMatrix[y] = [];
+      resAdjMatrix[y] = [];
+      for(var x = 0; x <= N; x++){
+        topAdjMatrix[y][x] = null;
+        resAdjMatrix[y][x] = null;
+      }
+    }
+    for(var i = 0; i < edges.length; i++){
+      var from = edges[i].from, to = edges[i].to;
+      topAdjMatrix[from][to] = edges[i].id;
+    }
+    console.log(topAdjMatrix);
 
 }
 
@@ -107,12 +126,7 @@ Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
 is already an edge with these nodes and -1 if there is not
 */
 function findDuplicateEdges(edges, from, to){
-    var i;
-    for(i = 0; i < edges.length; i++){
-        if((edges[i].from == from) && (edges[i].to == to)){
-            return 1;
-        }
-    }
+  if(topAdjMatrix[from][to] != null) return 1;
     return -1;
 }
 
@@ -124,9 +138,22 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateGraphData(){
+
+
+    for(var y = 0; y <= N; y++){
+      topAdjMatrix[y] = [];
+      resAdjMatrix[y] = [];
+      for(var x = 0; x <= N; x++){
+        topAdjMatrix[y][x] = null;
+        resAdjMatrix[y][x] = null;
+      }
+    }
+    console.log(topAdjMatrix);
+
     console.log("generate graph data");
     var   i,
         edge_id = 0,
+        matrixEdgeID = 0,
         nodesToSink = [], //  Nodes that are connected to T (or T itself)
         leftNodes = [];   //  Nodes that are in nodesToSink but have no incoming edges
     nodes = [];
@@ -160,6 +187,7 @@ function generateGraphData(){
               from: i,
               to: N,
           });
+          topAdjMatrix[i][N] = matrixEdgeID++;
         } else {
           // Connect to either T or one of the nodes already connected to T
           do{
@@ -172,6 +200,7 @@ function generateGraphData(){
               from: i,
               to: nodesToSink[rand_id],
           });
+          topAdjMatrix[i][nodesToSink[rand_id]] = matrixEdgeID++;
         }
         // add 'from' node to leftNodes
         leftNodes.push(i);
@@ -195,6 +224,7 @@ function generateGraphData(){
                 from: 0,
                 to: leftNodes[i],
             });
+            topAdjMatrix[0][leftNodes[i]] = matrixEdgeID++;
         } else {
             do {
                 from = (Math.random() * N | 0);
@@ -207,6 +237,7 @@ function generateGraphData(){
                 from: from,
                 to: leftNodes[i],
             });
+            topAdjMatrix[from][leftNodes[i]] = matrixEdgeID++;
 
 
         }
@@ -228,6 +259,7 @@ function generateGraphData(){
             from: from,
             to: to,
         });
+        topAdjMatrix[from][to] = matrixEdgeID++;
     }
 
     nodes.push({
