@@ -24,7 +24,7 @@ step = 0;
 */
 function animateGraph(){
   console.log("animating...");
-  var id = setInterval(frame, 50);
+  var id = setInterval(frame, 200);
   function frame() {
     if(step == animationSteps.length || play == 0){
       clearInterval(id);
@@ -128,7 +128,7 @@ function highlightAugmentingPath(path){
   var edge_id, colour;
 
   for(i = 1; i < path.length; i++){
-    var edgeData = findEdgeID(algResData, path[i-1], path[i]);
+    var edgeData = findEdgeID(0, path[i-1], path[i]);
     edge_id = edgeData.id;
     // if(edgeData.direction == 1){
     //   colour = {color:'red'};

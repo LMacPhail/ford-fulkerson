@@ -138,8 +138,6 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateGraphData(){
-
-
     for(var y = 0; y <= N; y++){
       topAdjMatrix[y] = [];
       resAdjMatrix[y] = [];
@@ -181,26 +179,26 @@ function generateGraphData(){
         if(i > N-3){
           // To ensure that T has at least 2 incoming edges
           edges.push({
-              id: edge_id++,
+              id: edge_id,
               arrows: {to : {enabled: true}},
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: N,
           });
-          topAdjMatrix[i][N] = matrixEdgeID++;
+          topAdjMatrix[i][N] = edge_id++;
         } else {
           // Connect to either T or one of the nodes already connected to T
           do{
               rand_id = (Math.random() * nodesToSink.length | 0);
           } while (i == nodesToSink[rand_id]);
           edges.push({
-              id: edge_id++,
+              id: edge_id,
               arrows: {to : {enabled: true}},
               label: 0 + '/' + (Math.random() * 10 | 1),
               from: i,
               to: nodesToSink[rand_id],
           });
-          topAdjMatrix[i][nodesToSink[rand_id]] = matrixEdgeID++;
+          topAdjMatrix[i][nodesToSink[rand_id]] = edge_id++;
         }
         // add 'from' node to leftNodes
         leftNodes.push(i);
@@ -218,26 +216,26 @@ function generateGraphData(){
         if(i < 2){
             // To ensure that S has at least 2 outgoing edges
             edges.push({
-                id: edge_id++,
+                id: edge_id,
                 arrows: {to: { enabled: true }},
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: 0,
                 to: leftNodes[i],
             });
-            topAdjMatrix[0][leftNodes[i]] = matrixEdgeID++;
+            topAdjMatrix[0][leftNodes[i]] = edge_id++;
         } else {
             do {
                 from = (Math.random() * N | 0);
             } while (leftNodes[i] == from);
 
             edges.push({
-                id: edge_id++,
+                id: edge_id,
                 arrows: {to: { enabled: true }},
                 label: 0 + '/' + (Math.random() * 10 | 1),
                 from: from,
                 to: leftNodes[i],
             });
-            topAdjMatrix[from][leftNodes[i]] = matrixEdgeID++;
+            topAdjMatrix[from][leftNodes[i]] = edge_id++;
 
 
         }
@@ -253,13 +251,13 @@ function generateGraphData(){
         }
         while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
         edges.push({
-            id: edge_id++,
+            id: edge_id,
             arrows: {to : {enabled: true}},
             label: 0 + '/' + (Math.random() * 10 | 1),
             from: from,
             to: to,
         });
-        topAdjMatrix[from][to] = matrixEdgeID++;
+        topAdjMatrix[from][to] = edge_id++;
     }
 
     nodes.push({
@@ -301,27 +299,26 @@ direction = 'to' - returns array of nodeIds that node connects to
 direction = 'from' - returns array of nodeIds that connect to node
 */
 function getConnectedNodes(data, nodeId, direction) {
+    console.log("getting connected nodes");
     var nodeList = [];
-    if (data.nodes.get(nodeId) !== undefined) {
-      var node = data.nodes.get(nodeId);
-      var nodeObj = {}; // used to quickly check if node already exists
-      for (var i = 0; i < data.edges.length; i++) {
-        var edge = data.edges.get(i);
-        if (direction !== 'to' && edge.to == node.id) {
-          // these are double equals since ids can be numeric or string
-          if (nodeObj[edge.from] === undefined) {
-            nodeList.push(edge.from);
-            nodeObj[edge.from] = true;
-          }
-        } else if (direction !== 'from' && edge.from == node.id) {
-          // these are double equals since ids can be numeric or string
-          if (nodeObj[edge.to] === undefined) {
-            nodeList.push(edge.to);
-            nodeObj[edge.to] = true;
-          }
-        }
+    var matrix;
+    if (data == 0){ matrix = resAdjMatrix; } else { matrix = topAdjMatrix;}
+    console.log(matrix);
+    if (direction == 'from') {
+      var fromList = matrix[nodeId];
+      console.log("direction is from: " + fromList);
+      for(var i = 0; i < fromList.length; i++){
+        if (fromList[i] != null) nodeList.push(i);
       }
     }
+    else if (direction == 'to') {
+      var toList = matrix[nodeId];
+      console.log("direction is to: " + toList);
+      for(var i = 0; i < toList.length; i++){
+        if (toList[i] != null) nodeList.push(i);
+      }
+    }
+
     return nodeList;
 }
 
@@ -333,15 +330,12 @@ direction 0 if backwards, 1 if forwards
 function findEdgeID(data, node1, node2){
     var edge;
     var edgeData = {};
-    for (var i = 0; i < data.edges.length; i++){
-        edge = data.edges.get(i);
-        if((edge.from == node1) && (edge.to == node2)){
-            edgeData = {id: edge.id, direction: 1}
-            return edgeData;
-        }
-        if((edge.from == node2) && (edge.to == node1)){
-            edgeData = {id: edge.id, direction: 0}
-            return edgeData;
-        }
+    var matrix;
+    if(data == 0){ matrix = resAdjMatrix; } else {matrix = topAdjMatrix;}
+    if(matrix[node1][node2] != null){
+      edgeData = {id: matrix[node1][node2], direction: 1}
+    } else if (matrix[node2][node1] != null){
+      edgeData = {id: matrix[node2][node1], direction: 0}
     }
+    return edgeData;
 }
