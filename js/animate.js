@@ -31,10 +31,11 @@ function animateGraph(){
     } else {
       var edge_id = animationSteps[step].edge_id,
           network = animationSteps[step].network;
+      var pseudocode = document.getElementsByClassName("pseudocode_step");
 
       switch(animationSteps[step].action){
-        case("destroyRes"):
-          resEdges.clear();
+        case("remove"):
+          resEdges.remove(edge_id);
           break;
 
         case("highlight"):
@@ -44,13 +45,17 @@ function animateGraph(){
           } else if (network == "residualGraph"){
             resEdges.update([{id:edge_id, color:edge_color}]);
           }
-          document.getElementById("step3").style.color = "black";
-          document.getElementById("step2").style.color = "#c0d6ba";
+          pseudocode[2].style.color = "black";
+          pseudocode[1].style.color = "#c0d6ba";
           break;
 
         case("label"):
           var label = animationSteps[step].label;
-          topEdges.update([{id: edge_id, label: label}]);
+          if(network == "topGraph"){
+            topEdges.update([{id: edge_id, label: label}]);
+          } else if (network == "residualGraph"){
+            resEdges.update([{id: edge_id, label: label}]);
+          }
           break;
 
         case("add"):
@@ -66,8 +71,8 @@ function animateGraph(){
               to: {enabled: true}
             }
           }]);
-          document.getElementById("step2").style.color = "black";
-          document.getElementById("step3").style.color = "#c0d6ba";
+          pseudocode[1].style.color = "black";
+          pseudocode[2].style.color = "#c0d6ba";
           break;
 
         default:
@@ -76,45 +81,47 @@ function animateGraph(){
       }
       step++;
     }
+
   }
+  console.log("Finished");
 }
 
-function backStep(){
-  if (step != 1){
-    var aStep = animationSteps[step];
-    var edge_id = aStep.edge_id,
-        network = aStep.network;
-
-    switch(aStep.action){
-      case("destroyRes"):
-        resEdges.update(aStep.old_edges);
-        break;
-
-      case("highlight"):
-        var edge_color = aSteps.orig_colour;
-        if(network == "topGraph"){
-          topEdges.update([{id:edge_id, color:edge_color}]);
-        } else if (network == "residualGraph"){
-          resEdges.update([{id:edge_id, color:edge_color}]);
-        }
-        document.getElementById("step3").style.color = "black";
-        document.getElementById("step2").style.color = "#c0d6ba";
-        break;
-
-      case("label"):
-        var label = animationSteps[step].orig_label;
-        topEdges.update([{id: edge_id, label: label}]);
-        break;
-
-      case("add"):
-        resEdges.remove(edge_id);
-        document.getElementById("step2").style.color = "black";
-        document.getElementById("step3").style.color = "#c0d6ba";
-        break;
-    }
-    step--;
-  }
-}
+// function backStep(){
+//   if (step != 1){
+//     var aStep = animationSteps[step];
+//     var edge_id = aStep.edge_id,
+//         network = aStep.network;
+//
+//     switch(aStep.action){
+//       case("destroyRes"):
+//         resEdges.update(aStep.old_edges);
+//         break;
+//
+//       case("highlight"):
+//         var edge_color = aSteps.orig_colour;
+//         if(network == "topGraph"){
+//           topEdges.update([{id:edge_id, color:edge_color}]);
+//         } else if (network == "residualGraph"){
+//           resEdges.update([{id:edge_id, color:edge_color}]);
+//         }
+//         document.getElementById("step3").style.color = "black";
+//         document.getElementById("step2").style.color = "#c0d6ba";
+//         break;
+//
+//       case("label"):
+//         var label = animationSteps[step].orig_label;
+//         topEdges.update([{id: edge_id, label: label}]);
+//         break;
+//
+//       case("add"):
+//         resEdges.remove(edge_id);
+//         document.getElementById("step2").style.color = "black";
+//         document.getElementById("step3").style.color = "#c0d6ba";
+//         break;
+//     }
+//     step--;
+//   }
+// }
 
 
 /*
@@ -130,20 +137,12 @@ function highlightAugmentingPath(path){
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(0, path[i-1], path[i]);
     edge_id = edgeData.id;
-    // if(edgeData.direction == 1){
-    //   colour = {color:'red'};
-    // }
-
-    // if(edgeData.direction == 0){
-    //   colour = {color:'green'};
-    // }
 
     animationSteps.push({
       network: "residualGraph",
       action: "highlight",
       edge_id: edge_id,
-      colour: {color:'red'},
-      pStep: "step4",
+      colour: {color:'red'}
     });
   }
 }

@@ -92,14 +92,8 @@ background-color: #c0d6ba;
 }
 .pseudocode_step {
   height: 10%;
+  text-decoration: none;
 }
-/* #step1 {
-  height: 10%;
-}
-
-#step2 {
-  height:10%;
-} */
 
 #flow_counter {
   height: 10%;

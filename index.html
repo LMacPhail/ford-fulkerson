@@ -52,41 +52,17 @@
   </div>
   <div class="info_bar" id="pseudocode">
     <div class="pseudocode_step" id="step1">
-      <p>set all flows to 0</p>
+      <p>Build Residual Graph</p>
     </div>
-    <div id="step2">
-      <p>for(;;)</p>
+    <div class="pseudocode_step" id="step2">
+      <p>Find path in residual graph from S to T</p>
     </div>
-    <div id="step3">
-      <p> build residual graph</p>
+    <div class="pseudocode_step" id="step3">
+      <p>Increment flow in top graph along augmenting path</p>
     </div>
-    <div id="step4">
-      <p>   search for path from S to T</p>
+    <div class="pseudocode_step" id="step4">
+      <p>Maximum flow has been found</p>
     </div>
-    <div id="step5">
-      <p>   if such a path exists</p>
-    </div>
-    <div id="step6">
-      <p>     for all edges</p>
-    </div>
-    <div id="step7">
-      <p>       if edge is forwards</p>
-    </div>
-    <div id="step8">
-      <p>         augment flow along edge</p>
-    </div>
-    <div id="step9">
-      <p>       else</p>
-    </div>
-    <div id="step10">
-      <p>         decrease flow along edge</p>
-    </div>
-    <!--<div id="step11">
-      <p>   else</p>
-    </div>
-    <div id="step12">
-      <p>     break (maximum flow has been found)</p>
-    </div>-->
   </div>
   <div id="flow_counter"></div>
 </div>

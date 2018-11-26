@@ -297,23 +297,21 @@ Given a node id and a direction:
 
 direction = 'to' - returns array of nodeIds that node connects to
 direction = 'from' - returns array of nodeIds that connect to node
+
 */
 function getConnectedNodes(data, nodeId, direction) {
     console.log("getting connected nodes");
     var nodeList = [];
     var matrix;
     if (data == 0){ matrix = resAdjMatrix; } else { matrix = topAdjMatrix;}
-    console.log(matrix);
     if (direction == 'from') {
       var fromList = matrix[nodeId];
-      console.log("direction is from: " + fromList);
       for(var i = 0; i < fromList.length; i++){
         if (fromList[i] != null) nodeList.push(i);
       }
     }
     else if (direction == 'to') {
       var toList = matrix[nodeId];
-      console.log("direction is to: " + toList);
       for(var i = 0; i < toList.length; i++){
         if (toList[i] != null) nodeList.push(i);
       }
