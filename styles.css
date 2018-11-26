@@ -89,10 +89,13 @@ background-color: #c0d6ba;
 #pseudocode {
   height: 50%;
   background-color: #308c92;
+  text-decoration: none;
 }
 .pseudocode_step {
   height: 10%;
   text-decoration: none;
+  text-align: left;
+  padding: 10px;
 }
 
 #flow_counter {
