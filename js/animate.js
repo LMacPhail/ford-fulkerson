@@ -24,7 +24,7 @@ step = 0;
 */
 function animateGraph(){
   console.log("animating...");
-  var id = setInterval(frame, 200);
+  var id = setInterval(frame, 1000);
   function frame() {
     if(step == animationSteps.length || play == 0){
       clearInterval(id);
@@ -131,8 +131,8 @@ function animateGraph(){
             new animation step to highlight the edges between the nodes
 
 */
-function highlightAugmentingPath(path){
-  var edge_id, colour;
+function highlightAugmentingPath(path, colour){
+  var edge_id;
 
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(0, path[i-1], path[i]);
@@ -142,7 +142,7 @@ function highlightAugmentingPath(path){
       network: "residualGraph",
       action: "highlight",
       edge_id: edge_id,
-      colour: {color:'red'}
+      colour: {color:colour}
     });
   }
 }

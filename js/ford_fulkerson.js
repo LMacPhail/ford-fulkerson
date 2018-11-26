@@ -159,13 +159,19 @@ function updateResidualGraph(path){
           action: "add",
           label: flow,
           edge_id: edgeID,
-          from: path[i-1],
-          to: path[i]
+          from: path[i],
+          to: path[i-1]
       });
       resAdjMatrix[path[i]][path[i-1]] = edgeID++;
       // console.log("adding to algResEdges");
       // console.log(algResEdges);
     }
+    animationSteps.push({
+        network: "topGraph",
+        action: "highlight",
+        edge_id: topAdjMatrix[path[i-1]][path[i]],
+        colour: {color: 'blue'}
+    });
   }
 }
 
@@ -263,7 +269,7 @@ function fordFulkerson(){
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
         console.log("path: " + path);
-        highlightAugmentingPath(path);
+        highlightAugmentingPath(path, 'red');
         if(path == -1){
             break;
         } else {
@@ -296,6 +302,7 @@ function fordFulkerson(){
                 });
             }
         }
+        highlightAugmentingPath(path, 'blue');
         count++;
         // break;
     }
