@@ -24,7 +24,8 @@ step = 0;
 */
 function animateGraph(){
   console.log("animating...");
-  var id = setInterval(frame, 1000);
+  var slider = document.getElementById("pb_slider");
+  var id = setInterval(frame, slider.value);
   function frame() {
     if(step == animationSteps.length || play == 0){
       clearInterval(id);
