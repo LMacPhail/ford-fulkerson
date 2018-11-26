@@ -23,39 +23,48 @@ function buildResidualGraph(){
     animationSteps.push({
         network: "residualGraph",
         action: "destroyRes",
+        old_edges: algResData.edges,
         pStep: "step3",
     });
     // build edges
+    for(var y = 0; y <= N; y++){
+      for(var x = 0; x <= N; x++){
+        resAdjMatrix[y][x] = null;
+      }
+    }
     for(i = 0; i < algTopEdges.length; i++){
         var edge = algTopEdges.get(i);
+        // console.log("top edge" + edge);
 
         animationSteps.push({
             network: "topGraph",
             action: "highlight",
             edge_id: i,
-            colour: {color: 'red'}
+            colour: {color: 'red'},
+            orig_colour: {color: 'blue'}
         });
 
         cap = getCapacity(edge.label);
         flow = getFlow(edge.label);
-        // console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
+        console.log("to: " + edge.to + ", from: "+ edge.from + ", capacity: " + cap + ", flow: " + flow);
         if((flow > 0) && (flow <= cap)){
 
             animationSteps.push({
                 network: "residualGraph",
                 action: "add",
                 label: flow,
-                edge_id: edgeID++,
+                edge_id: edgeID,
                 from: edge.to,
                 to: edge.from
             });
-
+            console.log("adding edge from: " + edge.to + ", to: " + edge.from + ", flow: " + flow );
             edges.push({
-                id: algEdgeID++, label: flow, from: edge.to, to: edge.from,
+                id: edgeID, label: flow, from: edge.to, to: edge.from,
                 arrows: {
                     to : {enabled: true}
                 },
             });
+            resAdjMatrix[edge.to][edge.from] = edgeID++;
         }
         if((0 <= flow) && (flow < cap)){
 
@@ -63,22 +72,24 @@ function buildResidualGraph(){
                 network: "residualGraph",
                 action: "add",
                 label: (cap - flow).toString(),
-                edge_id: edgeID++,
+                edge_id: edgeID,
                 from: edge.from,
                 to: edge.to
             });
-
+            console.log("adding edge from: " + edge.from + ", to: " + edge.to + ", flow: " + flow );
             edges.push({
-                id: algEdgeID++, label: (cap - flow).toString(), from: edge.from, to: edge.to,
+                id: edgeID, label: (cap - flow).toString(), from: edge.from, to: edge.to,
                 arrows: {
                     to : {enabled: true}
                 },
             });
+            resAdjMatrix[edge.from][edge.to] = edgeID++;
         }
         animationSteps.push({
             network: "topGraph",
             action: "highlight",
             edge_id: i,
+            orig_colour: {color: 'red'},
             colour: {color: 'blue'}
         });
     }
@@ -111,17 +122,22 @@ function findPath(visited){
         queue.push(i);
         while(queue.length > 0){
             x = queue.pop();
-            var L = getConnectedNodes(algResData, x, 'to');
+            var L = getConnectedNodes(0, x, 'to');
+            console.log("node: " + x + ", connected to: " + L);
             for(j = 0; j < L.length; j++){
                 y = L[j];
+                console.log("y: " + y);
                 if(visited[y] == 0){
+                    console.log("y is not visited");
                     visited[y] = 1;
                     parents[y].parent = x;
+                    console.log(x + " is a parent of " + y);
                     queue.push(y);
                 }
             }
         }
     }
+    console.log("parents: " + parents);
     if(parents[N].parent == N){
         return -1;
     } else {
@@ -175,6 +191,7 @@ function fordFulkerson(){
         visited.push(0);
     }
     while(true){
+        console.log("building residual graph");
         buildResidualGraph();
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
@@ -186,7 +203,8 @@ function fordFulkerson(){
             var m = findMinimumCapacity(algResData, path);
             console.log("minimum capacity: " + m);
             for(i = 1; i < path.length; i++){
-                var edgeData = findEdgeID(algTopData, path[i-1], path[i]);
+                var edgeData = findEdgeID(1, path[i-1], path[i]);
+                var orig_label = algTopEdges.get(id).label;
 
                 id = edgeData.id;
                 if(edgeData.direction == 1){
@@ -208,6 +226,7 @@ function fordFulkerson(){
                     action: "label",
                     edge_id: id,
                     label: label,
+                    orig_label: algTopEdges.get(id).label,
                     pStep: highlightStep,
                 });
             }
