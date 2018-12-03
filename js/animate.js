@@ -31,12 +31,19 @@ function animateGraph(){
       clearInterval(id);
     } else {
       var edge_id = animationSteps[step].edge_id,
-          network = animationSteps[step].network;
+          network = animationSteps[step].network,
+          pStep = animationSteps[step].pStep;
       var pseudocode = document.getElementsByClassName("pseudocode_step");
 
       switch(animationSteps[step].action){
         case("remove"):
           resEdges.remove(edge_id);
+          if(pStep == 0) {
+            pseudocode[2].style.color = "black";
+          } else {
+            pseudocode[pStep - 1].style.color = "black";
+          }
+          pseudocode[pStep].style.color = "#c0d6ba";
           break;
 
         case("highlight"):
@@ -46,8 +53,12 @@ function animateGraph(){
           } else if (network == "residualGraph"){
             resEdges.update([{id:edge_id, color:edge_color}]);
           }
-          pseudocode[2].style.color = "black";
-          pseudocode[1].style.color = "#c0d6ba";
+          if(pStep == 0) {
+            pseudocode[2].style.color = "black";
+          } else {
+            pseudocode[pStep - 1].style.color = "black";
+          }
+          pseudocode[pStep].style.color = "#c0d6ba";
           break;
 
         case("label"):
@@ -57,6 +68,12 @@ function animateGraph(){
           } else if (network == "residualGraph"){
             resEdges.update([{id: edge_id, label: label}]);
           }
+          if(pStep == 0) {
+            pseudocode[2].style.color = "black";
+          } else {
+            pseudocode[pStep - 1].style.color = "black";
+          }
+          pseudocode[pStep].style.color = "#c0d6ba";
           break;
 
         case("add"):
@@ -72,8 +89,12 @@ function animateGraph(){
               to: {enabled: true}
             }
           }]);
-          pseudocode[1].style.color = "black";
-          pseudocode[2].style.color = "#c0d6ba";
+          if(pStep == 0) {
+            pseudocode[2].style.color = "black";
+          } else {
+            pseudocode[pStep - 1].style.color = "black";
+          }
+          pseudocode[pStep].style.color = "#c0d6ba";
           break;
 
         default:
@@ -143,6 +164,7 @@ function highlightAugmentingPath(path, colour){
       network: "residualGraph",
       action: "highlight",
       edge_id: edge_id,
+      pStep: 1,
       colour: {color:colour}
     });
   }

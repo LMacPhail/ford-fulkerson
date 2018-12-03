@@ -29,6 +29,7 @@ function buildResidualGraph(){
             network: "topGraph",
             action: "highlight",
             edge_id: i,
+            pStep: 0,
             colour: {color: 'red'}
         });
         cap = getCapacity(edge.label);
@@ -39,6 +40,7 @@ function buildResidualGraph(){
                 action: "add",
                 label: flow,
                 edge_id: edgeID,
+                pStep: 0,
                 from: edge.to,
                 to: edge.from
             });
@@ -56,6 +58,7 @@ function buildResidualGraph(){
                 action: "add",
                 label: (cap - flow).toString(),
                 edge_id: edgeID,
+                pStep: 0,
                 from: edge.from,
                 to: edge.to
             });
@@ -71,6 +74,7 @@ function buildResidualGraph(){
             network: "topGraph",
             action: "highlight",
             edge_id: i,
+            pStep: 0,
             colour: {color: 'blue'}
         });
     }
@@ -86,6 +90,7 @@ function updateResidualGraph(path){
         network: "topGraph",
         action: "highlight",
         edge_id: topAdjMatrix[path[i-1]][path[i]],
+        pStep: 0,
         colour: {color: 'red'}
     });
     var edge = algTopEdges.get(edgeData.id);
@@ -101,6 +106,7 @@ function updateResidualGraph(path){
             network: "residualGraph",
             action: "label",
             label: (cap - flow).toString(),
+            pStep: 0,
             edge_id: forwards
         });
       } else {
@@ -108,6 +114,7 @@ function updateResidualGraph(path){
         animationSteps.push({
             network: "residualGraph",
             action: "remove",
+            pStep: 0,
             edge_id: forwards
         });
         resAdjMatrix[path[i-1]][path[i]] = null;
@@ -128,6 +135,7 @@ function updateResidualGraph(path){
           action: "add",
           label: (cap - flow).toString(),
           edge_id: edgeID,
+          pStep: 0,
           from: path[i-1],
           to: path[i]
       });
@@ -143,7 +151,8 @@ function updateResidualGraph(path){
           network: "residualGraph",
           action: "label",
           label: flow,
-          edge_id: backwards
+          edge_id: backwards,
+          pStep: 0
       });
     } else {
       algResEdges.add([{id:edgeID,
@@ -159,6 +168,7 @@ function updateResidualGraph(path){
           action: "add",
           label: flow,
           edge_id: edgeID,
+          pStep: 0,
           from: path[i],
           to: path[i-1]
       });
@@ -170,6 +180,7 @@ function updateResidualGraph(path){
         network: "topGraph",
         action: "highlight",
         edge_id: topAdjMatrix[path[i-1]][path[i]],
+        pStep: 0,
         colour: {color: 'blue'}
     });
   }
@@ -298,6 +309,7 @@ function fordFulkerson(){
                     network: "topGraph",
                     action: "label",
                     edge_id: id,
+                    pStep: 2,
                     label: label,
                 });
             }
