@@ -86,8 +86,6 @@ function defaultGraphData(){
       var from = edges[i].from, to = edges[i].to;
       topAdjMatrix[from][to] = edges[i].id;
     }
-    console.log(topAdjMatrix);
-    console.log(resAdjMatrix);
 }
 
 function initialiseMatrices(){
@@ -227,7 +225,7 @@ direction = 'from' - returns array of nodeIds that connect to node
 
 */
 function getConnectedNodes(data, nodeId, direction) {
-    console.log("getting connected nodes");
+    // console.log("getting connected nodes");
     var nodeList = [], matrix;
     if (data == "res") matrix = resAdjMatrix; else matrix = topAdjMatrix;
     if (direction == 'from') {

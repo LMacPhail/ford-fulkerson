@@ -32,69 +32,37 @@ function animateGraph(){
     } else {
       var edgeID = animationSteps[step].edgeID,
           network = animationSteps[step].network,
+          edges,
           pStep = animationSteps[step].pStep;
-      var pseudocode = document.getElementsByClassName("pseudocode_step");
-
+      if(network == "res") edges = resEdges; else if (network == "top") edges = topEdges;
       switch(animationSteps[step].action){
         case("remove"):
           resEdges.remove(edgeID);
-          if(pStep == 0) {
-            pseudocode[2].style.color = "black";
-          } else {
-            pseudocode[pStep - 1].style.color = "black";
-          }
-          pseudocode[pStep].style.color = "#c0d6ba";
+          highlightPseudocode(pStep);
           break;
 
         case("highlight"):
           var edge_color = animationSteps[step].colour;
-          if(network == "top"){
-            topEdges.update([{id:edgeID, color:edge_color}]);
-          } else if (network == "res"){
-            resEdges.update([{id:edgeID, color:edge_color}]);
-          }
-          if(pStep == 0) {
-            pseudocode[2].style.color = "black";
-          } else {
-            pseudocode[pStep - 1].style.color = "black";
-          }
-          pseudocode[pStep].style.color = "#c0d6ba";
+          edges.update([{id:edgeID, color:edge_color}]);
+          highlightPseudocode(pStep);
           break;
 
         case("label"):
           var label = animationSteps[step].label;
-          if(network == "top"){
-            topEdges.update([{id: edgeID, label: label}]);
-          } else if (network == "res"){
-            resEdges.update([{id: edgeID, label: label}]);
-          }
-          if(pStep == 0) {
-            pseudocode[2].style.color = "black";
-          } else {
-            pseudocode[pStep - 1].style.color = "black";
-          }
-          pseudocode[pStep].style.color = "#c0d6ba";
+          edges.update([{id: edgeID, label: label}]);
+          highlightPseudocode(pStep);
           break;
 
         case("add"):
           var label = animationSteps[step].label,
               from = animationSteps[step].from,
               to = animationSteps[step].to;
-          resEdges.add([{
-            id: edgeID,
-            label: label,
-            from: from,
-            to: to,
-            arrows: {
-              to: {enabled: true}
-            }
-          }]);
-          if(pStep == 0) {
-            pseudocode[2].style.color = "black";
-          } else {
-            pseudocode[pStep - 1].style.color = "black";
-          }
-          pseudocode[pStep].style.color = "#c0d6ba";
+          resEdges.add({
+            id: edgeID, label: label,
+            from: from, to: to,
+            arrows: {to: {enabled: true}}
+          });
+          highlightPseudocode(pStep);
           break;
 
         default:
@@ -108,42 +76,15 @@ function animateGraph(){
   console.log("Finished");
 }
 
-// function backStep(){
-//   if (step != 1){
-//     var aStep = animationSteps[step];
-//     var edgeID = aStep.edgeID,
-//         network = aStep.network;
-//
-//     switch(aStep.action){
-//       case("destroyRes"):
-//         resEdges.update(aStep.old_edges);
-//         break;
-//
-//       case("highlight"):
-//         var edge_color = aSteps.orig_colour;
-//         if(network == "topGraph"){
-//           topEdges.update([{id:edgeID, color:edge_color}]);
-//         } else if (network == "residualGraph"){
-//           resEdges.update([{id:edgeID, color:edge_color}]);
-//         }
-//         document.getElementById("step3").style.color = "black";
-//         document.getElementById("step2").style.color = "#c0d6ba";
-//         break;
-//
-//       case("label"):
-//         var label = animationSteps[step].orig_label;
-//         topEdges.update([{id: edgeID, label: label}]);
-//         break;
-//
-//       case("add"):
-//         resEdges.remove(edgeID);
-//         document.getElementById("step2").style.color = "black";
-//         document.getElementById("step3").style.color = "#c0d6ba";
-//         break;
-//     }
-//     step--;
-//   }
-// }
+function highlightPseudocode(pStep){
+  var pseudocode = document.getElementsByClassName("pseudocode_step");
+  if(pStep == 0) {
+    pseudocode[2].style.color = "black";
+  } else {
+    pseudocode[pStep - 1].style.color = "black";
+  }
+  pseudocode[pStep].style.color = "#c0d6ba";
+}
 
 
 function animateHighlightEdge(network, edgeID, pStep, colour){
