@@ -10,7 +10,6 @@
     topEdges: vis DataSet representing the edges in the top graph
     topData:  combination of top graph nodes and edges
 
-    resNodes: vis DataSet representing the nodes in the residual graph
     resEdges: vis DataSet representing the edges in the residual graph
     resData:  combination of residual graph nodes and edges
 
@@ -34,10 +33,11 @@
 
 ******************************************************************************/
 
-var nodes, edges, topNodes, topEdges, resNodes, resEdges;
+var nodes, edges, topNodes, topEdges, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
 var N = 8, E = 12;
+var T;
 var resAdjMatrix = [], topAdjMatrix = [];
 
 
@@ -46,7 +46,8 @@ Generates a graph with default valuse
 */
 function defaultGraphData(){
     console.log("default graph data");
-    N = 5;
+    N = 6;
+    T = N-1;
     nodes = [
         {id: 0, label: 'S', x: -300, y: 0, physics: false},
         {id: 1, label: 'n1', x: -150, y: -140, physics: false},
@@ -55,8 +56,6 @@ function defaultGraphData(){
         {id: 4, label: 'n4', x: 150, y: 140, physics: false},
         {id: 5, label: 'T', x: 300, y: 0, physics: false}
     ];
-
-    topNodes = new vis.DataSet(nodes);
 
     edges = [
         { id: 0, label: '0/2', from: 0, to: 1,
@@ -80,45 +79,41 @@ function defaultGraphData(){
         },
     ];
 
-
-    topEdges = new vis.DataSet(edges);
-    topData = {
-        nodes: topNodes,
-        edges: topEdges
-    };
-    algTopEdges = new vis.DataSet(edges);
-    algTopData = {
-        nodes: topNodes,
-        edges: algTopEdges
-    }
-    // resNodes = new vis.DataSet([]);
-
-    resEdges = new vis.DataSet([]);
-    resData = {
-        nodes: topNodes,
-        edges: resEdges
-    };
-    algResEdges = new vis.DataSet([]);
-    algResData = {
-        nodes: topNodes,
-        edges: algResEdges
-    }
     // Adjacency matrix initialising
-
-    for(var y = 0; y <= N; y++){
-      topAdjMatrix[y] = [];
-      resAdjMatrix[y] = [];
-      for(var x = 0; x <= N; x++){
-        topAdjMatrix[y][x] = null;
-        resAdjMatrix[y][x] = null;
-      }
-    }
+    initialiseDataSets(nodes, edges);
+    initialiseMatrices();
     for(var i = 0; i < edges.length; i++){
       var from = edges[i].from, to = edges[i].to;
       topAdjMatrix[from][to] = edges[i].id;
     }
     console.log(topAdjMatrix);
+    console.log(resAdjMatrix);
+}
 
+function initialiseMatrices(){
+  for(var y = 0; y < N; y++){
+    topAdjMatrix[y] = [];
+    resAdjMatrix[y] = [];
+    for(var x = 0; x < N; x++){
+      topAdjMatrix[y][x] = null;
+      resAdjMatrix[y][x] = null;
+    }
+  }
+}
+
+function initialiseDataSets(nodes, edges){
+  topNodes = new vis.DataSet(nodes);
+  topEdges = new vis.DataSet(edges);
+  algTopEdges = new vis.DataSet(edges);
+
+  topData = {nodes: topNodes, edges: topEdges};
+  algTopData = {nodes: topNodes, edges: algTopEdges};
+
+  resEdges = new vis.DataSet([]);
+  algResEdges = new vis.DataSet([]);
+
+  resData = { nodes: topNodes, edges: resEdges};
+  algResData = {nodes: topNodes, edges: algResEdges};
 }
 
 /*
@@ -130,6 +125,26 @@ function findDuplicateEdges(edges, from, to){
     return -1;
 }
 
+function addEdge(edges, id, from, to){
+  edges.push({
+      id: id,
+      arrows: {to : {enabled: true}},
+      label: 0 + '/' + (Math.random() * 10 | 1),
+      from: from,
+      to: to,
+  });
+  topAdjMatrix[from][to] = id;
+  return edges;
+}
+
+function addNode(nodes, id, label){
+  nodes.push({
+    id: id,
+    label: label,
+    physics: false,
+  });
+  return nodes;
+}
 
 /*
 Generates a graph using N and E, such that:
@@ -138,158 +153,70 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateGraphData(){
-    for(var y = 0; y <= N; y++){
-      topAdjMatrix[y] = [];
-      resAdjMatrix[y] = [];
-      for(var x = 0; x <= N; x++){
-        topAdjMatrix[y][x] = null;
-        resAdjMatrix[y][x] = null;
-      }
-    }
-    console.log(topAdjMatrix);
-
-    console.log("generate graph data");
-    var   i,
-        edge_id = 0,
-        matrixEdgeID = 0,
+    N = 8;
+    T = N-1;
+    initialiseMatrices();
+    console.log("generating graph data");
+    var i,
+        edgeID = 0,
         nodesToSink = [], //  Nodes that are connected to T (or T itself)
-        leftNodes = [];   //  Nodes that are in nodesToSink but have no incoming edges
+        onlyOutgoing = [];   //  Nodes that are in nodesToSink but have no incoming edges
     nodes = [];
     edges = [];
-    /* initialise nodes */
-    nodes.push(
-        {id: 0, label: 'S',
-            x: -250, // y: Math.random() * 220 + 180,
-            physics: false},
-    );
-    for(i = 1; i < N; i++){
-        nodes.push({
-            id: i,
-            label: 'n' + i,
-            physics: false,
-        });
-    }
 
-    nodesToSink.push(N);
+    /* initialise nodes */
+    nodes = addNode(nodes, 0, 'S');
+    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i);
+
+    nodesToSink.push(T);
     var rand_id, from, to;
 
-    // Construct graph from right to left, beginning at T
-    for(i = N - 1; i > 0; i--){
-
-        if(i > N-3){
-          // To ensure that T has at least 2 incoming edges
-          edges.push({
-              id: edge_id,
-              arrows: {to : {enabled: true}},
-              label: 0 + '/' + (Math.random() * 10 | 1),
-              from: i,
-              to: N,
-          });
-          topAdjMatrix[i][N] = edge_id++;
+    /* Construct graph from right to left, beginning at T */
+    for(i = T - 1; i > 0; i--){
+        if(i > T-3){    // To ensure that T has at least 2 incoming edges
+          edges = addEdge(edges, edgeID, i, T);
         } else {
           // Connect to either T or one of the nodes already connected to T
-          do{
-              rand_id = (Math.random() * nodesToSink.length | 0);
-          } while (i == nodesToSink[rand_id]);
-          edges.push({
-              id: edge_id,
-              arrows: {to : {enabled: true}},
-              label: 0 + '/' + (Math.random() * 10 | 1),
-              from: i,
-              to: nodesToSink[rand_id],
-          });
-          topAdjMatrix[i][nodesToSink[rand_id]] = edge_id++;
+          do rand_id = (Math.random() * nodesToSink.length | 0); while (i == nodesToSink[rand_id]);
+          edges = addEdge(edges, edgeID, i, nodesToSink[rand_id]);
         }
-        // add 'from' node to leftNodes
-        leftNodes.push(i);
-        // if 'to' not != T remove it from leftNodes
-        if((nodesToSink[rand_id] != N) && (leftNodes.indexOf(nodesToSink[rand_id]) != -1)){
-            leftNodes.splice(leftNodes.indexOf(nodesToSink[rand_id]), 1);
+        edgeID++;
+
+        onlyOutgoing.push(i);    // add 'from' node to onlyOutgoing
+        if((nodesToSink[rand_id] != T) && (onlyOutgoing.indexOf(nodesToSink[rand_id]) != -1)){
+            // if 'to' not != T remove it from onlyOutgoing
+            onlyOutgoing.splice(onlyOutgoing.indexOf(nodesToSink[rand_id]), 1);
         }
-        // add node to nodesToSink
-        nodesToSink.push(i);
+        nodesToSink.push(i);  // add node to nodesToSink
     }
 
-    // Ensure that all nodes in leftNodes have an incoming edge from S
-    while(leftNodes.length > 0){
-        if(edge_id == E){break;}
+    /* Ensure that all nodes in onlyOutgoing have an incoming edge from S */
+    while(onlyOutgoing.length > 0){
+        if(edgeID == E) break;
         if(i < 2){
             // To ensure that S has at least 2 outgoing edges
-            edges.push({
-                id: edge_id,
-                arrows: {to: { enabled: true }},
-                label: 0 + '/' + (Math.random() * 10 | 1),
-                from: 0,
-                to: leftNodes[i],
-            });
-            topAdjMatrix[0][leftNodes[i]] = edge_id++;
+            edges = addEdge(edges, edgeID, 0, onlyOutgoing[i]);
         } else {
-            do {
-                from = (Math.random() * N | 0);
-            } while (leftNodes[i] == from);
-
-            edges.push({
-                id: edge_id,
-                arrows: {to: { enabled: true }},
-                label: 0 + '/' + (Math.random() * 10 | 1),
-                from: from,
-                to: leftNodes[i],
-            });
-            topAdjMatrix[from][leftNodes[i]] = edge_id++;
-
+            do from = (Math.random() * T | 0); while (onlyOutgoing[i] == from);
+            edges = addEdge(edges, edgeID, from, onlyOutgoing[i]);
 
         }
-        leftNodes.splice(i, 1);
+        edgeID++;
+        onlyOutgoing.splice(i, 1);
     }
 
     // Once all nodes are connected, add remaining edges
-    for (i = edge_id; i < E; i++){
-        do {
-            // prevents loops and duplicate parallel edges
-            from = (Math.random() * N | 0);
-            to = (Math.random() * N + 1 | 0);
-        }
-        while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
-        edges.push({
-            id: edge_id,
-            arrows: {to : {enabled: true}},
-            label: 0 + '/' + (Math.random() * 10 | 1),
-            from: from,
-            to: to,
-        });
-        topAdjMatrix[from][to] = edge_id++;
+    for (i = edgeID; i < E; i++){
+        do {  // prevents loops and duplicate parallel edges
+              from = (Math.random() * T | 0);
+              to = (Math.random() * N | 0);
+        } while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
+        edges = addEdge(edges, edgeID, from, to);
+        edgeID++;
     }
-
-    nodes.push({
-        id: N, label: 'T',
-        x: 300, // y: Math.random() * 220 + 180,
-        physics: false
-    });
-
-    topNodes = new vis.DataSet(nodes);
-    topEdges = new vis.DataSet(edges);
-    topData = {
-        nodes: topNodes,
-        edges: topEdges
-    };
-
-    algTopEdges = new vis.DataSet(edges);
-    algTopData = {
-        nodes: topNodes,
-        edges: algTopEdges
-    }
-    // resNodes = new vis.DataSet([]);
-    resEdges = new vis.DataSet([]);
-    resData = {
-        nodes: topNodes,
-        edges: resEdges
-    };
-    algResEdges = new vis.DataSet([]);
-    algResData = {
-        nodes: topNodes,
-        edges: algResEdges
-    }
-
+    nodes = addNode(nodes, T, 'T');
+    initialiseDataSets(nodes, edges);
+    topNodes.update([{id:0, x: -250},{id:T, x:300}]);
 }
 
 /*
@@ -301,22 +228,16 @@ direction = 'from' - returns array of nodeIds that connect to node
 */
 function getConnectedNodes(data, nodeId, direction) {
     console.log("getting connected nodes");
-    var nodeList = [];
-    var matrix;
-    if (data == 0){ matrix = resAdjMatrix; } else { matrix = topAdjMatrix;}
+    var nodeList = [], matrix;
+    if (data == "res") matrix = resAdjMatrix; else matrix = topAdjMatrix;
     if (direction == 'from') {
       var fromList = matrix[nodeId];
-      for(var i = 0; i < fromList.length; i++){
-        if (fromList[i] != null) nodeList.push(i);
-      }
+      for(var i = 0; i < fromList.length; i++) if (fromList[i] != null) nodeList.push(i);
     }
     else if (direction == 'to') {
       var toList = matrix[nodeId];
-      for(var i = 0; i < toList.length; i++){
-        if (toList[i] != null) nodeList.push(i);
-      }
+      for(var i = 0; i < toList.length; i++) if (toList[i] != null) nodeList.push(i);
     }
-
     return nodeList;
 }
 
@@ -326,10 +247,8 @@ Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
 function findEdgeID(data, node1, node2){
-    var edge;
-    var edgeData = {};
-    var matrix;
-    if(data == 0){ matrix = resAdjMatrix; } else {matrix = topAdjMatrix;}
+    var edge, edgeData = {}, matrix;
+    if(data == "res") matrix = resAdjMatrix; else matrix = topAdjMatrix;
     if(matrix[node1][node2] != null){
       edgeData = {id: matrix[node1][node2], direction: 1}
     } else if (matrix[node2][node1] != null){

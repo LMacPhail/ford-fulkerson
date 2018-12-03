@@ -30,14 +30,14 @@ function animateGraph(){
     if(step == animationSteps.length || play == 0){
       clearInterval(id);
     } else {
-      var edge_id = animationSteps[step].edge_id,
+      var edgeID = animationSteps[step].edgeID,
           network = animationSteps[step].network,
           pStep = animationSteps[step].pStep;
       var pseudocode = document.getElementsByClassName("pseudocode_step");
 
       switch(animationSteps[step].action){
         case("remove"):
-          resEdges.remove(edge_id);
+          resEdges.remove(edgeID);
           if(pStep == 0) {
             pseudocode[2].style.color = "black";
           } else {
@@ -48,10 +48,10 @@ function animateGraph(){
 
         case("highlight"):
           var edge_color = animationSteps[step].colour;
-          if(network == "topGraph"){
-            topEdges.update([{id:edge_id, color:edge_color}]);
-          } else if (network == "residualGraph"){
-            resEdges.update([{id:edge_id, color:edge_color}]);
+          if(network == "top"){
+            topEdges.update([{id:edgeID, color:edge_color}]);
+          } else if (network == "res"){
+            resEdges.update([{id:edgeID, color:edge_color}]);
           }
           if(pStep == 0) {
             pseudocode[2].style.color = "black";
@@ -63,10 +63,10 @@ function animateGraph(){
 
         case("label"):
           var label = animationSteps[step].label;
-          if(network == "topGraph"){
-            topEdges.update([{id: edge_id, label: label}]);
-          } else if (network == "residualGraph"){
-            resEdges.update([{id: edge_id, label: label}]);
+          if(network == "top"){
+            topEdges.update([{id: edgeID, label: label}]);
+          } else if (network == "res"){
+            resEdges.update([{id: edgeID, label: label}]);
           }
           if(pStep == 0) {
             pseudocode[2].style.color = "black";
@@ -81,7 +81,7 @@ function animateGraph(){
               from = animationSteps[step].from,
               to = animationSteps[step].to;
           resEdges.add([{
-            id: edge_id,
+            id: edgeID,
             label: label,
             from: from,
             to: to,
@@ -111,7 +111,7 @@ function animateGraph(){
 // function backStep(){
 //   if (step != 1){
 //     var aStep = animationSteps[step];
-//     var edge_id = aStep.edge_id,
+//     var edgeID = aStep.edgeID,
 //         network = aStep.network;
 //
 //     switch(aStep.action){
@@ -122,9 +122,9 @@ function animateGraph(){
 //       case("highlight"):
 //         var edge_color = aSteps.orig_colour;
 //         if(network == "topGraph"){
-//           topEdges.update([{id:edge_id, color:edge_color}]);
+//           topEdges.update([{id:edgeID, color:edge_color}]);
 //         } else if (network == "residualGraph"){
-//           resEdges.update([{id:edge_id, color:edge_color}]);
+//           resEdges.update([{id:edgeID, color:edge_color}]);
 //         }
 //         document.getElementById("step3").style.color = "black";
 //         document.getElementById("step2").style.color = "#c0d6ba";
@@ -132,11 +132,11 @@ function animateGraph(){
 //
 //       case("label"):
 //         var label = animationSteps[step].orig_label;
-//         topEdges.update([{id: edge_id, label: label}]);
+//         topEdges.update([{id: edgeID, label: label}]);
 //         break;
 //
 //       case("add"):
-//         resEdges.remove(edge_id);
+//         resEdges.remove(edgeID);
 //         document.getElementById("step2").style.color = "black";
 //         document.getElementById("step3").style.color = "#c0d6ba";
 //         break;
@@ -146,6 +146,44 @@ function animateGraph(){
 // }
 
 
+function animateHighlightEdge(network, edgeID, pStep, colour){
+  animationSteps.push({
+    network: network,
+    action: "highlight",
+    edgeID: edgeID,
+    pStep: pStep,
+    colour: {color:colour}
+  });
+}
+function animateLabelEdge(network, edgeID, pStep, label){
+  animationSteps.push({
+      network: network,
+      action: "label",
+      label: label,
+      pStep: pStep,
+      edgeID: edgeID
+  });
+}
+function animateRemoveEdge(network, edgeID, pStep){
+  animationSteps.push({
+      network: network,
+      action: "remove",
+      pStep: pStep,
+      edgeID: edgeID
+  });
+}
+function animateAddEdge(network, edgeID, pStep, label, from, to){
+  animationSteps.push({
+    network: network,
+    action: "add",
+    label: label,
+    edgeID: edgeID,
+    pStep: pStep,
+    from: from,
+    to: to
+  });
+}
+
 /*
   Function: highlightAugmentingPath(path)
 
@@ -154,18 +192,11 @@ function animateGraph(){
 
 */
 function highlightAugmentingPath(path, colour){
-  var edge_id;
+  var edgeID;
 
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID(0, path[i-1], path[i]);
-    edge_id = edgeData.id;
-
-    animationSteps.push({
-      network: "residualGraph",
-      action: "highlight",
-      edge_id: edge_id,
-      pStep: 1,
-      colour: {color:colour}
-    });
+    edgeID = edgeData.id;
+    animateHighlightEdge("res", edgeID, 1, colour);
   }
 }

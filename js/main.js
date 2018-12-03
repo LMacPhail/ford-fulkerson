@@ -2,8 +2,8 @@ var mainContainer = document.getElementById('main_graph');
 var resContainer = document.getElementById('residual_graph');
 
 
-// generateGraphData();
 defaultGraphData();
+// generateGraphData();
 var options = {
   layout: {
     improvedLayout:true,
