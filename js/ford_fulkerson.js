@@ -18,6 +18,7 @@ function setFlow(label, new_flow){
 function addEdgeToRes(id, label, from, to){
   algResEdges.add({
     id:id,
+    color: {color: 'blue'},
     label: label,
     from: from, to: to,
     arrows: {to : {enabled: true}},
@@ -33,20 +34,20 @@ function buildResidualGraph(){
     // build edges
     for(i = 0; i < algTopEdges.length; i++){
         var edge = algTopEdges.get(i);
-        animateHighlightEdge("top", i, 0, 'red');
+        addAnimationStep("top", "highlight", i, 0, 'red', null, null, null);
         cap = getCapacity(edge.label);
         flow = getFlow(edge.label);
         if((flow > 0) && (flow <= cap)){
-            animateAddEdge("res", edgeID, 0, flow, edge.to, edge.from);
+            addAnimationStep("res", "add", edgeID, 0, null, flow, edge.to, edge.from);
             addEdgeToRes(edgeID, label, edge.to, edge.from);
             edgeID++;
         }
         if((0 <= flow) && (flow < cap)){
-            animateAddEdge("res", edgeID, 0, (cap - flow).toString(), edge.from, edge.to);
+            addAnimationStep("res", "add", edgeID, 0, null, (cap - flow).toString(), edge.from, edge.to);
             addEdgeToRes(edgeID, (cap - flow).toString(), edge.from, edge.to);
             edgeID++;
         }
-        animateHighlightEdge("top", i, 0, 'blue');
+        addAnimationStep("top", "highlight", i, 0, 'blue', null, null, null);
     }
     algResEdges.update(edges);
 }
@@ -55,7 +56,7 @@ function updateResidualGraph(path){
   // console.log("Updating residual graph");
   var edgeData, edge, flow, cap, forwards, backwards;
   for(i = 1; i < path.length; i++){
-    animateHighlightEdge("top", topAdjMatrix[path[i-1]][path[i]], 0, 'red');
+    addAnimationStep("top", "highlight", topAdjMatrix[path[i-1]][path[i]], 0, 'red', null, null, null);
 
     edgeData = findEdgeID("top", path[i-1], path[i]);
     edge = algTopEdges.get(edgeData.id);
@@ -67,26 +68,26 @@ function updateResidualGraph(path){
     if(forwards != null){
       if(cap - flow > 0){
         algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
-        animateLabelEdge("res", forwards, 0, (cap - flow).toString());
+        addAnimationStep("res", "label", forwards, 0, null, (cap - flow).toString(), null, null);
       } else {
         algResEdges.remove(forwards);
-        animateRemoveEdge("res", forwards, 0);
+        addAnimationStep("res", "remove", forwards, 0,  null,  null,  null,  null);
         resAdjMatrix[path[i-1]][path[i]] = null;
       }
     } else {
       addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
-      animateAddEdge("res", edgeID, 0, (cap - flow).toString(), path[i-1], path[i]);
+      addAnimationStep("res", "add", edgeID, 0, null, (cap - flow).toString(), path[i-1], path[i]);
       edgeID++;
     }
     if(backwards != null){
       algResEdges.update([{id: backwards, label: flow}]);
-      animateLabelEdge("res", backwards, 0, flow);
+      addAnimationStep("res", "label", backwards, 0, null, flow, null, null);
     } else {
       addEdgeToRes(edgeID, flow, path[i], path[i-1]);
-      animateAddEdge("res", edgeID, 0, flow, path[i], path[i-1]);
+      addAnimationStep("res", "add", edgeID, 0, null, flow, path[i], path[i-1]);
       edgeID++;
     }
-    animateHighlightEdge("top", topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
+    addAnimationStep("top", "highlight", topAdjMatrix[path[i-1]][path[i]], 0, 'blue', null, null, null);
   }
 }
 
@@ -177,7 +178,7 @@ function fordFulkerson(){
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
-                animateLabelEdge("top", id, 2, label);
+                addAnimationStep("top", "label", id, 2, null, label, null, null);
             }
         }
         highlightAugmentingPath(path, 'blue');
