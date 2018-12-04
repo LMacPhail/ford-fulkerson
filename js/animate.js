@@ -30,12 +30,14 @@ function animateAlgorithm(){
     if(step == animationSteps.length || play == 0){
       clearInterval(id);
     } else {
-      animateStep();
-      step++;
+      if(play == 1){
+        animateStep();
+      } else if (play == -1){
+        backwardStep();
+      }
     }
 
   }
-  console.log("Finished");
 }
 
 function animateStep(){
@@ -92,10 +94,10 @@ function animateStep(){
       clearInterval(id);
   }
   highlightPseudocode(pStep);
+  step++;
 }
 
 function backwardStep(){
-  play = 0;
   if(step > 0) {
     step--;
     var currentStep = animationSteps[step];
@@ -127,6 +129,8 @@ function backwardStep(){
         console.log("Error: Invalid animation step");
         clearInterval(id);
     }
+  } else {
+    play = 0;
   }
 
 }

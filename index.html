@@ -8,24 +8,19 @@
   <script type="text/javascript" src="js/ford_fulkerson.js"></script>
   <link href="vis-4.21.0/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="styles.css" type="text/css"/>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
 <body>
 
 <div id="info_bar">
   <div class="info_bar" id="alg_title"></div>
   <div class="info_bar" id="playback">
-      <button class="button" id="back_algorithm"
-        onclick="play = 0; backwardStep();">
-        Back
-      </button>
-      <button class="button" id="play_algorithm"
-        onclick="animateAlgorithm();play = 1;">
-        Play
-      </button>
-      <button class="button" id="pause_algorithm"
-        onclick="play = 0;">
-        Pause
-      </button>
+      <i class="fa fa-backward" id="pb_button" onclick="play = -1;animateAlgorithm();"></i>
+      <i class="fa fa-step-backward" id="pb_button" onclick="play = 0;backwardStep();"></i>
+      <i class="fa fa-play" id="pb_button" onclick="play = 1;animateAlgorithm();"></i>
+      <i class="fa fa-pause" id="pb_button" onclick="play =0;"></i>
+      <i class="fa fa-step-forward" id="pb_button" onclick="play=0;animateStep();"></i>
   </div>
   <div class="speed_control">
     <div id="speed_info"><p>Speed: </p></div>

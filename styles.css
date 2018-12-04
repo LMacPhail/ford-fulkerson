@@ -45,7 +45,7 @@
   display: flex;
 }
 .button{
-  padding: 15px 32px;
+  padding: 15px 15px;
   background-color: inherit;
   border: none;
   text-align: center;
@@ -54,8 +54,13 @@
   color:white;
   font-size: 16px;
 }
-#play_algorithm {
+#pb_button {
   color: white;
+  padding: 15px 15px;
+  background-color: inherit;
+  border: none;
+  display: inline-block;
+  color:white;
 }
 #pause_algorithm {
   color: white;

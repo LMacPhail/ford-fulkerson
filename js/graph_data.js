@@ -36,7 +36,7 @@
 var nodes, edges, topNodes, topEdges, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
-var N = 8, E = 12;
+var N = 8, E = 6;
 var T;
 var resAdjMatrix = [], topAdjMatrix = [];
 
@@ -161,7 +161,7 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateGraphData(){
-    N = 8;
+    N = 4;
     T = N-1;
     initialiseMatrices();
     console.log("generating graph data");
