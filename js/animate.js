@@ -14,10 +14,6 @@ var animationSteps = [];
 var play = 1;
 step = 0;
 
-
-
-
-
 /*
   Function: animateGraph(steps)
 

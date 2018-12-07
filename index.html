@@ -24,7 +24,7 @@
   </div>
   <div class="speed_control">
     <div id="speed_info"><p>Speed: </p></div>
-    <input type="range" min="10" max="50" value="30" class="slider" id="pb_slider">
+    <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
   </div>
   <div class="new_graph">
     <button onclick="newGraphOptions()" class="dropbtn">New Graph</button>
@@ -48,12 +48,22 @@
                   fordFulkerson();
                   step = 0;
                   newGraphOptions();">
-          Generate Random Graph with 
-          <input type="number" id="N" value="5"></input> nodes
+          Generate Random Graph
+          
       </button>
+      <input type="number" id="N" value="5"></input>
       
       <button class="dropdown-button" id="draw_graph">Draw Graph</button>
-      <button class="dropdown-button" id="upload_graph">Upload Graph</button>
+      <button class="dropdown-button" id="upload_graph">Upload/Save Graph</button>
+    </div>
+    
+  </div>
+  <div id="uploadModal" class="upload-modal">
+
+    <!-- Modal content -->
+    <div class="upload-modal-content">
+      <span class="close">&times;</span>
+      <p>Some text in the Modal..</p>
     </div>
     
   </div>

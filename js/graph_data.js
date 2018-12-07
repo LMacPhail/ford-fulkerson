@@ -44,7 +44,6 @@ function newGraphOptions() {
     document.getElementById("newGraphOptions").classList.toggle("show");
 }
 
-
 /*
 Generates a graph with default valuse
 */
