@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div id="info_bar">
+<div class="info_bar">
   <div id="alg_title"></div>
   <div id="playback">
       <i class="fa fa-backward" id="pb_button" onclick="play = -1;animateAlgorithm();"></i>
@@ -52,21 +52,18 @@
           
       </button>
       <input type="number" id="N" value="5"></input>
-      
-      <button class="dropdown-button" id="draw_graph">Draw Graph</button>
       <button class="dropdown-button" id="upload_graph">Upload/Save Graph</button>
+      <button class="dropdown-button" id="draw_graph">Draw Graph</button>
     </div>
-    
   </div>
   <div id="uploadModal" class="upload-modal">
 
-    <!-- Modal content -->
-    <div class="upload-modal-content">
-      <span class="close">&times;</span>
-      <p>Some text in the Modal..</p>
+      <div class="upload-modal-content">
+        <span class="close">&times;</span>
+        <button id="download_button" onclick="download('hello.txt','This is a downloadable file')">Download</button>
+      </div>
+        
     </div>
-    
-  </div>
   <div id="pseudocode">
     <div class="pseudocode_step" id="step1">
       <p>Build Residual Graph</p>
@@ -83,11 +80,15 @@
   </div>
   <div id="flow_counter"></div>
 </div>
+ 
+
 <div id="network_canvas">
   <div id="main_graph"></div>
   <div id="residual_graph"></div>
 </div>
 <script type="text/javascript" src="js/main.js"></script>
+
+<script type="text/javascript" src="js/upload_download.js"></script>
 
 </body>
 </html>
