@@ -14,8 +14,8 @@
 <body>
 
 <div id="info_bar">
-  <div class="info_bar" id="alg_title"></div>
-  <div class="info_bar" id="playback">
+  <div id="alg_title"></div>
+  <div id="playback">
       <i class="fa fa-backward" id="pb_button" onclick="play = -1;animateAlgorithm();"></i>
       <i class="fa fa-step-backward" id="pb_button" onclick="play = 0;backwardStep();"></i>
       <i class="fa fa-play" id="pb_button" onclick="play = 1;animateAlgorithm();"></i>
@@ -24,31 +24,40 @@
   </div>
   <div class="speed_control">
     <div id="speed_info"><p>Speed: </p></div>
-    <input type="range" min="10" max="35" value="30" class="slider" id="pb_slider">
+    <input type="range" min="10" max="50" value="30" class="slider" id="pb_slider">
   </div>
-  <div class="info_bar" id="new_graph">
-      <button class="button" id="load_default_graph"
+  <div class="new_graph">
+    <button onclick="newGraphOptions()" class="dropbtn">New Graph</button>
+    <div id="newGraphOptions" class="new-graph-options">
+        <button class="dropdown-button" id="load_default_graph"
         onclick="defaultGraphData();
                 topGraph.setData(topData);
                 resGraph.setData(resData);
                 animationSteps = [];
                 fordFulkerson();
-                step = 0;">
+                step = 0;
+                newGraphOptions();">
         Load Default Graph
       </button>
-      <button class="button" id="generate_random_graph"
+      <button class="dropdown-button" id="generate_random_graph"
           onclick="generateGraphData();
                   topGraph.setData(topData);
                   topGraph.storePositions();
                   resGraph.setData(resData);
                   animationSteps = [];
                   fordFulkerson();
-                  step = 0;">
-          Generate Random Graph
+                  step = 0;
+                  newGraphOptions();">
+          Generate Random Graph with 
+          <input type="number" id="N" value="5"></input> nodes
       </button>
-    <div id="draw_graph"></div>
+      
+      <button class="dropdown-button" id="draw_graph">Draw Graph</button>
+      <button class="dropdown-button" id="upload_graph">Upload Graph</button>
+    </div>
+    
   </div>
-  <div class="info_bar" id="pseudocode">
+  <div id="pseudocode">
     <div class="pseudocode_step" id="step1">
       <p>Build Residual Graph</p>
     </div>

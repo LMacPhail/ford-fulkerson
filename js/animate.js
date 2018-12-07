@@ -15,6 +15,9 @@ var play = 1;
 step = 0;
 
 
+
+
+
 /*
   Function: animateGraph(steps)
 
@@ -25,9 +28,13 @@ step = 0;
 function animateAlgorithm(){
   console.log("animating...");
   var slider = document.getElementById("pb_slider");
+  slider.oninput = function() {
+    play = 0;
+    play = 1;
+  }
   var id = setInterval(frame, (1000 * (10/slider.value)));
   function frame() {
-    if(step == animationSteps.length || play == 0){
+    if(((step == animationSteps.length)&&(play == 1)) || play == 0){
       clearInterval(id);
     } else {
       if(play == 1){
