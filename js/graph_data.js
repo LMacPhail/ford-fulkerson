@@ -40,7 +40,7 @@ var N, E;
 var T;
 var resAdjMatrix = [], topAdjMatrix = [];
 
-function newGraphOptions() {
+function toggleNewGraphOptions() {
     document.getElementById("newGraphOptions").classList.toggle("show");
 }
 

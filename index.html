@@ -27,7 +27,7 @@
     <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
   </div>
   <div class="new_graph">
-    <button onclick="newGraphOptions()" class="dropbtn">New Graph</button>
+    <button onclick="toggleNewGraphOptions()" class="dropbtn">New Graph</button>
     <div id="newGraphOptions" class="new-graph-options">
         <button class="dropdown-button" id="load_default_graph"
         onclick="defaultGraphData();
@@ -36,7 +36,7 @@
                 animationSteps = [];
                 fordFulkerson();
                 step = 0;
-                newGraphOptions();">
+                toggleNewGraphOptions();">
         Load Default Graph
       </button>
       <button class="dropdown-button" id="generate_random_graph"
@@ -47,20 +47,24 @@
                   animationSteps = [];
                   fordFulkerson();
                   step = 0;
-                  newGraphOptions();">
+                  toggleNewGraphOptions();">
           Generate Random Graph
           
       </button>
       <input type="number" id="N" value="5"></input>
-      <button class="dropdown-button" id="upload_graph">Upload/Save Graph</button>
+      <button class="dropdown-button" id="upload_graph" 
+                  onclick="uploadModal.style.display = 'block';
+                           toggleNewGraphOptions();">
+          Upload/Save Graph
+      </button>
       <button class="dropdown-button" id="draw_graph">Draw Graph</button>
     </div>
   </div>
   <div id="uploadModal" class="upload-modal">
 
       <div class="upload-modal-content">
-        <span class="close">&times;</span>
-        <button id="download_button" onclick="download('hello.txt','This is a downloadable file')">Download</button>
+        <span class="close" onclick="uploadModal.style.display = 'none';">&times;</span>
+        <button id="download_button" onclick="downloadGraphAsTxt('hello.txt')">Download</button>
       </div>
         
     </div>
