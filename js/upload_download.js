@@ -25,14 +25,31 @@ function createTxtFileFromGraph(){
     var text = "nodes = ["
     for (i = 0; i < topNodes.length; i++){
         node = topNodes.get(i);
-        text = text + "\n{ id: " + i + ", x: " + node.x + ", y: " + node.y + "},";
+        text += "\n{ id: " + i + ", x: " + node.x + ", y: " + node.y + "},";
     }
-    text = text + "\n]\nedges = [";
+    text += "\n]\nedges = [";
     for (i = 0; i < topEdges.length; i++) {
         edge = topEdges.get(i);
-        text = text + "\n{ from: " + edge.from + ", to: " + edge.to + ", capacity: " + getCapacity(edge.label) + "},";
+        text += "\n{ from: " + edge.from + ", to: " + edge.to + ", capacity: " + getCapacity(edge.label) + "},";
     }
-    text = text + "\n]"
+    text += "\n]"
     console.log(text);
     return text;
 }
+
+(function(){
+    function onChange(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(event.target.files[0]);
+    }
+
+    function onReaderLoad(event) {
+        console.log(event.target.result);
+    }
+
+    document.getElementById("uploadFile").addEventListener('change', onChange);
+
+
+
+}());
