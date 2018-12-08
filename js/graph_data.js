@@ -112,18 +112,23 @@ function initialiseMatrices(){
 }
 
 function initialiseDataSets(nodes, edges){
-  topNodes = new vis.DataSet(nodes);
-  topEdges = new vis.DataSet(edges);
-  algTopEdges = new vis.DataSet(edges);
+    console.log("initialising data sets");
+    topNodes = new vis.DataSet(nodes);
+    topEdges = new vis.DataSet(edges);
+    algTopEdges = new vis.DataSet(edges);
 
-  topData = {nodes: topNodes, edges: topEdges};
-  algTopData = {nodes: topNodes, edges: algTopEdges};
+    topData = {nodes: topNodes, edges: topEdges};
+    algTopData = {nodes: topNodes, edges: algTopEdges};
 
-  resEdges = new vis.DataSet([]);
-  algResEdges = new vis.DataSet([]);
+    resEdges = new vis.DataSet([]);
+    algResEdges = new vis.DataSet([]);
 
-  resData = { nodes: topNodes, edges: resEdges};
-  algResData = {nodes: topNodes, edges: algResEdges};
+    resData = { nodes: topNodes, edges: resEdges};
+    algResData = {nodes: topNodes, edges: algResEdges};
+
+    console.log(topData);
+    console.log(topAdjMatrix);
+    console.log(resAdjMatrix);
 }
 
 /*
@@ -135,26 +140,47 @@ function findDuplicateEdges(edges, from, to){
     return -1;
 }
 
-function addEdge(edges, id, from, to){
-  edges.push({
-      id: id,
-      color: {color: 'blue'},
-      arrows: {to : {enabled: true}},
-      label: 0 + '/' + (Math.random() * 10 | 1),
-      from: from,
-      to: to,
-  });
-  topAdjMatrix[from][to] = id;
-  return edges;
+function addEdge(edges, id, from, to, cap){
+    if(cap == null){
+        edges.push({
+            id,
+            color: {color: 'blue'},
+            arrows: {to : {enabled: true}},
+            label: 0 + '/' + (Math.random() * 10 | 1),
+            from,
+            to,
+        });
+    } else {
+        edges.push({
+            id,
+            color: {color: 'blue'},
+            arrows: {to : {enabled: true}},
+            label: 0 + '/' + cap,
+            from,
+            to,
+        });
+    }
+    topAdjMatrix[from][to] = id;
+    return edges;
 }
 
-function addNode(nodes, id, label){
-  nodes.push({
-    id: id,
-    label: label,
-    physics: false,
-  });
-  return nodes;
+function addNode(nodes, id, label, x, y){
+    if(x == null && y == null){
+        nodes.push({
+            id,
+            label,
+            physics: false,
+        });
+    } else {
+        nodes.push({
+            id,
+            label,
+            x,
+            y,
+            physics: false,
+        })
+    }
+    return nodes;
 }
 
 /*
@@ -177,8 +203,8 @@ function generateGraphData(){
     edges = [];
 
     /* initialise nodes */
-    nodes = addNode(nodes, 0, 'S');
-    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i);
+    nodes = addNode(nodes, 0, 'S', null, null);
+    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i, null, null);
 
     nodesToSink.push(T);
     var rand_id, from, to;
@@ -186,11 +212,11 @@ function generateGraphData(){
     /* Construct graph from right to left, beginning at T */
     for(i = T - 1; i > 0; i--){
         if(i > T-3){    // To ensure that T has at least 2 incoming edges
-          edges = addEdge(edges, edgeID, i, T);
+          edges = addEdge(edges, edgeID, i, T, null);
         } else {
           // Connect to either T or one of the nodes already connected to T
           do rand_id = (Math.random() * nodesToSink.length | 0); while (i == nodesToSink[rand_id]);
-          edges = addEdge(edges, edgeID, i, nodesToSink[rand_id]);
+          edges = addEdge(edges, edgeID, i, nodesToSink[rand_id], null);
         }
         edgeID++;
 
@@ -207,10 +233,10 @@ function generateGraphData(){
         if(edgeID == E) break;
         if(i < 2){
             // To ensure that S has at least 2 outgoing edges
-            edges = addEdge(edges, edgeID, 0, onlyOutgoing[i]);
+            edges = addEdge(edges, edgeID, 0, onlyOutgoing[i], null);
         } else {
             do from = (Math.random() * T | 0); while (onlyOutgoing[i] == from);
-            edges = addEdge(edges, edgeID, from, onlyOutgoing[i]);
+            edges = addEdge(edges, edgeID, from, onlyOutgoing[i], null);
 
         }
         edgeID++;
@@ -223,10 +249,10 @@ function generateGraphData(){
               from = (Math.random() * T | 0);
               to = (Math.random() * N | 0);
         } while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
-        edges = addEdge(edges, edgeID, from, to);
+        edges = addEdge(edges, edgeID, from, to, null);
         edgeID++;
     }
-    nodes = addNode(nodes, T, 'T');
+    nodes = addNode(nodes, T, 'T', null, null);
     initialiseDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
 }

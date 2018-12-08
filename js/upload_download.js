@@ -22,17 +22,19 @@ function downloadGraphAsTxt(filename) {
 
 function createTxtFileFromGraph(){
     var node, edge, i;
-    var text = "nodes = ["
+    var text = "{\n\"nodes\" : ["
     for (i = 0; i < topNodes.length; i++){
         node = topNodes.get(i);
-        text += "\n{ id: " + i + ", x: " + node.x + ", y: " + node.y + "},";
+        text += "\n{ \"id\": " + i + ", \"x\": " + node.x + ", \"y\": " + node.y + "}";
+        if(i < topNodes.length-1) text += ",";
     }
-    text += "\n]\nedges = [";
+    text += "\n],\n\"edges\" : [";
     for (i = 0; i < topEdges.length; i++) {
         edge = topEdges.get(i);
-        text += "\n{ from: " + edge.from + ", to: " + edge.to + ", capacity: " + getCapacity(edge.label) + "},";
+        text += "\n{ \"from\": " + edge.from + ", \"to\": " + edge.to + ", \"capacity\": " + getCapacity(edge.label) + "}";
+        if(i < topEdges.length-1) text += ",";
     }
-    text += "\n]"
+    text += "\n]\n}"
     console.log(text);
     return text;
 }
@@ -46,10 +48,43 @@ function createTxtFileFromGraph(){
 
     function onReaderLoad(event) {
         console.log(event.target.result);
+        var data = JSON.parse(event.target.result);
+        createGraphFromUpload(data.nodes, data.edges);
+    }
+
+    function createGraphFromUpload(fileNodes, fileEdges){
+        initialiseMatrices();
+        nodes = [], edges = [];
+        var node, edge, i, label;
+        N = fileNodes.length;
+        T = N -1;
+        E = fileEdges.length;
+        for(i = 0; i < N; i++){
+            node = fileNodes[i];
+            if(i == 0) {
+                label = 'S'
+            } else if (i == T) {
+                label = 'T'
+            } else {
+                label = 'n' + i
+            }
+            nodes = addNode(nodes, i, label, node.x, node.y);
+        }
+        for(i = 0; i < E; i++){
+            edge = fileEdges[i];
+            edges = addEdge(edges, i, edge.from, edge.to, edge.capacity);
+        }
+        console.log(nodes);
+        console.log(edges);
+        initialiseDataSets(nodes, edges);
+        topGraph.setData(topData);
+        resGraph.setData(resData);
+        animationSteps = [];
+        fordFulkerson();
+        step = 0;
+
     }
 
     document.getElementById("uploadFile").addEventListener('change', onChange);
-
-
 
 }());
