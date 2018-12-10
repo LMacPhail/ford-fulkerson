@@ -1,3 +1,7 @@
+.body {
+  background-color: #f69278;
+}
+
 #network_canvas {
     width: 75%;
     height: 100%;
@@ -7,17 +11,36 @@
     overflow-x: hidden;
     right:0;
 }
-#main_graph {
-    width: 100%;
-    height: 50%;
-    top: 0;
-}
-#residual_graph {
-    width: 100%;
-    height: 50%;
-    bottom: 0;
 
+.top {
+  width: 100%;
+  height: 50%;
+  top: 0;
+  display: flex;
 }
+.res {
+  width: 100%;
+  height: 50%;
+  bottom: 0;
+  display: flex;
+}
+#main_graph {
+  width: 98%;
+  height: 100%;
+}
+.indicator {
+  width: 2%;
+  height: 100%;
+  left:0;
+  z-index: 1;
+  background-color: white;
+}
+
+#residual_graph {
+    width: 98%;
+    height: 100%;
+}
+
 
 #info_bar {
     width: 25%;

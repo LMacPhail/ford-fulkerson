@@ -56,7 +56,7 @@
     <div id="uploadModal" class="upload-modal">
         <div class="upload-modal-content">
             <span class="close" onclick="uploadModal.style.display = 'none';">&times;</span>
-            <button id="download_button" onclick="downloadGraphAsTxt('graph2.json')">Download</button>
+            <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
             <input type="file" id="uploadFile"></input>
         </div>
     </div>
@@ -77,8 +77,14 @@
     <div id="flow_counter"></div>
 </div>
 <div id="network_canvas">
+  <div class="top">
+    <div class= "indicator" id="main_ind"></div>
     <div id="main_graph"></div>
+  </div>
+  <div class="res">
+    <div class= "indicator" id="res_ind"></div>
     <div id="residual_graph"></div>
+  </div>
 </div>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/upload_download.js"></script>

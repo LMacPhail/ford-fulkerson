@@ -47,9 +47,20 @@ function createTxtFileFromGraph(){
     }
 
     function onReaderLoad(event) {
-        var data = JSON.parse(event.target.result);
+        try {
+            var data = JSON.parse(event.target.result);
+        } catch(err) {
+            alert("Parsing error: " + err);
+            document.getElementById("uploadFile").val = '';
+            return;
+        }
+        // var validData = checkValidData(data);
         var validGraph = checkValidGraph(data.nodes, data.edges);
-        if (validGraph) createGraphFromUpload(data.nodes, data.edges);
+        if (validGraph){ 
+            createGraphFromUpload(data.nodes, data.edges);
+        } else {
+            document.getElementById("uploadFile").val = '';
+        }
     }
 
     function createGraphFromUpload(fileNodes, fileEdges){
@@ -97,23 +108,32 @@ function checkValidGraph(fileNodes, fileEdges){
         return false;
     }
     var edge, invalidEdges = [], i;
-    for(i = 0; i < nl; i++) if (fileNodes[i].id != i) return false;//"nodes not consecutive!"
+    for(i = 0; i < nl; i++) if (fileNodes[i].id != i) return false;
+
+    var testMatrix = [];
+    for(var y = 0; y < N; y++){
+        testMatrix[y] = [];
+        for(var x = 0; x < N; x++){
+          testMatrix[y][x] = null;
+        }
+    }
+    
     for(i = 0; i < el; i++) {
         edge = fileEdges[i];
         if(!(isBetween(edge.to, 0, nl)) || !(isBetween(edge.from, 0, nl))) {
             invalidEdges.push({id:i, problem: " is going to or from a node that doesn't exist!"});
         }
-        if(edge.to == edge.from) {
-            invalidEdges.push({id:i, problem: " is going to and from the same node!"});
+        if(edge.to == edge.from) invalidEdges.push({id:i, problem: " is going to and from the same node!"});
+        if(edge.capacity <= 0) invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
+        if(findDuplicateEdges(testMatrix, edge.from, edge.to) == 1) {
+            invalidEdges.push({id: i, problem: " is a duplicate edge!"});
         }
-        if(edge.capacity <= 0) {
-            invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
-        }
+        testMatrix[edge.from][edge.to] = i;
     }
     if(invalidEdges.length > 0) {
         var errorMsg = "Invalid edges!\n";
         for (i in invalidEdges){
-            errorMsg += "edge " + invalidEdges[i].id + invalidEdges[i].problem + "\n";
+            errorMsg += "edge " + (invalidEdges[i].id + 1).toString() + invalidEdges[i].problem + "\n";
         }
         alert(errorMsg);
         return false;

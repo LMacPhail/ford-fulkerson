@@ -43,12 +43,36 @@ function animateAlgorithm(){
   }
 }
 
+function indicateGraph(graph){
+  if(graph == "top") {
+    document.getElementById("res_ind").style.backgroundColor = "white";
+    document.getElementById("main_ind").style.backgroundColor = "#e03c4c";
+  } else if (graph == "res"){
+    document.getElementById("main_ind").style.backgroundColor = "white";
+    document.getElementById("res_ind").style.backgroundColor = "#e03c4c";
+  }
+
+}
+
 function animateStep(){
   var edgeID = animationSteps[step].edgeID,
       network = animationSteps[step].network,
       pStep = animationSteps[step].pStep,
       edges;
-  if(network == "res") edges = resEdges; else if (network == "top") edges = topEdges;
+  if(network == "res") { 
+    edges = resEdges;
+    if(pStep == 2) indicateGraph("res");
+  } else if (network == "top") { 
+    edges = topEdges;
+    if(pStep == 2) indicateGraph("top");
+  }
+  if(pStep < 2) indicateGraph("res");
+
+  if(edgeID == null) {
+    step++;
+    return;
+  }
+
   switch(animationSteps[step].action){
     case("remove"):
       // console.log("remove");
@@ -98,6 +122,7 @@ function backwardStep(){
     var edgeID = currentStep.edgeID,
         network = currentStep.network,
         orig_edge = currentStep.orig_edge,
+        pStep = animationSteps[step].pStep,
         edges;
     if(network == "res") edges = resEdges; else if (network == "top") edges = topEdges;
     switch(currentStep.action){
@@ -123,6 +148,7 @@ function backwardStep(){
         console.log("Error: Invalid animation step");
         clearInterval(id);
     }
+    highlightPseudocode(pStep);
   } else {
     play = 0;
   }
@@ -149,12 +175,12 @@ function addAnimationStep(network, action, edgeID, pStep, colour, label, from, t
             new animation step to highlight the edges between the nodes
 
 */
-function highlightAugmentingPath(path, colour){
+function highlightAugmentingPath(path){
   var edgeID;
 
   for(i = 1; i < path.length; i++){
     var edgeData = findEdgeID("res", path[i-1], path[i]);
     edgeID = edgeData.id;
-    addAnimationStep("res", "highlight", edgeID, 1, colour, null, null, null);
+    addAnimationStep("res", "highlight", edgeID, 1, 'red', null, null, null);
   }
 }

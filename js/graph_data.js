@@ -130,8 +130,10 @@ function initialiseDataSets(nodes, edges){
 Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
 is already an edge with these nodes and -1 if there is not
 */
-function findDuplicateEdges(edges, from, to){
-  if(topAdjMatrix[from][to] != null) return 1;
+function findDuplicateEdges(data, from, to){
+    var matrix;
+    if(data == "top") matrix = topAdjMatrix; else matrix = data;
+    if(matrix[from][to] != null) return 1;
     return -1;
 }
 
@@ -233,7 +235,7 @@ function generateGraphData(){
         do {  // prevents loops and duplicate parallel edges
               from = (Math.random() * T | 0);
               to = (Math.random() * N | 0);
-        } while ((from == to) || (findDuplicateEdges(edges, from, to) == 1));
+        } while ((from == to) || (findDuplicateEdges("top", from, to) == 1));
         edges = addEdge(edges, edgeID, from, to, null);
         edgeID++;
     }

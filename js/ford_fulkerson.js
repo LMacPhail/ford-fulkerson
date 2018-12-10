@@ -164,14 +164,16 @@ function fordFulkerson(){
         for(i in visited) visited[i] = 0;
         path = findPath(visited);
         console.log("path: " + path);
-        highlightAugmentingPath(path, 'red');
+        highlightAugmentingPath(path);
         if(path == -1){
             break;
         } else {
             var m = findMinimumCapacity(algResData, path);
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID("top", path[i-1], path[i]);
+                var resID = resAdjMatrix[path[i-1]][path[i]];
                 id = edgeData.id;
+                addAnimationStep("res", "highlight", resID, 2, 'green', null, null, null);
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
                 }
@@ -181,9 +183,11 @@ function fordFulkerson(){
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
                 addAnimationStep("top", "label", id, 2, null, label, null, null);
+                for(var j = 0; j < 3; j++) addAnimationStep(null);
+                
+                addAnimationStep("res", "highlight", resID, 2, 'blue', null, null, null);
             }
         }
-        highlightAugmentingPath(path, 'blue');
         count++;
         // break;
     }
