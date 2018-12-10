@@ -12,87 +12,75 @@
     integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
 <body>
-
-<div class="info_bar">
-  <div id="alg_title"></div>
-  <div id="playback">
-      <i class="fa fa-backward" id="pb_button" onclick="play = -1;animateAlgorithm();"></i>
-      <i class="fa fa-step-backward" id="pb_button" onclick="play = 0;backwardStep();"></i>
-      <i class="fa fa-play" id="pb_button" onclick="play = 1;animateAlgorithm();"></i>
-      <i class="fa fa-pause" id="pb_button" onclick="play =0;"></i>
-      <i class="fa fa-step-forward" id="pb_button" onclick="play=0;animateStep();"></i>
-  </div>
-  <div class="speed_control">
-    <div id="speed_info"><p>Speed: </p></div>
-    <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
-  </div>
-  <div class="new_graph">
-    <button onclick="toggleNewGraphOptions()" class="dropbtn">New Graph</button>
-    <div id="newGraphOptions" class="new-graph-options">
-        <button class="dropdown-button" id="load_default_graph"
-        onclick="defaultGraphData();
-                topGraph.setData(topData);
-                resGraph.setData(resData);
-                animationSteps = [];
-                fordFulkerson();
-                step = 0;
-                toggleNewGraphOptions();">
-        Load Default Graph
-      </button>
-      <button class="dropdown-button" id="generate_random_graph"
-          onclick="generateGraphData();
-                  topGraph.setData(topData);
-                  topGraph.storePositions();
-                  resGraph.setData(resData);
-                  animationSteps = [];
-                  fordFulkerson();
-                  step = 0;
-                  toggleNewGraphOptions();">
-          Generate Random Graph
-          
-      </button>
-      <input type="number" id="N" value="5"></input>
-      <button class="dropdown-button" id="upload_graph" 
-                  onclick="uploadModal.style.display = 'block';
-                           toggleNewGraphOptions();">
-          Upload/Save Graph
-      </button>
-      <button class="dropdown-button" id="draw_graph">Draw Graph</button>
+<div id="info_bar">
+    <div id="alg_title"></div>
+    <div class="playback">
+        <div class="playback_control">
+            <i class="fa fa-backward" id="rewind_button" onclick="play = -1;animateAlgorithm();"></i>
+            <i class="fa fa-step-backward" id="backstep_button" onclick="play = 0;backwardStep();"></i>
+            <i class="fa fa-play" id="play_button" onclick="play = 1;animateAlgorithm();"></i>
+            <i class="fa fa-pause" id="pause_button" onclick="play =0;"></i>
+            <i class="fa fa-step-forward" id="forwardstep_button" onclick="play=0;animateStep();"></i>
+        </div>
+        <div class="speed_control">
+            <p id="speed_info">Speed: </p>
+            <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
+        </div>
     </div>
-  </div>
-  <div id="uploadModal" class="upload-modal">
-
-      <div class="upload-modal-content">
-        <span class="close" onclick="uploadModal.style.display = 'none';">&times;</span>
-        <button id="download_button" onclick="downloadGraphAsTxt('graph2.json')">Download</button>
-        <input type="file" id="uploadFile"></input>
-      </div>
-        
+    <div class="new_graph">
+        <button onclick="toggleNewGraphOptions()" class="dropbtn">New Graph</button>
+        <div id="newGraphOptions" class="new-graph-options">
+            <button class="dropdown-button" id="load_default_graph"
+            onclick="defaultGraphData();
+                    setNewGraph();
+                    toggleNewGraphOptions();">
+            Load Default Graph
+            </button>
+            <div class="dropdown-button" id="generate_random_graph">
+                <button class="dropdown-button"
+                onclick="generateGraphData();
+                        setNewGraph();
+                        toggleNewGraphOptions();">
+                Generate Random Graph    
+                </button>
+                <input type="number" class="dropdown-button" id="N_picker" value="5"></input>
+            </div>
+            <button class="dropdown-button" id="upload_graph" 
+                onclick="uploadModal.style.display = 'block';
+                        toggleNewGraphOptions();">
+                Upload/Save Graph
+            </button>
+            <button class="dropdown-button" id="draw_graph">Draw Graph</button>
+        </div>
     </div>
-  <div id="pseudocode">
-    <div class="pseudocode_step" id="step1">
-      <p>Build Residual Graph</p>
+    <div id="uploadModal" class="upload-modal">
+        <div class="upload-modal-content">
+            <span class="close" onclick="uploadModal.style.display = 'none';">&times;</span>
+            <button id="download_button" onclick="downloadGraphAsTxt('graph2.json')">Download</button>
+            <input type="file" id="uploadFile"></input>
+        </div>
     </div>
-    <div class="pseudocode_step" id="step2">
-      <p>Find path in residual graph from S to T</p>
+    <div id="pseudocode">
+        <div class="pseudocode_step" id="step1">
+            <p>Build Residual Graph</p>
+        </div>
+        <div class="pseudocode_step" id="step2">
+            <p>Find path in residual graph from S to T</p>
+        </div>
+        <div class="pseudocode_step" id="step3">
+            <p>Increment flow along augmenting path</p>
+        </div>
+        <div class="pseudocode_step" id="step4">
+            <p>Maximum flow has been found</p>
+        </div>
     </div>
-    <div class="pseudocode_step" id="step3">
-      <p>Increment flow along augmenting path</p>
-    </div>
-    <div class="pseudocode_step" id="step4">
-      <p>Maximum flow has been found</p>
-    </div>
-  </div>
-  <div id="flow_counter"></div>
+    <div id="flow_counter"></div>
 </div>
- 
-
 <div id="network_canvas">
-  <div id="main_graph"></div>
-  <div id="residual_graph"></div>
+    <div id="main_graph"></div>
+    <div id="residual_graph"></div>
 </div>
 <script type="text/javascript" src="js/main.js"></script>
-
 <script type="text/javascript" src="js/upload_download.js"></script>
 
 </body>

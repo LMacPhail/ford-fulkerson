@@ -23,3 +23,12 @@ topGraph.storePositions();
 
 var resGraph = new vis.Network(resContainer, resData, options);
 fordFulkerson();
+
+function setNewGraph(){
+  topGraph.setData(topData);
+  topGraph.storePositions();
+  resGraph.setData(resData);
+  animationSteps = [];
+  fordFulkerson();
+  step = 0;
+}

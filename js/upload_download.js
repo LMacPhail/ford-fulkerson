@@ -31,11 +31,11 @@ function createTxtFileFromGraph(){
     text += "\n],\n\"edges\" : [";
     for (i = 0; i < topEdges.length; i++) {
         edge = topEdges.get(i);
-        text += "\n{ \"from\": " + edge.from + ", \"to\": " + edge.to + ", \"capacity\": " + getCapacity(edge.label) + "}";
+        text += "\n{ \"from\": " + edge.from + ", \"to\": " 
+                + edge.to + ", \"capacity\": " + getCapacity(edge.label) + "}";
         if(i < topEdges.length-1) text += ",";
     }
     text += "\n]\n}"
-    console.log(text);
     return text;
 }
 
@@ -47,9 +47,9 @@ function createTxtFileFromGraph(){
     }
 
     function onReaderLoad(event) {
-        console.log(event.target.result);
         var data = JSON.parse(event.target.result);
-        createGraphFromUpload(data.nodes, data.edges);
+        var validGraph = checkValidGraph(data.nodes, data.edges);
+        if (validGraph) createGraphFromUpload(data.nodes, data.edges);
     }
 
     function createGraphFromUpload(fileNodes, fileEdges){
@@ -74,17 +74,50 @@ function createTxtFileFromGraph(){
             edge = fileEdges[i];
             edges = addEdge(edges, i, edge.from, edge.to, edge.capacity);
         }
-        console.log(nodes);
-        console.log(edges);
         initialiseDataSets(nodes, edges);
-        topGraph.setData(topData);
-        resGraph.setData(resData);
-        animationSteps = [];
-        fordFulkerson();
-        step = 0;
+        setNewGraph();
 
     }
 
     document.getElementById("uploadFile").addEventListener('change', onChange);
 
 }());
+
+function isBetween(comp, lower, upper){
+    if((comp >= lower) && (comp < upper)) return true; else return false;
+}
+
+function checkValidGraph(fileNodes, fileEdges){
+    var nl = fileNodes.length, el = fileEdges.length;
+    if(nl == 0) {
+        alert("no nodes in file!");
+        return false;
+    } else if (el == 0) {
+        alert("no edges in file!");
+        return false;
+    }
+    var edge, invalidEdges = [], i;
+    for(i = 0; i < nl; i++) if (fileNodes[i].id != i) return false;//"nodes not consecutive!"
+    for(i = 0; i < el; i++) {
+        edge = fileEdges[i];
+        if(!(isBetween(edge.to, 0, nl)) || !(isBetween(edge.from, 0, nl))) {
+            invalidEdges.push({id:i, problem: " is going to or from a node that doesn't exist!"});
+        }
+        if(edge.to == edge.from) {
+            invalidEdges.push({id:i, problem: " is going to and from the same node!"});
+        }
+        if(edge.capacity <= 0) {
+            invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
+        }
+    }
+    if(invalidEdges.length > 0) {
+        var errorMsg = "Invalid edges!\n";
+        for (i in invalidEdges){
+            errorMsg += "edge " + invalidEdges[i].id + invalidEdges[i].problem + "\n";
+        }
+        alert(errorMsg);
+        return false;
+    }
+    return true;
+
+}

@@ -36,8 +36,7 @@
 var nodes, edges, topNodes, topEdges, resEdges;
 var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
-var N, E;
-var T;
+var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
 
 function toggleNewGraphOptions() {
@@ -125,10 +124,6 @@ function initialiseDataSets(nodes, edges){
 
     resData = { nodes: topNodes, edges: resEdges};
     algResData = {nodes: topNodes, edges: algResEdges};
-
-    console.log(topData);
-    console.log(topAdjMatrix);
-    console.log(resAdjMatrix);
 }
 
 /*
@@ -143,21 +138,15 @@ function findDuplicateEdges(edges, from, to){
 function addEdge(edges, id, from, to, cap){
     if(cap == null){
         edges.push({
-            id,
-            color: {color: 'blue'},
+            id, color: {color: 'blue'},
             arrows: {to : {enabled: true}},
-            label: 0 + '/' + (Math.random() * 10 | 1),
-            from,
-            to,
+            label: 0 + '/' + (Math.random() * 10 | 1), from, to
         });
     } else {
         edges.push({
-            id,
-            color: {color: 'blue'},
+            id, color: {color: 'blue'},
             arrows: {to : {enabled: true}},
-            label: 0 + '/' + cap,
-            from,
-            to,
+            label: 0 + '/' + cap, from, to
         });
     }
     topAdjMatrix[from][to] = id;
@@ -167,16 +156,12 @@ function addEdge(edges, id, from, to, cap){
 function addNode(nodes, id, label, x, y){
     if(x == null && y == null){
         nodes.push({
-            id,
-            label,
+            id, label,
             physics: false,
         });
     } else {
         nodes.push({
-            id,
-            label,
-            x,
-            y,
+            id, label, x, y,
             physics: false,
         })
     }
@@ -190,7 +175,7 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateGraphData(){
-    N = document.getElementById("N").value;
+    N = document.getElementById("N_picker").value;
     E = N*2 - 3;
     T = N-1;
     initialiseMatrices();
@@ -285,8 +270,8 @@ Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
 function findEdgeID(data, node1, node2){
-    var edge, edgeData = {}, matrix;
-    if(data == "res") matrix = resAdjMatrix; else matrix = topAdjMatrix;
+    var edgeData = {}, matrix;
+    if(data == "res") matrix = resAdjMatrix; else if (data == "top") matrix = topAdjMatrix;
     if(matrix[node1][node2] != null){
       edgeData = {id: matrix[node1][node2], direction: 1}
     } else if (matrix[node2][node1] != null){

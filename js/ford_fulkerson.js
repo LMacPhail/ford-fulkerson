@@ -28,7 +28,7 @@ function addEdgeToRes(id, label, from, to){
 
 var edgeID = 0;
 function buildResidualGraph(){
-    console.log("Building residual graph");
+    // console.log("Building residual graph");
     var edges = [];
     var cap, flow, i;
     // build edges
@@ -53,7 +53,7 @@ function buildResidualGraph(){
 }
 
 function updateResidualGraph(path){
-  console.log("Updating residual graph");
+//   console.log("Updating residual graph");
   var edgeData, edge, flow, cap, forwards, backwards;
   for(i = 1; i < path.length; i++){
     addAnimationStep("top", "highlight", topAdjMatrix[path[i-1]][path[i]], 0, 'red', null, null, null);
@@ -98,7 +98,7 @@ If successful, returns an array of node IDs (in order of the path)
 If unsuccessful, returns -1
 */
 function findPath(visited){
-    console.log("finding path");
+    // console.log("finding path");
     var i, j, parents = [], queue = [];
     var nodes = topNodes, node, neighbour;
     for(i = 0; i < nodes.length; i++) parents.push({ node: i, parent: i});
@@ -170,7 +170,7 @@ function fordFulkerson(){
         } else {
             var m = findMinimumCapacity(algResData, path);
             for(i = 1; i < path.length; i++){
-                var edgeData = findEdgeID(1, path[i-1], path[i]);
+                var edgeData = findEdgeID("top", path[i-1], path[i]);
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;

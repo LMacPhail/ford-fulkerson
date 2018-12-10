@@ -54,8 +54,6 @@ function animateStep(){
       // console.log("remove");
       animationSteps[step].orig_edge = edges.get(edgeID);
       edges.remove(edgeID);
-      // console.log(animationSteps[step].orig_edge);
-      // console.log(edges.get(edgeID));
       break;
 
     case("highlight"):
@@ -63,8 +61,6 @@ function animateStep(){
       var edge_color = animationSteps[step].colour;
       animationSteps[step].orig_edge = edges.get(edgeID);
       edges.update([{id:edgeID, color:edge_color}]);
-      // console.log(animationSteps[step].orig_edge);
-      // console.log(edges.get(edgeID));
       break;
 
     case("label"):
@@ -72,8 +68,6 @@ function animateStep(){
       var label = animationSteps[step].label;
       animationSteps[step].orig_edge = edges.get(edgeID);
       edges.update([{id: edgeID, label: label}]);
-      // console.log(animationSteps[step].orig_edge);
-      // console.log(edges.get(edgeID));
       break;
 
     case("add"):
@@ -87,9 +81,6 @@ function animateStep(){
         from: from, to: to,
         arrows: {to: {enabled: true}}
       });
-      
-      // console.log(animationSteps[step].orig_edge);
-      // console.log(edges.get(edgeID));
       break;
 
     default:
@@ -146,15 +137,8 @@ function highlightPseudocode(pStep){
 
 function addAnimationStep(network, action, edgeID, pStep, colour, label, from, to){
   animationSteps.push({
-    network,
-    action,
-    edgeID,
-    pStep,
-    colour: {color:colour},
-    label,
-    from,
-    to,
-    orig_edge: null
+    network, action, edgeID, pStep, colour: {color:colour},
+    label, from, to, orig_edge: null
   });
 }
 
@@ -169,7 +153,7 @@ function highlightAugmentingPath(path, colour){
   var edgeID;
 
   for(i = 1; i < path.length; i++){
-    var edgeData = findEdgeID(0, path[i-1], path[i]);
+    var edgeData = findEdgeID("res", path[i-1], path[i]);
     edgeID = edgeData.id;
     addAnimationStep("res", "highlight", edgeID, 1, colour, null, null, null);
   }
