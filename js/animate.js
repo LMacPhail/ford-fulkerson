@@ -50,6 +50,9 @@ function indicateGraph(graph){
   } else if (graph == "res"){
     document.getElementById("main_ind").style.backgroundColor = "white";
     document.getElementById("res_ind").style.backgroundColor = "#e03c4c";
+  } else {
+    document.getElementById("main_ind").style.backgroundColor = "white";
+    document.getElementById("res_ind").style.backgroundColor = "white";
   }
 
 }
@@ -106,7 +109,10 @@ function animateStep(){
         arrows: {to: {enabled: true}}
       });
       break;
-
+    
+    case("finish"):
+      indicateGraph("neither");
+      break;
     default:
       console.log("Error: Invalid animation step");
       clearInterval(id);
@@ -143,7 +149,8 @@ function backwardStep(){
       case("add"):
         edges.remove(edgeID);
         break;
-
+      case("finish"):
+        break;
       default:
         console.log("Error: Invalid animation step");
         clearInterval(id);

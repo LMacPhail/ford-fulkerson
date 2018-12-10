@@ -182,13 +182,16 @@ function fordFulkerson(){
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
+                addAnimationStep("top", "highlight", resID, 2, 'green', null, null, null);
+                addAnimationStep(null);
                 addAnimationStep("top", "label", id, 2, null, label, null, null);
-                for(var j = 0; j < 3; j++) addAnimationStep(null);
-                
+                addAnimationStep("top", "highlight", resID, 2, 'blue', null, null, null);
+                addAnimationStep(null);
                 addAnimationStep("res", "highlight", resID, 2, 'blue', null, null, null);
             }
         }
         count++;
         // break;
     }
+    addAnimationStep("top", "finish",0, 3);
 }

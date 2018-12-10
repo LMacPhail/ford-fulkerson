@@ -54,7 +54,7 @@
 }
 
 #alg_title {
-    height: 5%;
+    height: 8%;
     width: 100%;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -164,6 +164,14 @@
 
 .show{display:block;}
 
+#N_controls { 
+  align-items: center;
+  display: flex;
+}
+
+#N_controls p {
+  font-family: sans-serif;
+}
 #N_picker { width: 30px; }
 
 /* #generate_random_graph {
