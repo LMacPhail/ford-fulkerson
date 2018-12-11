@@ -32,3 +32,14 @@ function setNewGraph(){
   fordFulkerson();
   step = 0;
 }
+
+topGraph.addEventListener("dragEnd",  
+  function(){
+    topGraph.storePositions();
+    resGraph.storePositions(); 
+  });
+resGraph.addEventListener("dragEnd",
+  function(){
+    topGraph.storePositions();
+    resGraph.storePositions(); 
+  });

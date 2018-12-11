@@ -22,7 +22,6 @@ step = 0;
 
 */
 function animateAlgorithm(){
-  console.log("animating...");
   var slider = document.getElementById("pb_slider");
   slider.oninput = function() {
     play = 0;
@@ -109,7 +108,10 @@ function animateStep(){
         arrows: {to: {enabled: true}}
       });
       break;
-    
+    case("updateFlow"):
+      pStep = animationSteps[step -1].pStep;
+      document.getElementById("flow_counter").innerHTML = "Current flow: " + animationSteps[step].m;
+
     case("finish"):
       indicateGraph("neither");
       break;
@@ -189,5 +191,10 @@ function highlightAugmentingPath(path){
     var edgeData = findEdgeID("res", path[i-1], path[i]);
     edgeID = edgeData.id;
     addAnimationStep("res", "highlight", edgeID, 1, 'red', null, null, null);
+  }
+  for(i = 1; i < path.length; i++){
+    var edgeData = findEdgeID("top", path[i-1], path[i]);
+    edgeID = edgeData.id;
+    addAnimationStep("top", "highlight", edgeID, 1, 'red', null, null, null);
   }
 }

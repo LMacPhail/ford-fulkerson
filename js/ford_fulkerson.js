@@ -154,7 +154,7 @@ function findMinimumCapacity(data, path){
 function fordFulkerson(){
     console.log("Running Ford Fulkerson...");
     var path = -1, visited = [];
-    var i, id;
+    var i, id, totalFlow = 0;
     var count = 0;
     for(i in topNodes){
         visited.push(0);
@@ -182,13 +182,15 @@ function fordFulkerson(){
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
-                addAnimationStep("top", "highlight", resID, 2, 'green', null, null, null);
+                addAnimationStep("top", "highlight", id, 2, 'green', null, null, null);
                 addAnimationStep(null);
                 addAnimationStep("top", "label", id, 2, null, label, null, null);
-                addAnimationStep("top", "highlight", resID, 2, 'blue', null, null, null);
+                addAnimationStep("top", "highlight", id, 2, 'blue', null, null, null);
                 addAnimationStep(null);
                 addAnimationStep("res", "highlight", resID, 2, 'blue', null, null, null);
             }
+            totalFlow += m;
+            animationSteps.push({network: "top", edgeID: resID, action: "updateFlow", m:totalFlow});
         }
         count++;
         // break;
