@@ -6,7 +6,7 @@
     nodes:    array to temporarily store nodes
     edges:    array to temporarily store edges
 
-    topNodes: vis DataSet representing the nodes in the top graph
+    topNodes: vis DataSet representing the nodes in the top and residual graph
     topEdges: vis DataSet representing the edges in the top graph
     topData:  combination of top graph nodes and edges
 

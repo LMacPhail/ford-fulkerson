@@ -60,15 +60,15 @@ function animateStep(){
   var edgeID = animationSteps[step].edgeID,
       network = animationSteps[step].network,
       pStep = animationSteps[step].pStep,
+      tracebackID = animationSteps[step].tracebackID,
+      tracebackData = animationSteps[step].tracebackData,
       edges;
   if(network == "res") { 
     edges = resEdges;
-    if(pStep == 2) indicateGraph("res");
   } else if (network == "top") { 
     edges = topEdges;
-    if(pStep == 2) indicateGraph("top");
   }
-  if(pStep < 2) indicateGraph("res");
+  if(tracebackID != null) console.log(constructTracebackLine(tracebackID, tracebackData));
 
   if(edgeID == null) {
     step++;
@@ -113,7 +113,7 @@ function animateStep(){
       document.getElementById("flow_counter").innerHTML = "Current flow: " + animationSteps[step].m;
 
     case("finish"):
-      indicateGraph("neither");
+      // indicateGraph("neither");
       break;
     default:
       console.log("Error: Invalid animation step");
@@ -133,6 +133,10 @@ function backwardStep(){
         pStep = animationSteps[step].pStep,
         edges;
     if(network == "res") edges = resEdges; else if (network == "top") edges = topEdges;
+    if(edgeID == null) {
+      step--;
+      return;
+    }
     switch(currentStep.action){
       case("remove"):
         edges.add(orig_edge);
@@ -151,10 +155,16 @@ function backwardStep(){
       case("add"):
         edges.remove(edgeID);
         break;
+
+      case("updateFlow"):
+        pStep = animationSteps[step -1].pStep;
+        document.getElementById("flow_counter").innerHTML = "Current flow: " + animationSteps[step].m;
+        break;
+
       case("finish"):
         break;
       default:
-        console.log("Error: Invalid animation step");
+        console.log("Error: Invalid animation step: " + currentStep.action);
         clearInterval(id);
     }
     highlightPseudocode(pStep);
@@ -168,14 +178,42 @@ function highlightPseudocode(pStep){
   var pseudocode = document.getElementsByClassName("pseudocode_step");
   for(var i = 0; i < pseudocode.length; i++) pseudocode[i].style.color = "black";
   pseudocode[pStep].style.color = "#c0d6ba";
+  if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
 }
 
-function addAnimationStep(network, action, edgeID, pStep, colour, label, from, to){
+function addAnimationStep(network, action, edgeID, pStep, colour, label, from, to, tracebackID, tracebackData){
   animationSteps.push({
     network, action, edgeID, pStep, colour: {color:colour},
-    label, from, to, orig_edge: null
+    label, from, to, orig_edge: null,
+    tracebackID, tracebackData
   });
 }
+
+function createHighlightAnimation(network, edgeID, pStep, colour, tracebackID, tracebackData){
+  if(tracebackID != null){
+    addAnimationStep(network, "highlight", edgeID, pStep, colour, null, null, null, tracebackID, tracebackData);
+  } else {
+    addAnimationStep(network, "highlight", edgeID, pStep, colour);
+  }
+}
+
+function createLabelEdgeAnimation(network, edgeID, pStep, label, tracebackID, tracebackData){
+  addAnimationStep(network, "label", edgeID, pStep, null, label, null, null, tracebackID, tracebackData);
+}
+
+function createAddEdgeAnimation(network, edgeID, pStep, label, from, to, tracebackID, tracebackData){
+  addAnimationStep(network, "add", edgeID, pStep, null, label, from, to, tracebackID, tracebackData);
+}
+
+function createRemoveEdgeAnimation(network, edgeID, pStep, tracebackID, tracebackData){
+  addAnimationStep(network, "remove", edgeID, pStep, null, null, null, null, tracebackID, tracebackData);
+}
+
+function printTracebackLine(tracebackID, tracebackData){
+  addAnimationStep(null, null, null, null, null, null, null, null, tracebackID, tracebackData);
+}
+
+
 
 /*
   Function: highlightAugmentingPath(path)
@@ -185,16 +223,70 @@ function addAnimationStep(network, action, edgeID, pStep, colour, label, from, t
 
 */
 function highlightAugmentingPath(path){
-  var edgeID;
+  var edgeID, edgeData;
 
   for(i = 1; i < path.length; i++){
-    var edgeData = findEdgeID("res", path[i-1], path[i]);
+    edgeData = findEdgeID("res", path[i-1], path[i]);
     edgeID = edgeData.id;
-    addAnimationStep("res", "highlight", edgeID, 1, 'red', null, null, null);
-  }
-  for(i = 1; i < path.length; i++){
-    var edgeData = findEdgeID("top", path[i-1], path[i]);
+    createHighlightAnimation("res", edgeID, 1, 'red', 8, [path[i-1], path[i]]);
+
+    edgeData = findEdgeID("top", path[i-1], path[i]);
     edgeID = edgeData.id;
-    addAnimationStep("top", "highlight", edgeID, 1, 'red', null, null, null);
+    createHighlightAnimation("top", edgeID, 1, 'red');
   }
 }
+
+function constructTracebackLine(index, data){
+  var txt;
+  // console.log("index: " + index);
+  switch(true){
+    case(index == 0):
+      txt = traceback[index].split("$");
+      return txt[0] + data + txt[1] + data;
+
+    case((1 <= index) && (index <= 3)):
+      txt = traceback[index].split("$");
+      return txt[0] + data;
+
+    case((4 <= index) && (index <= 7)):
+      return traceback[index];
+
+    case((8 <= index) && (index <= 10)):
+      txt = traceback[index].split("$");
+      var from, to;
+      if(data[0] == 0){
+        from = "S";
+      } else if(data[0] == T){
+        from = "T";
+      } else {
+        from = data[0];
+      }
+      if(data[1] == 0){ 
+        to = "S";
+      } else if(data[1] == T){
+        to = "T";
+      } else {
+        to = data[1];
+      }
+      return txt[0] + from + txt[1] + to;
+    default:
+      console.log("Error: traceback index out of bounds: " + index);
+  }
+}
+
+var traceback = [
+  "capacity - flow = $, adding forwards edge of value $",
+
+  "flow > 0, adding backwards edge of value $",
+  "adding forwards edge of value $",
+  "augmenting path found: $",
+
+  "searching for augmenting path...",
+  "no augmenting path found",
+  "Building residual graph...",
+  "Updating residual graph...",
+
+  "augmenting edge between nodes $ and $",
+  "augmenting forwards edge between nodes $ and $",
+  "decrementing backwards edge between nodes $ and $",
+]

@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="new_graph">
-        <button onclick="toggleNewGraphOptions()" class="dropbtn">New Graph</button>
+        <button onclick="toggleNewGraphOptions()" class="dropbtn">New/Save Graph</button>
         <div id="newGraphOptions" class="new-graph-options">
             <button class="dropdown-button" id="load_default_graph"
             onclick="defaultGraphData();
@@ -55,7 +55,7 @@
                         toggleNewGraphOptions();">
                 Upload/Save Graph
             </button>
-            <button class="dropdown-button" id="draw_graph">Draw Graph</button>
+            <!-- <button class="dropdown-button" id="draw_graph">Draw Graph</button> -->
         </div>
     </div>
     <div id="uploadModal" class="upload-modal">
@@ -79,15 +79,16 @@
             <p>Maximum flow has been found</p>
         </div>
     </div>
+    <div id="traceback"></div>
     <div id="flow_counter">Current flow: 0</div>
 </div>
 <div id="network_canvas">
   <div class="top">
-    <div class= "indicator" id="main_ind"></div>
+    <!-- <div class= "indicator" id="main_ind"></div> -->
     <div id="main_graph"></div>
   </div>
   <div class="res">
-    <div class= "indicator" id="res_ind"></div>
+    <!-- <div class= "indicator" id="res_ind"></div> -->
     <div id="residual_graph"></div>
   </div>
 </div>
