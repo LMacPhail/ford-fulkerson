@@ -150,9 +150,7 @@ function fordFulkerson(){
     var path = -1, visited = [];
     var i, id, totalFlow = 0;
     var count = 0;
-    for(i in topNodes){
-        visited.push(0);
-    }
+    for(i in topNodes) visited.push(0);
     while(true){
         if (path == -1) buildResidualGraph(); else updateResidualGraph(path);
         for(i in visited) visited[i] = 0;
@@ -192,5 +190,46 @@ function fordFulkerson(){
         count++;
         // break;
     }
+    findMinimumCut(totalFlow);
     addAnimationStep("top", "finish", 0, 3);
+}
+
+function findMinimumCut(totalFlow){
+    var A = [], B = [], C = [], Q = [], i, j = 1;
+    var visited = [];
+    for(i in topNodes) visited.push(0);
+    for(i = 1; i < N; i++) B.push(i);
+    visited[0] = 1;
+    Q.push(0);
+    while(Q.length > 0) {
+        var node = Q.pop();
+        var connected = getConnectedNodes("res", node, "from");
+        for(i in connected){
+            console.log(connected[i]);
+            if(visited[connected[i]] == 0) {
+                A.push(connected[i]);
+                Q.push(connected[i]);
+                visited[connected[i]] = 1;
+            }
+        }
+    }
+    
+    A.push(0);
+    
+    console.log(A);
+    for(i = 0; i < A.length -1; i++) {
+        B.splice((A[i]-j), 1);
+        j++;
+    }
+    console.log(B);
+    for(i = 0; i < A.length; i++) {
+        for(j = 0; j < B.length; j++) {
+            // console.log("from: " + A[i] + ", to: " + B[j]);
+            if(topAdjMatrix[A[i]][B[j]] != null) C.push(topAdjMatrix[A[i]][B[j]]);
+        }
+    }
+    console.log(C);
+    for(i = 0; i < C.length; i++){
+        createHighlightAnimation("top", C[i], 3, "red");
+    }
 }
