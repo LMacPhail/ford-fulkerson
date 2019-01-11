@@ -18,11 +18,11 @@
     </div>
     <div class="playback">
         <div class="playback_control">
-            <i class="fa fa-backward" id="rewind_button" onclick="play = -1;animateAlgorithm();"></i>
-            <i class="fa fa-step-backward" id="backstep_button" onclick="play = -2;executeAnimationStep();"></i>
-            <i class="fa fa-play" id="play_button" onclick="play = 1;animateAlgorithm();"></i>
-            <i class="fa fa-pause" id="pause_button" onclick="play =0;"></i>
-            <i class="fa fa-step-forward" id="forwardstep_button" onclick="play=2;executeAnimationStep();step++;"></i>
+            <i class="fa fa-backward" id="rewind_button" onclick="playState = -1;animateAlgorithm();"></i>
+            <i class="fa fa-step-backward" id="backstep_button" onclick="playState = -2;executeAnimationStep();"></i>
+            <i class="fa fa-play" id="play_button" onclick="playState = 1;animateAlgorithm();"></i>
+            <i class="fa fa-pause" id="pause_button" onclick="playState = 0;"></i>
+            <i class="fa fa-step-forward" id="forwardstep_button" onclick="playState = 2;executeAnimationStep();step++;"></i>
         </div>
         <div class="speed_control">
             <p id="speed_info">Speed: </p>
@@ -47,7 +47,7 @@
                 </button>
                 <div id="N_controls">
                   <p>Number of nodes: </p>
-                  <input type="number" class="dropdown-button" id="N_picker" value="8"></input>
+                  <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
                 </div>
             </div>
             <button class="dropdown-button" id="upload_graph" 

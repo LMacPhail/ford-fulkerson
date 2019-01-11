@@ -60,26 +60,33 @@ function updateResidualGraph(path){
     backwards = resAdjMatrix[path[i]][path[i-1]];
 
     if(forwards != null){
-      if(cap - flow > 0){
-        algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
-        createLabelEdgeAnimation("res", forwards, 0, (cap - flow).toString(), 0, (cap-flow));
-      } else {
-        algResEdges.remove(forwards);
-        createRemoveEdgeAnimation("res", forwards, 0);
-        resAdjMatrix[path[i-1]][path[i]] = null;
-      }
+        if((cap - flow > 0) && (flow > 0)){
+            console.log("cap-flow > 0 and = " + (cap - flow).toString());
+            algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
+            createLabelEdgeAnimation("res", forwards, 0, (cap - flow).toString(), 0, (cap-flow));
+        } else {
+            algResEdges.remove(forwards);
+            createRemoveEdgeAnimation("res", forwards, 0);
+            resAdjMatrix[path[i-1]][path[i]] = null;
+        }
     } else {
-      addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
-      createAddEdgeAnimation("res", edgeID, 0, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
-      edgeID++;
+        console.log("no forwards edge here, cap - flow = " + (cap - flow).toString());
+        addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
+        createAddEdgeAnimation("res", edgeID, 0, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
+        edgeID++;
     }
     if(backwards != null){
-      algResEdges.update([{id: backwards, label: flow}]);
-      createLabelEdgeAnimation("res", backwards, 0, flow, 1, flow);
+        algResEdges.update([{id: backwards, label: flow}]);
+        createLabelEdgeAnimation("res", backwards, 0, flow, 1, flow);
     } else {
-      addEdgeToRes(edgeID, flow, path[i], path[i-1]);
-      createAddEdgeAnimation("res", edgeID, 0, flow, path[i], path[i-1], 1, flow);
-      edgeID++;
+        if(flow == 0) {
+            addEdgeToRes(edgeID, cap, path[i], path[i-1]);
+            createAddEdgeAnimation("res", edgeID, 0, cap, path[i], path[i-1], 1, flow);
+        } else {
+            addEdgeToRes(edgeID, flow, path[i], path[i-1]);
+            createAddEdgeAnimation("res", edgeID, 0, flow, path[i], path[i-1], 1, flow);
+        }
+        edgeID++;
     }
     createHighlightAnimation("top", topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
   }
@@ -101,7 +108,7 @@ function findPath(visited){
         visited[i] = 1;
         queue.push(i);
         while(queue.length > 0){
-            node = queue.pop();
+            node = queue.shift();
             var neighbours = getConnectedNodes("res", node, 'to');
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
