@@ -161,7 +161,7 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             to = currentStep.to;
         edges.add({ 
             id: edgeID, label: label,
-            color: {color: 'blue'}, width: 4,
+            color: {color: 'blue'}, width: 3,
             from: from, to: to,
             font: {strokeWidth: 5},
             arrows: {to: {enabled: true}},
@@ -230,9 +230,10 @@ function highlightAugmentingPath(path){
         edgeID = edgeData.id;
         createHighlightAnimation(TOP, edgeID, 1, 'red');
     }
-    }
+    addAnimationStep(null);
+}
 
-    function constructTracebackLine(index, data){
+function constructTracebackLine(index, data){
     var txt;
     // console.log("index: " + index);
     switch(true){

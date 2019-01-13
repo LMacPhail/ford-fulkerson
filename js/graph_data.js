@@ -51,67 +51,32 @@ function defaultGraphData(){
     console.log("default graph data");
     N = 6;
     T = N-1;
-    nodes = [
-        {id: 0, label: 'S', x: -300, y: 0, physics: false},
-        {id: 1, label: 'n1', x: -150, y: -140, physics: false},
-        {id: 2, label: 'n2', x: 130, y: -130, physics: false},
-        {id: 3, label: 'n3', x: -150, y: 130, physics: false},
-        {id: 4, label: 'n4', x: 150, y: 140, physics: false},
-        {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
-    ];
 
-    edges = [
-        { id: 0, label: '0/2', from: 0, to: 1,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 1, label: '0/4', from: 0, to: 3,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 2, label: '0/1', from: 1, to: 2,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 3, label: '0/3', from: 1, to: 4,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 4, label: '0/3', from: 3, to: 2,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 5, label: '0/1', from: 3, to: 4,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 6, label: '0/1', from: 4, to: 3,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 7, label: '0/2', from: 2, to: 5,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true}},
-            arrowStrikethrough: false,
-        },{ id: 8, label: '0/4', from: 4, to: 5,
-            color: {color: 'blue'}, width: 4,
-            font: {strokeWidth: 5},
-            arrows: { to : {enabled: true }},
-            arrowStrikethrough: false,
-        },
-    ]; 
+    initialiseMatrices();
+    nodes = [];
+    // addNode(nodes, id, label, x, y);
+    addNode(nodes, 0, 'S', -300, 0);
+    addNode(nodes, 1, 'n1', -150, -140);
+    addNode(nodes, 2, 'n2', 130, -130);
+    addNode(nodes, 3, 'n3', -150, 130);
+    addNode(nodes, 4, 'n4', 150, 140);
+    addNode(nodes, 5, 'n5', 300, 0);
+    //     {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
+    
+    edges = [];
+    // addEdge(edges, id, from, to, capacity)
+    addEdge(edges, 0, 0, 1, 2);
+    addEdge(edges, 1, 0, 3, 4);
+    addEdge(edges, 2, 1, 2, 1);
+    addEdge(edges, 3, 1, 4, 3);
+    addEdge(edges, 4, 3, 2, 3);
+    addEdge(edges, 5, 3, 4, 1);
+    addEdge(edges, 6, 4, 3, 1);
+    addEdge(edges, 7, 2, 5, 2);
+    addEdge(edges, 8, 4, 5, 4);
 
     // Adjacency matrix initialising
     initialiseDataSets(nodes, edges);
-    initialiseMatrices();
     for(var i = 0; i < edges.length; i++){
       var from = edges[i].from, to = edges[i].to;
       topAdjMatrix[from][to] = edges[i].id;
@@ -161,13 +126,19 @@ function addEdge(edges, id, from, to, cap){
         edges.push({
             id, color: {color: 'blue'},
             arrows: {to : {enabled: true}},
-            label: 0 + '/' + (Math.random() * 10 | 1), from, to
+            font: {strokeWidth: 5},
+            width: 3,
+            label: 0 + '/' + (Math.random() * 10 | 1), from, to,
+            arrowStrikethrough: false,
         });
     } else {
         edges.push({
             id, color: {color: 'blue'},
             arrows: {to : {enabled: true}},
-            label: 0 + '/' + cap, from, to
+            font: {strokeWidth: 5},
+            width: 3,
+            label: 0 + '/' + cap, from, to,
+            arrowStrikethrough: false,
         });
     }
     topAdjMatrix[from][to] = id;

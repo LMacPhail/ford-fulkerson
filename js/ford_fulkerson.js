@@ -88,6 +88,7 @@ function updateResidualGraph(path){
     }
     createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
   }
+  addAnimationStep(null);
 }
 
 /*
