@@ -29,30 +29,30 @@ function addEdgeToRes(id, label, from, to){
 var edgeID = 0;
 function buildResidualGraph(){
     // console.log("Building residual graph");
-    printTracebackLine(6);
+    prepareOutputLine(6);
     var edges = [];
     var cap, i;
     // build edges
     for(i = 0; i < algTopEdges.length; i++){
         var edge = algTopEdges.get(i);
-        createHighlightAnimation("top", i, 0, 'red');
+        createHighlightAnimation(TOP, i, 0, 'red');
         cap = getCapacity(edge.label);
-        createAddEdgeAnimation("res", edgeID, 0, cap, edge.from, edge.to, 2, cap);
+        createAddEdgeAnimation(RES, edgeID, 0, cap, edge.from, edge.to, 2, cap);
         addEdgeToRes(edgeID, cap, edge.from, edge.to);
         edgeID++;
-        createHighlightAnimation("top", i, 0, 'blue');
+        createHighlightAnimation(TOP, i, 0, 'blue');
     }
     algResEdges.update(edges);
 }
 
 function updateResidualGraph(path){
 //   console.log("Updating residual graph");
-    printTracebackLine(7);
+    prepareOutputLine(7);
   var edgeData, edge, flow, cap, forwards, backwards;
   for(i = 1; i < path.length; i++){
-    createHighlightAnimation("top", topAdjMatrix[path[i-1]][path[i]], 0, 'red');
+    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'green');
 
-    edgeData = findEdgeID("top", path[i-1], path[i]);
+    edgeData = findEdgeID(TOP, path[i-1], path[i]);
     edge = algTopEdges.get(edgeData.id);
     flow = getFlow(edge.label), cap = getCapacity(edge.label);
 
@@ -61,34 +61,32 @@ function updateResidualGraph(path){
 
     if(forwards != null){
         if((cap - flow > 0) && (flow > 0)){
-            console.log("cap-flow > 0 and = " + (cap - flow).toString());
             algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
-            createLabelEdgeAnimation("res", forwards, 0, (cap - flow).toString(), 0, (cap-flow));
+            createLabelEdgeAnimation(RES, forwards, 0, (cap - flow).toString(), 0, (cap-flow));
         } else {
             algResEdges.remove(forwards);
-            createRemoveEdgeAnimation("res", forwards, 0);
+            createRemoveEdgeAnimation(RES, forwards, 0);
             resAdjMatrix[path[i-1]][path[i]] = null;
         }
     } else {
-        console.log("no forwards edge here, cap - flow = " + (cap - flow).toString());
         addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
-        createAddEdgeAnimation("res", edgeID, 0, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
+        createAddEdgeAnimation(RES, edgeID, 0, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
         edgeID++;
     }
     if(backwards != null){
         algResEdges.update([{id: backwards, label: flow}]);
-        createLabelEdgeAnimation("res", backwards, 0, flow, 1, flow);
+        createLabelEdgeAnimation(RES, backwards, 0, flow, 1, flow);
     } else {
         if(flow == 0) {
             addEdgeToRes(edgeID, cap, path[i], path[i-1]);
-            createAddEdgeAnimation("res", edgeID, 0, cap, path[i], path[i-1], 1, flow);
+            createAddEdgeAnimation(RES, edgeID, 0, cap, path[i], path[i-1], 1, flow);
         } else {
             addEdgeToRes(edgeID, flow, path[i], path[i-1]);
-            createAddEdgeAnimation("res", edgeID, 0, flow, path[i], path[i-1], 1, flow);
+            createAddEdgeAnimation(RES, edgeID, 0, flow, path[i], path[i-1], 1, flow);
         }
         edgeID++;
     }
-    createHighlightAnimation("top", topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
+    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
   }
 }
 
@@ -109,7 +107,7 @@ function findPath(visited){
         queue.push(i);
         while(queue.length > 0){
             node = queue.shift();
-            var neighbours = getConnectedNodes("res", node, 'to');
+            var neighbours = getConnectedNodes(RES, node, 'to');
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
                 if(visited[neighbour] == 0){
@@ -161,21 +159,21 @@ function fordFulkerson(){
     while(true){
         if (path == -1) buildResidualGraph(); else updateResidualGraph(path);
         for(i in visited) visited[i] = 0;
-        printTracebackLine(4);
+        prepareOutputLine(4);
         path = findPath(visited);
         console.log("path: " + path);
         highlightAugmentingPath(path);
         if(path == -1){
-            printTracebackLine(5);            
+            prepareOutputLine(5);            
             break;
         } else {
-            printTracebackLine(3, path);
+            prepareOutputLine(3, path);
             var m = findMinimumCapacity(algResData, path);
             for(i = 1; i < path.length; i++){
-                var edgeData = findEdgeID("top", path[i-1], path[i]);
+                var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
                 id = edgeData.id;
-                createHighlightAnimation("res", resID, 2, "green");
+                createHighlightAnimation(RES, resID, 2, "green");
                 if(edgeData.direction == 1){
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
                 }
@@ -184,24 +182,24 @@ function fordFulkerson(){
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
-                createHighlightAnimation("top", id, 2, 'green');
+                createHighlightAnimation(TOP, id, 2, 'green');
                 addAnimationStep(null);
-                createLabelEdgeAnimation("top", id, 2, label, 8, [path[i-1], path[i]]);
-                createHighlightAnimation("top", id, 2, 'blue');
+                createLabelEdgeAnimation(TOP, id, 2, label, 8, [path[i-1], path[i]]);
+                createHighlightAnimation(TOP, id, 2, 'red');
                 addAnimationStep(null);
-                createHighlightAnimation("res", resID, 2, 'blue');
+                createHighlightAnimation(RES, resID, 2, 'blue');
             }
             totalFlow += m;
-            animationSteps.push({network: "top", edgeID: resID, action: "updateFlow", m:totalFlow});
+            animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
         }
         count++;
         // break;
     }
     findMinimumCut(totalFlow);
-    addAnimationStep("top", "finish", 0, 3);
+    addAnimationStep(TOP, "finish", 0, 3);
 }
 
-function findMinimumCut(totalFlow){
+function findMinimumCut(){
     var A = [], B = [], C = [], Q = [], i, j = 1;
     var visited = [];
     for(i in topNodes) visited.push(0);
@@ -210,7 +208,7 @@ function findMinimumCut(totalFlow){
     Q.push(0);
     while(Q.length > 0) {
         var node = Q.pop();
-        var connected = getConnectedNodes("res", node, "from");
+        var connected = getConnectedNodes(RES, node, "from");
         for(i in connected){
             console.log(connected[i]);
             if(visited[connected[i]] == 0) {
@@ -237,6 +235,6 @@ function findMinimumCut(totalFlow){
     }
     console.log(C);
     for(i = 0; i < C.length; i++){
-        createHighlightAnimation("top", C[i], 3, "red");
+        createHighlightAnimation(TOP, C[i], 3, "red");
     }
 }

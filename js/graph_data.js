@@ -38,6 +38,7 @@ var algTopEdges, algResEdges;
 var topData, resData, algTopData, algResData;
 var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
+var TOP = 0, RES = 1;
 
 function toggleNewGraphOptions() {
     document.getElementById("newGraphOptions").classList.toggle("show");
@@ -56,39 +57,57 @@ function defaultGraphData(){
         {id: 2, label: 'n2', x: 130, y: -130, physics: false},
         {id: 3, label: 'n3', x: -150, y: 130, physics: false},
         {id: 4, label: 'n4', x: 150, y: 140, physics: false},
-        {id: 5, label: 'T', x: 300, y: 0, physics: false}
+        {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
     ];
 
     edges = [
         { id: 0, label: '0/2', from: 0, to: 1,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 1, label: '0/4', from: 0, to: 3,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 2, label: '0/1', from: 1, to: 2,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 3, label: '0/3', from: 1, to: 4,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 4, label: '0/3', from: 3, to: 2,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 5, label: '0/1', from: 3, to: 4,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 6, label: '0/1', from: 4, to: 3,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 7, label: '0/2', from: 2, to: 5,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
             arrows: { to : {enabled: true}},
+            arrowStrikethrough: false,
         },{ id: 8, label: '0/4', from: 4, to: 5,
-            color: {color: 'blue'},
-            arrows: { to : {enabled: true}},
+            color: {color: 'blue'}, width: 4,
+            font: {strokeWidth: 5},
+            arrows: { to : {enabled: true }},
+            arrowStrikethrough: false,
         },
-    ];
+    ]; 
 
     // Adjacency matrix initialising
     initialiseDataSets(nodes, edges);
@@ -132,7 +151,7 @@ is already an edge with these nodes and -1 if there is not
 */
 function findDuplicateEdges(data, from, to){
     var matrix;
-    if(data == "top") matrix = topAdjMatrix; else matrix = data;
+    if(data == TOP) matrix = topAdjMatrix; else matrix = data;
     if(matrix[from][to] != null) return 1;
     return -1;
 }
@@ -235,7 +254,7 @@ function generateGraphData(){
         do {  // prevents loops and duplicate parallel edges
               from = (Math.random() * T | 0);
               to = (Math.random() * N | 0);
-        } while ((from == to) || (findDuplicateEdges("top", from, to) == 1));
+        } while ((from == to) || (findDuplicateEdges(TOP, from, to) == 1));
         edges = addEdge(edges, edgeID, from, to, null);
         edgeID++;
     }
@@ -254,7 +273,7 @@ direction = 'from' - returns array of nodeIds that connect to node
 function getConnectedNodes(data, nodeId, direction) {
     // console.log("getting connected nodes");
     var nodeList = [], matrix;
-    if (data == "res") matrix = resAdjMatrix; else matrix = topAdjMatrix;
+    if (data == RES) matrix = resAdjMatrix; else matrix = topAdjMatrix;
     if (direction == 'from') {
       var fromList = matrix[nodeId];
       for(var i = 0; i < fromList.length; i++) if (fromList[i] != null) nodeList.push(i);
@@ -273,7 +292,7 @@ direction 0 if backwards, 1 if forwards
 */
 function findEdgeID(data, node1, node2){
     var edgeData = {}, matrix;
-    if(data == "res") matrix = resAdjMatrix; else if (data == "top") matrix = topAdjMatrix;
+    if(data == RES) matrix = resAdjMatrix; else if (data == TOP) matrix = topAdjMatrix;
     if(matrix[node1][node2] != null){
       edgeData = {id: matrix[node1][node2], direction: 1}
     } else if (matrix[node2][node1] != null){

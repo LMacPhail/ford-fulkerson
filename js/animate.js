@@ -34,7 +34,7 @@ function animateAlgorithm(){
     playState = PLAY;
   }
   var id = setInterval(frame, (1000 * (10/slider.value)));
-  console.log(animationSteps.length);
+//   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
       clearInterval(id);
@@ -46,9 +46,9 @@ function animateAlgorithm(){
 }
 
 function selectNetwork(network){
-    if(network == "res") { 
+    if(network == RES) { 
         return resEdges;
-    } else if (network == "top") { 
+    } else if (network == TOP) { 
         return topEdges;
     } else if (network == null) {
         return null;
@@ -63,18 +63,18 @@ function executeAnimationStep(){
             playState = PAUSE;
         }
     } 
-    console.log("executing step " + step + ", play = " + playState);
-    console.log(currentStep);
+    // console.log("executing step " + step + ", play = " + playState);
+    // console.log(currentStep);
     
     var currentStep = animationSteps[step];
     var edgeID = currentStep.edgeID,
         network = currentStep.network,
         pStep = currentStep.pStep,
-        tracebackID = currentStep.tracebackID,
-        tracebackData = currentStep.tracebackData,
+        outputID = currentStep.outputID,
+        outputData = currentStep.outputData,
         edges;
     
-    if(tracebackID != null) console.log(constructTracebackLine(tracebackID, tracebackData));
+    if(outputID != null) console.log(constructTracebackLine(outputID, outputData));
         
     if(network != null) {
         edges = selectNetwork(network);
@@ -161,9 +161,11 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             to = currentStep.to;
         edges.add({ 
             id: edgeID, label: label,
-            color: {color: 'blue'},
+            color: {color: 'blue'}, width: 4,
             from: from, to: to,
-            arrows: {to: {enabled: true}}
+            font: {strokeWidth: 5},
+            arrows: {to: {enabled: true}},
+            arrowStrikethrough: false
         });
     } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         edges.remove(edgeID);
@@ -177,36 +179,36 @@ function highlightPseudocode(pStep){
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
   }
   
-function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, tracebackID, tracebackData){
+function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, outputID, outputData){
     animationSteps.push({
         network, action, edgeID, pStep, color: {color:color},
         label, from, to, orig_edge: null,
-        tracebackID, tracebackData
+        outputID, outputData
     });
 }
 
-function createHighlightAnimation(network, edgeID, pStep, color, tracebackID, tracebackData){
-    if(tracebackID != null){
-        addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, tracebackID, tracebackData);
+function createHighlightAnimation(network, edgeID, pStep, color, outputID, outputData){
+    if(outputID != null){
+        addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, outputID, outputData);
     } else {
         addAnimationStep(network, "highlight", edgeID, pStep, color);
     }
 }
 
-function createLabelEdgeAnimation(network, edgeID, pStep, label, tracebackID, tracebackData){
-    addAnimationStep(network, "label", edgeID, pStep, null, label, null, null, tracebackID, tracebackData);
+function createLabelEdgeAnimation(network, edgeID, pStep, label, outputID, outputData){
+    addAnimationStep(network, "label", edgeID, pStep, null, label, null, null, outputID, outputData);
 }
 
-function createAddEdgeAnimation(network, edgeID, pStep, label, from, to, tracebackID, tracebackData){
-    addAnimationStep(network, "add", edgeID, pStep, null, label, from, to, tracebackID, tracebackData);
+function createAddEdgeAnimation(network, edgeID, pStep, label, from, to, outputID, outputData){
+    addAnimationStep(network, "add", edgeID, pStep, null, label, from, to, outputID, outputData);
 }
 
-function createRemoveEdgeAnimation(network, edgeID, pStep, tracebackID, tracebackData){
-    addAnimationStep(network, "remove", edgeID, pStep, null, null, null, null, tracebackID, tracebackData);
+function createRemoveEdgeAnimation(network, edgeID, pStep, outputID, outputData){
+    addAnimationStep(network, "remove", edgeID, pStep, null, null, null, null, outputID, outputData);
 }
 
-function printTracebackLine(tracebackID, tracebackData){
-    addAnimationStep(null, null, null, null, null, null, null, null, tracebackID, tracebackData);
+function prepareOutputLine(outputID, outputData){
+    addAnimationStep(null, null, null, null, null, null, null, null, outputID, outputData);
 }
 
 /*
@@ -220,13 +222,13 @@ function highlightAugmentingPath(path){
     var edgeID, edgeData;
 
     for(i = 1; i < path.length; i++){
-        edgeData = findEdgeID("res", path[i-1], path[i]);
+        edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation("res", edgeID, 1, 'red', 8, [path[i-1], path[i]]);
+        createHighlightAnimation(RES, edgeID, 1, 'red', 8, [path[i-1], path[i]]);
 
-        edgeData = findEdgeID("top", path[i-1], path[i]);
+        edgeData = findEdgeID(TOP, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation("top", edgeID, 1, 'red');
+        createHighlightAnimation(TOP, edgeID, 1, 'red');
     }
     }
 
