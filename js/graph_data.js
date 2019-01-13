@@ -122,25 +122,17 @@ function findDuplicateEdges(data, from, to){
 }
 
 function addEdge(edges, id, from, to, cap){
-    if(cap == null){
-        edges.push({
-            id, color: {color: 'blue'},
-            arrows: {to : {enabled: true}},
-            font: {strokeWidth: 5},
-            width: 3,
-            label: 0 + '/' + (Math.random() * 10 | 1), from, to,
-            arrowStrikethrough: false,
-        });
-    } else {
-        edges.push({
-            id, color: {color: 'blue'},
-            arrows: {to : {enabled: true}},
-            font: {strokeWidth: 5},
-            width: 3,
-            label: 0 + '/' + cap, from, to,
-            arrowStrikethrough: false,
-        });
-    }
+    if(cap == null) cap = Math.random() * 10 | 1
+    edges.push({
+        id, color: {color: 'blue'},
+        arrows: {to : {enabled: true}},
+        font: {strokeWidth: 5},
+        chosen: false,
+        width: 3,
+        label: 0 + '/' + cap, from, to,
+        arrowStrikethrough: false,
+    });
+
     topAdjMatrix[from][to] = id;
     return edges;
 }

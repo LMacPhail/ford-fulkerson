@@ -12,6 +12,9 @@ var options = {
       nodeSpacing: 300,
     }
   },
+  interaction: {
+    hover: true,
+  },
   physics: {
     stabilization: {
       fit: true,
