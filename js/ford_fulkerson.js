@@ -87,6 +87,7 @@ function updateResidualGraph(path){
         edgeID++;
     }
     createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
+    if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], 0, 'blue');
   }
   addAnimationStep(null);
 }
@@ -200,6 +201,20 @@ function fordFulkerson(){
     addAnimationStep(TOP, "finish", 0, 3);
 }
 
+function bubbleSort(list){
+    var i, j;
+    for(i = 0; i < list.length-1; i++){
+        for(j = 0; j < list.length-i-1; j++){
+            if (list[j] > list[j+1]) {
+                var temp = list[j];
+                list[j] = list[j+1];
+                list[j+1] = temp
+            }
+        }
+    }
+    return list;
+}
+
 function findMinimumCut(){
     var A = [], B = [], C = [], Q = [], i, j = 1;
     var visited = [];
@@ -207,6 +222,7 @@ function findMinimumCut(){
     for(i = 1; i < N; i++) B.push(i);
     visited[0] = 1;
     Q.push(0);
+    A.push(0);
     while(Q.length > 0) {
         var node = Q.pop();
         var connected = getConnectedNodes(RES, node, "from");
@@ -219,11 +235,10 @@ function findMinimumCut(){
             }
         }
     }
-    
-    A.push(0);
-    
+    A = bubbleSort(A);
     console.log(A);
-    for(i = 0; i < A.length -1; i++) {
+    console.log(B);
+    for(i = 1; i < A.length; i++) {
         B.splice((A[i]-j), 1);
         j++;
     }
@@ -236,6 +251,7 @@ function findMinimumCut(){
     }
     console.log(C);
     for(i = 0; i < C.length; i++){
+        console.log("highlighting edge: " + C[i]);
         createHighlightAnimation(TOP, C[i], 3, "red");
     }
 }
