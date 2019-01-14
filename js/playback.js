@@ -1,6 +1,8 @@
 function rewind(){
     playState = -1;
     animateAlgorithm();
+    var pp = document.getElementById('play_pause_button');
+    if(pp.className == "fa fa-play") pp.className = "fa fa-pause";
 }
 
 function playPause(){

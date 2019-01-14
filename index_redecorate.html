@@ -21,23 +21,23 @@
       integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     </head>
     <body>
-        <div id="info_bar">
-            <div id="alg_title">
+        <div class="nav flex-column" id="info_bar">
+            <div class="nav-item" id="alg_title">
                 Ford Fulkerson
             </div>
-            <div class="playback">
-                <div class="playback_control">
+            <div class="nav-item" id="playback">
+                <div id="playback_control">
                     <i class="fa fa-backward" id="rewind_button" onclick="rewind()"></i>
                     <i class="fa fa-step-backward" id="backstep_button" onclick="stepBackward();"></i>
                     <i class="fa fa-play" id="play_pause_button" onclick="playPause();"></i>
                     <i class="fa fa-step-forward" id="forwardstep_button" onclick="stepForward();"></i>
                 </div>
-                <div class="speed_control">
+                <div id="speed_control">
                     <p id="speed_info">Speed: </p>
                     <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
                 </div>
             </div>
-            <div class="new_graph">
+            <div class="nav-item" id="new_graph">
                 <button onclick="toggleNewGraphOptions()" class="dropbtn">New/Save Graph</button>
                 <div id="newGraphOptions" class="new-graph-options">
                     <button class="dropdown-button" id="load_default_graph"
@@ -97,7 +97,7 @@
         </div>
         <div class="res">
             <!-- <div class= "indicator" id="res_ind"></div> -->
-            <div id="residual_graph"></div>
+            <div id="res_graph"></div>
         </div>
     </div>
     <script type="text/javascript" src="js/main.js"></script>
