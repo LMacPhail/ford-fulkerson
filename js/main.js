@@ -1,5 +1,5 @@
 var mainContainer = document.getElementById('main_graph');
-var resContainer = document.getElementById('residual_graph');
+var resContainer = document.getElementById('res_graph');
 
 
 defaultGraphData();
