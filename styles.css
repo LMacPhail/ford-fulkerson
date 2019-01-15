@@ -64,29 +64,22 @@
     height: 12%;
     width: 100%;
     background-color: #f69278;
-    align-items: center;
 }
 #playback_control {
     width: 100%;
-    display: flex;
-    align-items: center;
+    height: 50%;
     background-color: #f69278;
 }
-#playback_control i{
+#playback_control button{
     width: 100%;
-    display: inline-flex;
     color: white;
-    padding: 15px 15px;
+    border: none;
     background-color: inherit;
 }
-#playback_control i:hover{
+#playback_control button:hover{
   color: #aaa;
 }
-/* #rewind_button {}
-#backstep_button {}
-#play_button {}
-#pause_button {}
-#forwardstep_button {} */
+
 #speed_control {
     width: 100%;
     display: flex;
@@ -241,7 +234,7 @@
 }
 
 #flow_counter {
-    height: 4%;
+    height: 10%;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     font-size: 20px;
