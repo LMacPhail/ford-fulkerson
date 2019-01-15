@@ -1,21 +1,20 @@
-#animation_canvas {
+main {
+    margin-bottom: 50px;
+}
+
+#network_canvas {
     width: 75%;
     height: 100%;
     position: fixed;
     z-index: 1;
     top: 0;
+    bottom: 0;
     overflow-x: hidden;
     right:0;
 }
 
-#top {
-  height: 45%;
-}
-#res {
-  height: 45%;
-}
 #top_graph {
-  width: 100%;
+  width: auto;
   height: 45%;
 }
 /* .indicator {
@@ -27,7 +26,7 @@
 } */
 
 #res_graph {
-    width: 100%;
+    width: auto;
     height: 45%;
 }
 
@@ -40,7 +39,7 @@
     top: 0;
     overflow-x: hidden;
     left:0;
-    background-color: #f69278
+    background-color: #cee1ff;
 }
 
 #alg_title {
@@ -54,18 +53,22 @@
     padding-top: 10px;
 }
 
+.collapsible {
+    width: 100%;
+    height: auto;
+}
+
 #playback {
-    height: 10%;
+    background-color: #002259;
+    width: 100%;
 }
 #playback_control {
     width: 100%;
-    height: 50%;
-    
-    background-color: #f69278;
+    background-color: inherit;
 }
 #playback_control button{
-    width: 100%;
     color: white;
+    width: 100%;
     border: none;
     background-color: inherit;
 }
@@ -73,9 +76,10 @@
   color: #aaa;
 }
 
-/* #speed_control {
+#speed_control {
     width: 100%;
-} */
+    background-color: inherit;
+}
 #speed_info {
     color: black;
     display:inline-flex;
@@ -84,27 +88,8 @@
     width: 25%;
     padding: 10px;
 }
-/* #pb_slider {} */
-.slider {
-    -webkit-appearance: none;
-    display:inline-flex;
-    appearance:none;
-    width:70%;
-    height: 15px;
-    right: 0;
-    margin: 10px;
-    background: #c0d6ba;
-    outline: none;
-}
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    background: #308c92;
-}
 
-.dropbtn { 
+/* .dropbtn { 
     background-color: #c0d6ba;
     color: black;
     padding: 16px;
@@ -124,6 +109,7 @@
     display: inline-block;
 }
 /* #newGraphOptions {} */
+/*
 .new-graph-options {
     width: inherit;
     display: none;
@@ -146,7 +132,7 @@
 .dropdown-button:hover {
     background-color: #e03c4c;
     color: white;
-}
+} */
 
 .show{display:block;}
 
@@ -207,8 +193,8 @@
 #uploadFile {} */
 
 #pseudocode {
-    height: 60%;
-    background-color: #308c92;
+    height: 40%;
+    width: 100%;
     text-decoration: none;
 }
 
@@ -225,10 +211,18 @@
 }
 
 #flow_counter {
-    height: 10%;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    color: white;
     font-size: 20px;
-    padding: 10px;
-    background-color: #c0d6ba;
+    background-color: inherit;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    /* line-height: 60px; */
+    background-color: #cecece;
 }

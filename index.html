@@ -19,99 +19,95 @@
     <link rel="stylesheet" href=" css/styles.css" type="text/css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
       integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link href="css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href=" css/materialize.min.css" type="text/css"/>
     </head>
     <body>
-        <div class="nav flex-column" id="info_bar">
-            <div class="nav-item" id="alg_title">
-                Ford Fulkerson
-            </div>
-            <div class="nav-item" id="playback">
-                <div class="btn-group" id="playback_control">
-                    <button class="fa fa-backward btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
-                    <button class="fa fa-step-backward" class="btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
-                    <button class="fa fa-play" class="btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
-                    <button class="fa fa-step-forward" class="btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
-                </div>
-                <div id="speed_control">
-                    <p id="speed_info">Speed: </p>
-                    <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
-                </div>
-            </div>
-            <div class="nav-item" id="new_graph">
-                <button onclick="toggleNewGraphOptions()" class="dropbtn">New/Save Graph</button>
-                <div id="newGraphOptions" class="new-graph-options">
-                    <button class="dropdown-button" id="load_default_graph"
-                    onclick="defaultGraphData();
-                            setNewGraph();
-                            toggleNewGraphOptions();">
-                    Load Default Graph
-                    </button>
-                    <div class="dropdown-button" id="generate_random_graph">
-                        <button class="dropdown-button"
-                        onclick="generateGraphData();
-                                setNewGraph();
-                                toggleNewGraphOptions();">
-                        Generate Random Graph    
-                        </button>
-                        <div id="N_controls">
-                            <p>Number of nodes: </p>
-                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+        <main class="container">
+            <div class="row no-gutter">
+                <div class="col nav" id="info_bar"> 
+                        <ul class="collapsible">
+                            <li class="active">
+                                <div class="collapsible-header">New Graph</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                        <button id="load_default_graph" onclick="defaultGraphData(); setNewGraph();">
+                                        Load Default Graph
+                                        </button>
+                                        <button onclick="generateGraphData(); setNewGraph();">
+                                        Generate Random Graph    
+                                        </button>
+                                        <div id="N_controls">
+                                            <p>Number of nodes: </p>
+                                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                                        </div>
+                                    </span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header">Upload/Save graph</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                        <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                        <input type="file" id="uploadFile"></input>
+                                    </span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header">Draw Graph</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                            There'll be info about this when implemented
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="card" id="pseudocode">
+                            <div class="pseudocode_step" id="step1">
+                                <p>Build Residual Graph</p>
+                            </div>
+                            <div class="pseudocode_step" id="step2">
+                                <p>Find path in residual graph from S to T</p>
+                            </div>
+                            <div class="pseudocode_step" id="step3">
+                                <p>Increment flow along augmenting path</p>
+                            </div>
+                            <div class="pseudocode_step" id="step4">
+                                <p>Maximum flow has been found</p>
+                            </div>
                         </div>
+                </div>
+                <div class="col-9" id="network_canvas">
+                    <div class="row" id="top_graph">
+
                     </div>
-                    <button class="dropdown-button" id="upload_graph" 
-                        onclick="uploadModal.style.display = 'block';
-                                toggleNewGraphOptions();">
-                        Upload/Save Graph
-                    </button>
-                    <!-- <button class="dropdown-button" id="draw_graph">Draw Graph</button> -->
+                    <div class="row" id="res_graph">
+
+                    </div>
                 </div>
             </div>
-            <div id="uploadModal" class="upload-modal">
-                <div class="upload-modal-content">
-                    <span class="close" onclick="uploadModal.style.display = 'none';">&times;</span>
-                    <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                    <input type="file" id="uploadFile"></input>
+        </main>
+        <footer class="footer mt-auto py-3" id="playback">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="btn-group col-6" id="playback_control">
+                        <button class="fa fa-backward waves-effect btn-flat btn-secondary" id="rewind_button" onclick="rewind()"></button>
+                        <button class="fa fa-step-backward waves-effect btn-flat btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
+                        <button class="fa fa-play waves-effect btn-flat btn-secondary" id="play_pause_button" onclick="playPause();"></button>
+                        <button class="fa fa-step-forward waves-effect btn-flat btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
+                    </div>
+                    <div class="col" id="speed_control">
+                        <form action="Change Speed">
+                            <p class="range-field">
+                                <input type="range" id="pb_slider" min="1" max="100" />
+                            </p>
+                            </form>
+                    </div>
+                    <div class="col" id="flow_counter">Current flow: 0</div>
                 </div>
             </div>
-            <div id="pseudocode">
-                <div class="pseudocode_step" id="step1">
-                    <p>Build Residual Graph</p>
-                </div>
-                <div class="pseudocode_step" id="step2">
-                    <p>Find path in residual graph from S to T</p>
-                </div>
-                <div class="pseudocode_step" id="step3">
-                    <p>Increment flow along augmenting path</p>
-                </div>
-                <div class="pseudocode_step" id="step4">
-                    <p>Maximum flow has been found</p>
-                </div>
-            </div>
-            <div id="traceback"></div>
-            <div id="flow_counter">Current flow: 0</div>
-        </div>
-    <div class="container-fluid" id="animation_canvas">
-        <div class="row" id="top_graph">
-            <!-- <div id="top_graph"></div> -->
-        </div>
-        <div class="row" id="res_graph">
-            <!-- <div id="res_graph"></div> -->
-        </div>
-        <div class="row" id="playback">
-            <div class="col"></div>
-            <div class="btn-group col" id="playback_control">
-                <button class="fa fa-backward" class="btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
-                <button class="fa fa-step-backward" class="btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
-                <button class="fa fa-play" class="btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
-                <button class="fa fa-step-forward" class="btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
-            </div>
-            <div class="col" id="speed_control">
-                <p id="speed_info">Speed: </p>
-                <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
-            </div>
-        </div>
-    </div>
+        </footer>
+
+
     <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript" src="js/upload_download.js"></script>
 
@@ -120,6 +116,86 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/mdb.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
   </body>
 </html>
+<!-- 
+
+<div class="nav-item" id="alg_title">
+        Ford Fulkerson
+    </div>
+    <div class="nav-item" id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                New Graph
+                </button>
+            </h5>
+            </div>
+        
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <button id="load_default_graph"
+                onclick="defaultGraphData();
+                        setNewGraph();">
+                Load Default Graph
+                </button>
+                <button
+                onclick="generateGraphData();
+                        setNewGraph();">
+                Generate Random Graph    
+                </button>
+                <div id="N_controls">
+                    <p>Number of nodes: </p>
+                    <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Upload/Save graph
+                </button>
+            </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+                <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                <input type="file" id="uploadFile"></input>
+            </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Draw graph
+                </button>
+            </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+                There'll be info about this when implemented
+            </div>
+            </div>
+        </div>
+    </div>
+    <div id="pseudocode">
+        <div class="pseudocode_step" id="step1">
+            <p>Build Residual Graph</p>
+        </div>
+        <div class="pseudocode_step" id="step2">
+            <p>Find path in residual graph from S to T</p>
+        </div>
+        <div class="pseudocode_step" id="step3">
+            <p>Increment flow along augmenting path</p>
+        </div>
+        <div class="pseudocode_step" id="step4">
+            <p>Maximum flow has been found</p>
+        </div>
+    </div>
+    <div id="traceback"></div>
+</div> -->

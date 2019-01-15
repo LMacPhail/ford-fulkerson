@@ -2,7 +2,7 @@ function rewind(){
     playState = -1;
     animateAlgorithm();
     var pp = document.getElementById('play_pause_button');
-    if(pp.className == "fa fa-play") pp.className = "fa fa-pause";
+    if(pp.className == "fa fa-play waves-effect btn-flat btn-secondary") pp.className = "fa fa-pause waves-effect btn-flat btn-secondary";
 }
 
 function playPause(){
@@ -24,11 +24,11 @@ function stepBackward(){
 }
 
 function togglePlayPause(current){
-    if(current.className == "fa fa-play"){
-        current.className = "fa fa-pause";
+    if(current.className == "fa fa-play waves-effect btn-flat btn-secondary"){
+        current.className = "fa fa-pause waves-effect btn-flat btn-secondary";
         return 1;
     } else {
-        current.className = "fa fa-play";
+        current.className = "fa fa-play waves-effect btn-flat btn-secondary";
         return 0;
     }
 }
