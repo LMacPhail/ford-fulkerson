@@ -1,4 +1,4 @@
-var mainContainer = document.getElementById('main_graph');
+var mainContainer = document.getElementById('top_graph');
 var resContainer = document.getElementById('res_graph');
 
 

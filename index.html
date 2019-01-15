@@ -16,9 +16,10 @@
     <script type="text/javascript" src="js/ford_fulkerson.js"></script>
 
     <link href="vis-4.21.0/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="styles.css" type="text/css"/>
+    <link rel="stylesheet" href=" css/styles.css" type="text/css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
       integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="css/mdb.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="nav flex-column" id="info_bar">
@@ -27,7 +28,7 @@
             </div>
             <div class="nav-item" id="playback">
                 <div class="btn-group" id="playback_control">
-                    <button class="fa fa-backward" class="btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
+                    <button class="fa fa-backward btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
                     <button class="fa fa-step-backward" class="btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
                     <button class="fa fa-play" class="btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
                     <button class="fa fa-step-forward" class="btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
@@ -90,14 +91,25 @@
             <div id="traceback"></div>
             <div id="flow_counter">Current flow: 0</div>
         </div>
-    <div id="network_canvas">
-        <div class="top">
-            <!-- <div class= "indicator" id="main_ind"></div> -->
-            <div id="main_graph"></div>
+    <div class="container-fluid" id="animation_canvas">
+        <div class="row" id="top_graph">
+            <!-- <div id="top_graph"></div> -->
         </div>
-        <div class="res">
-            <!-- <div class= "indicator" id="res_ind"></div> -->
-            <div id="res_graph"></div>
+        <div class="row" id="res_graph">
+            <!-- <div id="res_graph"></div> -->
+        </div>
+        <div class="row" id="playback">
+            <div class="col"></div>
+            <div class="btn-group col" id="playback_control">
+                <button class="fa fa-backward" class="btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
+                <button class="fa fa-step-backward" class="btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
+                <button class="fa fa-play" class="btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
+                <button class="fa fa-step-forward" class="btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
+            </div>
+            <div class="col" id="speed_control">
+                <p id="speed_info">Speed: </p>
+                <input type="range" min="10" max="50" value="45" class="slider" id="pb_slider">
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="js/main.js"></script>
@@ -108,5 +120,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/mdb.min.js"></script>
   </body>
 </html>
