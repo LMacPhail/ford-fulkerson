@@ -1,3 +1,13 @@
+function loadDefaultGraph(){
+    defaultGraphData();
+    setNewGraph();
+}
+
+function generateRandomGraph(){
+    generateGraphData();
+    setNewGraph();
+}
+
 function rewind(){
     playState = -1;
     animateAlgorithm();
