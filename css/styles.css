@@ -40,6 +40,7 @@
 #flow_counter {
     text-align: center;
     font-size: 24px;
+    padding: 10px;
 }
 
 #playback_control a:hover{

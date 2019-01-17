@@ -30,35 +30,33 @@
                     <div class="section center-align" id="alg_title">
                         Ford Fulkerson
                     </div>
-                    <div class="card">
-                        <ul class="collapsible">
-                            <li>
-                                <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
-                                <div class="collapsible-body">
-                                    <span>
-                                        <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                        <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                        <div id="N_controls">
-                                            <p>Number of nodes: </p>
-                                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                        </div>
-                                    </span></div>
-                            </li>
-                            <li>
-                                <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
-                                <div class="collapsible-body">
-                                    <span>
-                                        <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                                        <input type="file" id="uploadFile"></input>
+                    <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                            <div class="collapsible-body">
+                                <span>
+                                    <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
+                                    <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                    <div id="N_controls">
+                                        <p>Number of nodes: </p>
+                                        <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                                    </div>
+                                </span></div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                            <div class="collapsible-body">
+                                <span>
+                                    <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                    <input type="file" id="uploadFile"></input>
 
-                                    </span></div>
-                            </li>
-                            <li>
-                                <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
-                                <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
-                            </li>
-                        </ul>
-                    </div>
+                                </span></div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                            <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
+                        </li>
+                    </ul>
                     <div class="section" id="pseudocode">
                         <p class="pseudocode_step">build/update residual graph</p>
                         <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
@@ -69,7 +67,7 @@
                         <p class="pseudocode_step tab1">else:</p>
                         <p class="pseudocode_step tab2">augmenting flow has been found</p>
                     </div>
-                    <div class="section center-align" id="flow_counter">Current flow: 0</div>
+                    
                 </div>
                 <div class="col s9" id="playback_screen">
                     <div class="section" id="network_canvas">
@@ -79,7 +77,8 @@
                     <div class="divider"></div>
                     <div class="section" id="playback">
                         <div class="row">
-                            <div class="col s4 offset-s4">
+                            <div class="col s4"><div class="card center-align" id="flow_counter">Current flow: 0</div></div>
+                            <div class="col s4">
                                 <div id="playback_control">
                                     <a class="waves-effect btn-large btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
                                     <a class="waves-effect btn-large btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
