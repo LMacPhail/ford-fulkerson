@@ -1,0 +1,30 @@
+#info_bar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #000066;
+}
+
+#main_graph {
+    height: 50%;
+}
+
+#res_graph {
+    height: 50%;
+}
+
+#playback {
+    background-color: inherit;
+}
+
+#playback_control {
+    background-color: inherit;
+}
+
+#playback_control button{
+    color: #ffffcc;
+    border: none;
+    background-color: inherit;
+    display: inline-flex;
+}

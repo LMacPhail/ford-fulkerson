@@ -1,5 +1,5 @@
-var mainContainer = document.getElementById('main_graph');
-var resContainer = document.getElementById('residual_graph');
+var mainContainer = document.getElementById('top_graph');
+var resContainer = document.getElementById('res_graph');
 
 
 defaultGraphData();
@@ -46,3 +46,9 @@ resGraph.addEventListener("dragEnd",
     topGraph.storePositions();
     resGraph.storePositions(); 
   });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  var instances = M.Collapsible.init(elems, options);
+});

@@ -1,0 +1,116 @@
+
+#playback_screen {
+    height: 100%;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+#info_bar {
+    background-color: #ededed;
+    position: fixed;
+    left: 0;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+#network_canvas {
+    height: 90%;
+    width: 100%;
+}
+
+#top_graph {
+  height: 50%;
+}
+
+#res_graph {
+    height: 50%;
+}
+
+#alg_title {
+    text-align: center;
+    font-size: 24px;
+}
+
+.new_graph_options {
+    width: 100%;
+}
+
+#flow_counter {
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+}
+
+#playback_control a:hover{
+  color: white;/*rgb(107, 107, 107);
+  /* background-color: white; */
+}
+
+
+#N_controls { 
+  display: flex;
+}
+
+#N_controls p {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#N_picker { 
+    width: 40px;
+}
+
+#pseudocode {
+    margin: 0;
+    padding-left: 10px;
+    background-color: #ededed;
+}
+
+.pseudocode_step{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+}
+
+.tab1 {
+    padding-left: 10%;
+}
+
+.tab2 {
+    padding-left: 15%;
+}
+
+.tab3 {
+    padding-left: 20%;
+}
+
+#flow_counter {
+    text-align: center;
+}
+
+#speed_control {
+    display: inline-flex;
+    height: 40px;
+}
+
+.speed-control-icon {
+    height: 40px;
+    padding: 7px;
+    padding-top: 14px;
+}
+
+.hare {
+    background: url('../media/hare.png');
+    height: 24px;
+    width: 24px;
+    color: #262626;
+    display: block;
+}
+
+.turtle {
+    background: url('../media/turtle.png');
+    height: 24px;
+    width: 24px;
+    display: block; 
+}
