@@ -34,6 +34,7 @@ function setNewGraph(){
   animationSteps = [];
   fordFulkerson();
   step = 0;
+  document.getElementById("flow_counter").innerHTML = "Current flow: 0";
 }
 
 topGraph.addEventListener("dragEnd",  
