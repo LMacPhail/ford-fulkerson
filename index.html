@@ -27,36 +27,38 @@
         <main>
             <div class="row">
                 <div class="sidenav sidenav-fixed" id="info_bar">
-                    <div id="alg_title">
+                    <div class="section center-align" id="alg_title">
                         Ford Fulkerson
                     </div>
-                    <ul class="collapsible" id="new_graph_options">
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
-                            <div class="collapsible-body">
-                                <span>
-                                    <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                    <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                    <div id="N_controls">
-                                        <p>Number of nodes: </p>
-                                        <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                    </div>
-                                </span></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
-                            <div class="collapsible-body">
-                                <span>
-                                    <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                                    <input type="file" id="uploadFile"></input>
+                    <div class="card">
+                        <ul class="collapsible" >
+                            <li>
+                                <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                        <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
+                                        <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                        <div id="N_controls">
+                                            <p>Number of nodes: </p>
+                                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                                        </div>
+                                    </span></div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                        <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                        <input type="file" id="uploadFile"></input>
 
-                                </span></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
-                            <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
-                        </li>
-                    </ul>
+                                    </span></div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                                <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
+                            </li>
+                        </ul>
+                    </div>
                     <div id="pseudocode">
                         <div class="pseudocode_step" id="step1">
                             <p>Build Residual Graph</p>
@@ -71,7 +73,7 @@
                             <p>Maximum flow has been found</p>
                         </div>
                     </div>
-                    <div id="flow_counter">Current flow: 0</div>
+                    <div class="section center-align" id="flow_counter">Current flow: 0</div>
                 </div>
                 <div class="col s10 offset-s2" id="playback_screen">
                     <div class="section" id="network_canvas">
@@ -81,18 +83,22 @@
                     <div class="divider"></div>
                     <div class="section" id="playback">
                         <div class="row">
-                            <div class="col s4 offset-s2" id="playback_control">
-                                <a class="waves-effect btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
-                                <a class="waves-effect btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
-                                <a class="waves-effect btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
-                                <a class="waves-effect btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                            <div class="col s4 offset-s4" id="playback_control">
+                                <a class="waves-effect btn-large btn-flat center-align" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                <a class="waves-effect btn-large btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                <a class="waves-effect btn-large btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                <a class="waves-effect btn-large btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
                             </div>
-                            <div class="col s4" id="speed_control">
-                                <form action="Change Speed">
-                                    <p class="range-field">
-                                        <input type="range" id="pb_slider" min="1" max="100" />
-                                    </p>
-                                </form>
+                            <div class="col" id="speed_control">
+                                <div class="speed-control-icon center-align"><i class="turtle"></i></div>
+                                <div class="speed-control-item center-align">
+                                    <form action="Change Speed">
+                                        <p class="range-field">
+                                            <input type="range" id="pb_slider" min="1" max="100" />
+                                        </p>
+                                    </form>
+                                </div>
+                                <div class="speed-control-icon center-align"><i class="hare center-align"></i></div>
                             </div>
                         </div>
                     </div>

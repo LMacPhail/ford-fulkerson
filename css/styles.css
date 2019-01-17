@@ -1,19 +1,6 @@
-/* #network_canvas {
-    /* position: fixed; 
-    z-index: 1;
-    top: 0;
-    margin-bottom: 60px;
-    width: 100%;
-    overflow-x: hidden;
-    right:0;
-} */
-.container {
-    width: 100%;
-}
 
 #playback_screen {
     height: 100%;
-    /* width: 100%; */
     right: 0;
     bottom: 0;
     position: fixed;
@@ -32,67 +19,16 @@
     height: 50%;
 }
 
-/*
-#side_bar {
-    height: 100%;
-    left:0;
-    top:0;
-    position: fixed;
-}
-
-#info_bar {
-    height: 100%;
-    background-color: #cee1ff;
-} */
-
 #alg_title {
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    background-color: #002259;
     font-size: 24px;
-    margin: 0;
 }
 
-.collapsible {
-    height: auto;
-    margin: 0;
-}
-/* 
-#playback {
-    height: 10%;
-    width: 100%;
-}
-#playback_control {
-    /* width: 100%;
-    display: flex;
-}
-#playback_control a{
-    border: none;
-    background-color: inherit;
-}
 #playback_control a:hover{
-  color: #aaa;
+  color: white;/*rgb(107, 107, 107);
+  /* background-color: white; */
 }
 
-#playback_control i{
-    align-self: center;
-} */
-
-#speed_control {
-    /* width: 100%; */
-    background-color: inherit;
-}
-#speed_info {
-    color: black;
-    display:inline-flex;
-    font-family: Arial, Helvetica, sans-serif;
-    left: 0;
-    width: 25%;
-    padding: 10px;
-}
-
-.show{display:block;}
 
 #N_controls { 
   display: flex;
@@ -109,24 +45,35 @@
 
 #pseudocode {
     height: 40%;
-    margin: 0;
-    text-decoration: none;
-}
-
-.pseudocode_step {
-    height: 10%;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: left;
-}
-
-#traceback {
-    background-color: #f69278;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ededed;
 }
 
 #flow_counter {
-    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    font-size: 20px;
-    background-color: inherit;
+    bottom: 0;
+}
+
+#speed_control {
+    display: inline-flex;
+    height: 40px;
+}
+
+.speed-control-icon {
+    height: 40px;
+    padding: 7px;
+    padding-top: 14px;
+}
+
+.hare {
+    background: url('../media/hare.png');
+    height: 24px;
+    width: 24px;
+    display: block;
+}
+
+.turtle {
+    background: url('../media/turtle.png');
+    height: 24px;
+    width: 24px;
+    display: block; 
 }
