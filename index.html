@@ -26,12 +26,12 @@
     <body>
         <main>
             <div class="row">
-                <div class="sidenav sidenav-fixed" id="info_bar">
+                <div class="col s3 sidenav-fixed" id="info_bar">
                     <div class="section center-align" id="alg_title">
                         Ford Fulkerson
                     </div>
                     <div class="card">
-                        <ul class="collapsible" >
+                        <ul class="collapsible">
                             <li>
                                 <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
                                 <div class="collapsible-body">
@@ -71,7 +71,7 @@
                     </div>
                     <div class="section center-align" id="flow_counter">Current flow: 0</div>
                 </div>
-                <div class="col s10 offset-s2" id="playback_screen">
+                <div class="col s9" id="playback_screen">
                     <div class="section" id="network_canvas">
                         <div class="row" id="top_graph"></div>
                         <div class="row" id="res_graph"></div>
@@ -79,11 +79,13 @@
                     <div class="divider"></div>
                     <div class="section" id="playback">
                         <div class="row">
-                            <div class="col s4 offset-s4" id="playback_control">
-                                <a class="waves-effect btn-large btn-flat center-align" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
-                                <a class="waves-effect btn-large btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
-                                <a class="waves-effect btn-large btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
-                                <a class="waves-effect btn-large btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                            <div class="col s4 offset-s4">
+                                <div id="playback_control">
+                                    <a class="waves-effect btn-large btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                    <a class="waves-effect btn-large btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                    <a class="waves-effect btn-large btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                    <a class="waves-effect btn-large btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                                </div>
                             </div>
                             <div class="col" id="speed_control">
                                 <div class="speed-control-icon center-align"><i class="turtle"></i></div>
