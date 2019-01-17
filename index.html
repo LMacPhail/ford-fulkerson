@@ -7,10 +7,10 @@
 
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 
-    <title>Bootstrap</title>
+    <title>Ford Fulkerson</title>
     <script type="text/javascript" src="vis-4.21.0/dist/vis.js"></script>
     <script type="text/javascript" src="js/graph_data.js"></script>
-    <script type="text/javascript" src="js/playback.js"></script>
+    <script type="text/javascript" src="js/button_actions.js"></script>
     <script type="text/javascript" src="js/animate.js"></script>
     <script type="text/javascript" src="js/ford_fulkerson.js"></script>
 
@@ -34,16 +34,16 @@
                             </div>
                             <ul class="collapsible">
                                 <li>
-                                  <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
-                                  <div class="collapsible-body">
-                                    <span>
-                                        <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                        <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                        <div id="N_controls">
-                                            <p>Number of nodes: </p>
-                                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                        </div>
-                                    </span></div>
+                                    <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                                    <div class="collapsible-body">
+                                        <span>
+                                            <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
+                                            <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                            <div id="N_controls">
+                                                <p>Number of nodes: </p>
+                                                <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                                            </div>
+                                        </span></div>
                                 </li>
                                 <li>
                                     <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
@@ -85,11 +85,15 @@
 
                     </div>
                     <div class="row">
-                        <div class="btn-group col s6" id="playback_control">
-                            <button class="fa fa-backward btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
+                        <div class="col s6" id="playback_control">
+                            <a class="waves-effect btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                            <a class="waves-effect btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                            <a class="waves-effect btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                            <a class="waves-effect btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                            <!-- <button class="fa fa-backward btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
                             <button class="fa fa-step-backward btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
                             <button class="fa fa-play btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
-                            <button class="fa fa-step-forward btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button>
+                            <button class="fa fa-step-forward btn btn-secondary" id="forwardstep_button" onclick="stepForward();"></button> -->
                         </div>
                         <div class="col" id="speed_control">
                             <form action="Change Speed">

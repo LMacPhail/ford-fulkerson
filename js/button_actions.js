@@ -11,13 +11,14 @@ function generateRandomGraph(){
 function rewind(){
     playState = -1;
     animateAlgorithm();
-    var pp = document.getElementById('play_pause_button');
-    if(pp.className == "fa fa-play waves-effect btn-flat btn-secondary") pp.className = "fa fa-pause waves-effect btn-flat btn-secondary";
+    var state = document.getElementById('play_pause_button').innerHTML;
+    if(state == "play_arrow") document.getElementById('play_pause_button').innerHTML = "pause";
 }
 
 function playPause(){
-    var pp = document.getElementById('play_pause_button');
-    playState = togglePlayPause(pp);
+    var state = document.getElementById('play_pause_button').innerHTML;
+    console.log(state);
+    playState = togglePlayPause(state);
     animateAlgorithm();
 }
 
@@ -33,12 +34,12 @@ function stepBackward(){
     step--;
 }
 
-function togglePlayPause(current){
-    if(current.className == "fa fa-play waves-effect btn-flat btn-secondary"){
-        current.className = "fa fa-pause waves-effect btn-flat btn-secondary";
+function togglePlayPause(state){
+    if(state == "play_arrow"){
+        document.getElementById('play_pause_button').innerHTML = "pause";
         return 1;
     } else {
-        current.className = "fa fa-play waves-effect btn-flat btn-secondary";
+        document.getElementById('play_pause_button').innerHTML = "play_arrow";
         return 0;
     }
 }
