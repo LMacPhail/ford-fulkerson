@@ -174,8 +174,12 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
 
 function highlightPseudocode(pStep){
     var pseudocode = document.getElementsByClassName("pseudocode_step");
-    for(var i = 0; i < pseudocode.length; i++) pseudocode[i].style.color = "black";
-    pseudocode[pStep].style.color = "#c0d6ba";
+    for(var i = 0; i < pseudocode.length; i++) {
+        pseudocode[i].style.color = "black";
+        pseudocode[pStep].style.fontWeight = "normal";
+    }
+    pseudocode[pStep].style.color = "teal";
+    pseudocode[pStep].style.fontWeight = "bold";
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
   }
   

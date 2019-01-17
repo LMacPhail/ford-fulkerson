@@ -44,10 +44,13 @@
 }
 
 #playback_control a:hover{
-  color: white;/*rgb(107, 107, 107);
-  /* background-color: white; */
+    color:rgb(107, 107, 107);
+    background-color: white; 
 }
 
+.collapsible-header i:hover {
+    color:rgb(107, 107, 107);
+}
 
 #N_controls { 
   display: flex;

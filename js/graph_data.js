@@ -60,7 +60,7 @@ function defaultGraphData(){
     addNode(nodes, 2, 'n2', 130, -130);
     addNode(nodes, 3, 'n3', -150, 130);
     addNode(nodes, 4, 'n4', 150, 140);
-    addNode(nodes, 5, 'n5', 300, 0);
+    addNode(nodes, 5, 'T', 300, 0);
     //     {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
     
     edges = [];

@@ -174,22 +174,26 @@ function fordFulkerson(){
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
+                var pseudocodeStep = 4;
                 id = edgeData.id;
-                createHighlightAnimation(RES, resID, 2, "green");
                 if(edgeData.direction == 1){
+                    pseudocodeStep = 4;
+                    createHighlightAnimation(RES, resID, pseudocodeStep, "green");
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
                 }
-                if(edgeData.direction == 0){
+                if(edgeData.direction == 0){  
+                    pseudocodeStep = 5;
+                    createHighlightAnimation(RES, resID, pseudocodeStep, "green");
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) - m;
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
-                createHighlightAnimation(TOP, id, 2, 'green');
+                createHighlightAnimation(TOP, id, pseudocodeStep, 'green');
                 addAnimationStep(null);
-                createLabelEdgeAnimation(TOP, id, 2, label, 8, [path[i-1], path[i]]);
-                createHighlightAnimation(TOP, id, 2, 'red');
+                createLabelEdgeAnimation(TOP, id, pseudocodeStep, label, 8, [path[i-1], path[i]]);
+                createHighlightAnimation(TOP, id, pseudocodeStep, 'red');
                 addAnimationStep(null);
-                createHighlightAnimation(RES, resID, 2, 'blue');
+                createHighlightAnimation(RES, resID, pseudocodeStep, 'blue');
             }
             totalFlow += m;
             animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
@@ -198,7 +202,7 @@ function fordFulkerson(){
         // break;
     }
     findMinimumCut(totalFlow);
-    addAnimationStep(TOP, "finish", 0, 3);
+    addAnimationStep(TOP, "finish", 0, 7);
 }
 
 function bubbleSort(list){
