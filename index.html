@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 
     <title>Bootstrap</title>
     <script type="text/javascript" src="vis-4.21.0/dist/vis.js"></script>
@@ -19,75 +18,47 @@
     <link rel="stylesheet" href=" css/styles.css" type="text/css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
       integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     </head>
     <body>
         <main class="container">
             <div class="row">
-                <div class="col-3" id="side_bar"> 
+                <div class="col s3" id="side_bar"> 
                     <div class="row">
                         <div class="flex-column" id="info_bar">
                             <div id="alg_title">
                                 Ford Fulkerson
                             </div>
-                            <div class="accordion" id="newGraphOptions">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                Generate New Graph
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#newGraphOptions">
-                                        <div class="card-body">
-                                            <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                            <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                            <div id="N_controls">
-                                                <p>Number of nodes: </p>
-                                                <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                            </div>
+                            <ul class="collapsible">
+                                <li>
+                                  <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                                  <div class="collapsible-body">
+                                    <span>
+                                        <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
+                                        <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                        <div id="N_controls">
+                                            <p>Number of nodes: </p>
+                                            <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
                                         </div>
-                                    </div>
-                                </div>
-                            <div class="card">
-                                    <div class="card-header" id="headingTwo">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Generate New Graph
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#newGraphOptions">
-                                        <div class="card-body">
-                                            <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                            <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                            <div id="N_controls">
-                                                <p>Number of nodes: </p>
-                                                <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="card">
-                                    <div class="card-header" id="headingThree">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                Generate New Graph
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#newGraphOptions">
-                                        <div class="card-body">
-                                            <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                            <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                            <div id="N_controls">
-                                                <p>Number of nodes: </p>
-                                                <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </span></div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                                    <div class="collapsible-body">
+                                        <span>
+                                            <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                            <input type="file" id="uploadFile"></input>
+
+                                        </span></div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                                    <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
+                                </li>
+                            </ul>
                             <div class="card" id="pseudocode">
                                 <div class="pseudocode_step" id="step1">
                                     <p>Build Residual Graph</p>
@@ -106,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-9" id="network_canvas">
+                <div class="col s9" id="network_canvas">
                     <div class="row" id="top_graph">
 
                     </div>
@@ -114,7 +85,7 @@
 
                     </div>
                     <div class="row">
-                        <div class="btn-group col-6" id="playback_control">
+                        <div class="btn-group col s6" id="playback_control">
                             <button class="fa fa-backward btn btn-secondary" id="rewind_button" onclick="rewind()"></button>
                             <button class="fa fa-step-backward btn btn-secondary" id="backstep_button" onclick="stepBackward();"></button>
                             <button class="fa fa-play btn btn-secondary" id="play_pause_button" onclick="playPause();"></button>
@@ -135,11 +106,12 @@
 
     <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript" src="js/upload_download.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
   </body>
 </html>
