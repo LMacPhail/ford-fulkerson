@@ -24,11 +24,19 @@
     font-size: 24px;
 }
 
+#flow_counter {
+    text-align: center;
+    font-size: 24px;
+}
+
 #playback_control a:hover{
   color: white;/*rgb(107, 107, 107);
   /* background-color: white; */
 }
 
+#info_bar {
+    background-color: #ededed;
+}
 
 #N_controls { 
   display: flex;
@@ -44,13 +52,30 @@
 }
 
 #pseudocode {
-    height: 40%;
+    margin: 0;
+    padding-left: 10px;
     background-color: #ededed;
+}
+
+.pseudocode_step{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+}
+
+.tab1 {
+    padding-left: 10px;
+}
+
+.tab2 {
+    padding-left: 20px;
+}
+
+.tab3 {
+    padding-left: 30px;
 }
 
 #flow_counter {
     text-align: center;
-    bottom: 0;
 }
 
 #speed_control {
@@ -68,6 +93,7 @@
     background: url('../media/hare.png');
     height: 24px;
     width: 24px;
+    color: #262626;
     display: block;
 }
 

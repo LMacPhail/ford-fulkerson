@@ -59,19 +59,15 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="pseudocode">
-                        <div class="pseudocode_step" id="step1">
-                            <p>Build Residual Graph</p>
-                        </div>
-                        <div class="pseudocode_step" id="step2">
-                            <p>Find path in residual graph from S to T</p>
-                        </div>
-                        <div class="pseudocode_step" id="step3">
-                            <p>Increment flow along augmenting path</p>
-                        </div>
-                        <div class="pseudocode_step" id="step4">
-                            <p>Maximum flow has been found</p>
-                        </div>
+                    <div class="section" id="pseudocode">
+                        <p class="pseudocode_step">build/update residual graph</p>
+                        <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
+                        <p class="pseudocode_step tab1">if augmenting path is found:</p>
+                        <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
+                        <p class="pseudocode_step tab3">augment flow along forwards edge</p>
+                        <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
+                        <p class="pseudocode_step tab1">else:</p>
+                        <p class="pseudocode_step tab2">augmenting flow has been found</p>
                     </div>
                     <div class="section center-align" id="flow_counter">Current flow: 0</div>
                 </div>
