@@ -1,8 +1,11 @@
+#content {
+    height: 100%;
+}
+
 
 #playback_screen {
     height: 100%;
     right: 0;
-    bottom: 0;
     position: fixed;
 }
 

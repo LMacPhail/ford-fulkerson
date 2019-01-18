@@ -37,9 +37,9 @@ function animateAlgorithm(){
 //   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
-      clearInterval(id);
+        clearInterval(id);
     } else if ((playState == PLAY) || (playState == REWIND)) {
-      executeAnimationStep();
+        executeAnimationStep();
     }
 
   }
@@ -176,12 +176,12 @@ function highlightPseudocode(pStep){
     var pseudocode = document.getElementsByClassName("pseudocode_step");
     for(var i = 0; i < pseudocode.length; i++) {
         pseudocode[i].style.color = "black";
-        pseudocode[pStep].style.fontWeight = "normal";
+        pseudocode[i].style.fontWeight = "normal";
     }
-    pseudocode[pStep].style.color = "teal";
-    pseudocode[pStep].style.fontWeight = "bold";
+    pseudocode[pStep].style.color = "blue";
+    pseudocode[pStep].style.fontWeight = "900";
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
-  }
+}
   
 function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, outputID, outputData){
     animationSteps.push({

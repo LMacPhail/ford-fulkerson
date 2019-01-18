@@ -24,84 +24,82 @@
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     </head>
     <body>
-        <main>
-            <div class="row">
-                <div class="col s3 sidenav-fixed" id="info_bar">
-                    <div class="section center-align" id="alg_title">
-                        Ford Fulkerson
-                    </div>
-                    <ul class="collapsible">
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
-                            <div class="collapsible-body">
-                                <span>
-                                    <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                    <button onclick="generateRandomGraph();">Generate Random Graph</button>
-                                    <div id="N_controls">
-                                        <p>Number of nodes: </p>
-                                        <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
-                                    </div>
-                                </span></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
-                            <div class="collapsible-body">
-                                <span>
-                                    <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                                    <input type="file" id="uploadFile"></input>
-
-                                </span></div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
-                            <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
-                        </li>
-                    </ul>
-                    <div class="section" id="pseudocode">
-                        <p class="pseudocode_step">build/update residual graph</p>
-                        <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
-                        <p class="pseudocode_step tab1">if augmenting path is found:</p>
-                        <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
-                        <p class="pseudocode_step tab3">augment flow along forwards edge</p>
-                        <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
-                        <p class="pseudocode_step tab1">else:</p>
-                        <p class="pseudocode_step tab2">augmenting flow has been found</p>
-                    </div>
-                    
+        <div class="row" id="content">
+            <div class="col s3" id="info_bar">
+                <div class="section center-align" id="alg_title">
+                    Ford Fulkerson
                 </div>
-                <div class="col s9" id="playback_screen">
-                    <div class="section" id="network_canvas">
-                        <div class="row" id="top_graph"></div>
-                        <div class="row" id="res_graph"></div>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="section" id="playback">
-                        <div class="row">
-                            <div class="col s4"><div class="card" id="flow_counter">Current flow: 0</div></div>
-                            <div class="col s4">
-                                <div id="playback_control">
-                                    <a class="waves-effect btn-large btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
-                                    <a class="waves-effect btn-large btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
-                                    <a class="waves-effect btn-large btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
-                                    <a class="waves-effect btn-large btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                <ul class="collapsible">
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                        <div class="collapsible-body">
+                            <span>
+                                <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
+                                <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                <div id="N_controls">
+                                    <p>Number of nodes: </p>
+                                    <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
                                 </div>
+                            </span></div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                        <div class="collapsible-body">
+                            <span>
+                                <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                <input type="file" id="uploadFile"></input>
+
+                            </span></div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                        <div class="collapsible-body"><span>More info on this when it's implemented</span></div>
+                    </li>
+                </ul>
+                <div class="section" id="pseudocode">
+                    <p class="pseudocode_step">build/update residual graph</p>
+                    <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
+                    <p class="pseudocode_step tab1">if augmenting path is found:</p>
+                    <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
+                    <p class="pseudocode_step tab3">augment flow along forwards edge</p>
+                    <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
+                    <p class="pseudocode_step tab1">else:</p>
+                    <p class="pseudocode_step tab2">augmenting flow has been found</p>
+                </div>
+                
+            </div>
+            <div class="col s9" id="playback_screen">
+                <div class="section" id="network_canvas">
+                    <div class="row" id="top_graph"></div>
+                    <div class="row" id="res_graph"></div>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="playback">
+                    <div class="row">
+                        <div class="col s4"><div class="card" id="flow_counter">Current flow: 0</div></div>
+                        <div class="col s4">
+                            <div id="playback_control">
+                                <a class="waves-effect btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                <a class="waves-effect btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                <a class="waves-effect btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                <a class="waves-effect btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
                             </div>
-                            <div class="col" id="speed_control">
-                                <div class="speed-control-icon center-align"><i class="turtle"></i></div>
-                                <div class="speed-control-item center-align">
-                                    <form action="Change Speed">
-                                        <p class="range-field">
-                                            <input type="range" id="pb_slider" min="1" max="100" />
-                                        </p>
-                                    </form>
-                                </div>
-                                <div class="speed-control-icon center-align"><i class="hare center-align"></i></div>
+                        </div>
+                        <div class="col" id="speed_control">
+                            <div class="speed-control-icon center-align"><i class="turtle"></i></div>
+                            <div class="speed-control-item center-align">
+                                <form action="Change Speed">
+                                    <p class="range-field">
+                                        <input type="range" id="pb_slider" min="1" max="100" />
+                                    </p>
+                                </form>
                             </div>
+                            <div class="speed-control-icon center-align"><i class="hare center-align"></i></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
 
 
     <script type="text/javascript" src="js/main.js"></script>

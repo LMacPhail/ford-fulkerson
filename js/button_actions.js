@@ -16,9 +16,7 @@ function rewind(){
 }
 
 function playPause(){
-    var state = document.getElementById('play_pause_button').innerHTML;
-    console.log(state);
-    playState = togglePlayPause(state);
+    playState = togglePlayPause();
     animateAlgorithm();
 }
 
@@ -34,7 +32,8 @@ function stepBackward(){
     step--;
 }
 
-function togglePlayPause(state){
+function togglePlayPause(){
+    var state = document.getElementById('play_pause_button').innerHTML;
     if(state == "play_arrow"){
         document.getElementById('play_pause_button').innerHTML = "pause";
         return 1;
