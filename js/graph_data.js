@@ -40,10 +40,6 @@ var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
 
-function toggleNewGraphOptions() {
-    document.getElementById("newGraphOptions").classList.toggle("show");
-}
-
 /*
 Generates a graph with default valuse
 */
@@ -263,3 +259,4 @@ function findEdgeID(data, node1, node2){
     }
     return edgeData;
 }
+
