@@ -1,6 +1,10 @@
 var drawingEnabled = true;
+var nodeID;
 
-function setDrawingCanvas(){
+function draw(){
+    destroy();
+
+    nodeID = 1;
     nodes = [];
     addNode(nodes, 0, 'S', -300, 0);
     addNode(nodes, -1, 'T', 300, 0);
@@ -9,37 +13,23 @@ function setDrawingCanvas(){
 
     // TODO change this to use initialiseDataSets when it works
     initialiseDataSets(nodes, edges);
-    var mainContainer = document.getElementById('graph_canvas');
+    console.log(topData);
+    var mainContainer = document.getElementById('top_graph');
     var options = {
         
         manipulation: {
             addNode: function (data, callback) {
-                // filling in the popup DOM elements
-                document.getElementById('operation').innerHTML = "Add Node";
-                document.getElementById('node-id').value = data.id;
-                document.getElementById('node-label').value = data.label;
-                document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                document.getElementById('cancelButton').onclick = clearPopUp.bind();
-                document.getElementById('network-popUp').style.display = 'block';
-            },
-            editNode: function (data, callback) {
-                // filling in the popup DOM elements
-                document.getElementById('operation').innerHTML = "Edit Node";
-                document.getElementById('node-id').value = data.id;
-                document.getElementById('node-label').value = data.label;
-                document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                document.getElementById('cancelButton').onclick = cancelEdit.bind(this,callback);
-                document.getElementById('network-popUp').style.display = 'block';
+                data.id = nodeID;
+                data.label = "n" + nodeID.toString();
+                nodeID++;
+                callback(data);
+                // document.getElementById('saveNodeButton').onclick = saveData.bind(this, data, callback);
+                // document.getElementById('cancelButton').onclick = clearPopUp.bind();
             },
             addEdge: function (data, callback) {
-                if (data.from == data.to) {
-                    var r = confirm("Do you want to connect the node to itself?");
-                    if (r == true) {
-                        callback(data);
-                    }
-                } else {
-                    callback(data);
-                }
+                document.getElementById('saveEdgeButton').onclick = saveEdgeData.bind(this, data, callback);
+                // console.log(data.id);
+                
             }
         }
     };
@@ -49,9 +39,9 @@ function setDrawingCanvas(){
 }
 
 function destroy() {
-    if (network !== null) {
-      network.destroy();
-      network = null;
+    if (topGraph !== null) {
+      topGraph.destroy();
+      topGraph = null;
     }
 }
 function clearPopUp() {
@@ -65,14 +55,28 @@ function cancelEdit(callback) {
     callback(null);
 }
 
+function saveEdgeData(data, callback) {
+    data.id = nodeID;
+    data.arrows = {to: {enabled: true}};
+    data.label = 0 + '/' + document.getElementById('newEdgeCapacity').value;
+    if (data.from == data.to) {
+        var r = confirm("Do you want to connect the node to itself?");
+        if (r == true) {
+            callback(data);
+        }
+    } else {
+        callback(data);
+    }
+}
+
 function saveData(data,callback) {
-    data.id = document.getElementById('node-id').value;
-    data.label = document.getElementById('node-label').value;
-    clearPopUp();
+    data.id = nodeID;
+    data.label = "n" + nodeID.toString();
+    nodeID++;
     callback(data);
 }
 
 function init() {
-    // setDefaultLocale();
+    setDefaultLocale();
     draw();
 }
