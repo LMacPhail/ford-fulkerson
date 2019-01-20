@@ -53,14 +53,11 @@
                             </span></div>
                     </li>
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                        <div class="collapsible-header"><i class="material-icons">create</i>Draw/Edit Graph</div>
                         <div class="collapsible-body"><span>
-                            <button onclick="draw();">Draw</button>
-                            
-                            <input type="button" value="save node" id="saveNodeButton" />
-                            <input type="button" value="cancel" id="cancelButton" />
-                            <input type="button" value="save edge" id="saveEdgeButton" />
-                            <input type="number" class="dropdown-button" id="newEdgeCapacity" value="4"></input>
+                            <button onclick="draw();">Draw New Graph</button>
+                            <p id="drawing_instructions">Follow instructions at top of screen</p>
+                            <button onclick="finishDrawing();">Finish drawing</button>
                         </span></div>
                     </li>
                 </ul>

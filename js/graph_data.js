@@ -39,6 +39,7 @@ var topData, resData, algTopData, algResData;
 var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
+var newNodeID, newEdgeID;
 
 /*
 Generates a graph with default valuse

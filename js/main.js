@@ -2,8 +2,11 @@ var mainContainer = document.getElementById('top_graph');
 var resContainer = document.getElementById('res_graph');
 
 
-// defaultGraphData();
+defaultGraphData();
 // generateGraphData();
+
+newNodeID = nodes.length - 1;
+newEdgeID = edges.length - 1;
 var options = {
   layout: {
     improvedLayout:true,
@@ -25,6 +28,8 @@ var topGraph = new vis.Network(mainContainer, topData, options);
 topGraph.storePositions();
 
 var resGraph = new vis.Network(resContainer, resData, options);
+
+fordFulkerson();
 
 function setNewGraph(){
   topGraph.setData(topData);
@@ -54,4 +59,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-draw();
+// draw();
