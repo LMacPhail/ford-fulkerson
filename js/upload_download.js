@@ -64,6 +64,7 @@ function createTxtFileFromGraph(){
     }
 
     function createGraphFromUpload(fileNodes, fileEdges){
+        toggleDisableDrawBtns()
         initialiseMatrices();
         nodes = [], edges = [];
         var node, edge, i, label;

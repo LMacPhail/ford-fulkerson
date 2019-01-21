@@ -1,9 +1,11 @@
 function loadDefaultGraph(){
-    GenerateDefaultGraph();
+    toggleDisableDrawBtns()
+    generateDefaultGraph();
     setNewGraph();
 }
 
 function loadRandomGraph(){
+    toggleDisableDrawBtns()
     generateRandomGraphData();
     setNewGraph();
 }
@@ -45,11 +47,28 @@ function togglePlayPause(){
 
 function toggleDisableDrawBtns(){
     var drawBtnClass = document.getElementById('drawNew').className;
+    var playbackBtnClass = document.getElementById('rewind_button').className;
     if(drawBtnClass == "waves-effect btn") {
         document.getElementById('drawNew').className = drawBtnClass + " disabled";
         document.getElementById('saveGraph').className = drawBtnClass;
+        
+        document.getElementById('rewind_button').className = playbackBtnClass + " disabled";
+        document.getElementById('step_back_button').className = playbackBtnClass + " disabled";
+        document.getElementById('play_button').className = playbackBtnClass + " disabled";
+        document.getElementById('step_forward_button').className = playbackBtnClass + " disabled";
+
+        drawingEnabled = true;
     } else {
-        document.getElementById('drawNew').className = "waves-effect btn";
-        document.getElementById('saveGraph').className = "waves-effect btn disabled";
+        playbackBtnClass = "waves-effect btn-flat";
+        drawBtnClass = "waves-effect btn";
+        document.getElementById('drawNew').className = drawBtnClass;
+        document.getElementById('saveGraph').className = drawBtnClass + " disabled";
+
+        document.getElementById('rewind_button').className = playbackBtnClass;
+        document.getElementById('step_back_button').className = playbackBtnClass;
+        document.getElementById('play_button').className = playbackBtnClass;
+        document.getElementById('step_forward_button').className = playbackBtnClass;
+
+        drawingEnabled = false;
     }
 }

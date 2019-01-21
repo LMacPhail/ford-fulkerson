@@ -20,7 +20,7 @@ function drawNewGraph(){
     topGraph.setOptions(options);
 }
 
-function finishDrawing(){
+function saveDrawnGraph(){
     topNodes = topData.nodes;
     topEdges = topData.edges; 
     
