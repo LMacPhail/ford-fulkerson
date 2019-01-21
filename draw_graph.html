@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Draw Graph</title>
+    <script type="text/javascript" src="vis-4.21.0/dist/vis.js"></script>
+    <script type="text/javascript" src="js/graph_data.js"></script>
+    
+    <script type="text/javascript" src="js/draw_graph.js"></script>
+    <!-- <script type="text/javascript" src="js/button_actions.js"></script>
+    <script type="text/javascript" src="js/animate.js"></script>
+    <script type="text/javascript" src="js/ford_fulkerson.js"></script> -->
+
+    <link href="vis-4.21.0/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href=" css/drawing.css" type="text/css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+      <div id="network-popUp">
+          <span id="operation">node</span> <br>
+          <table style="margin:auto;"><tr>
+            <td>id</td><td><input id="node-id" value="new value" /></td>
+          </tr>
+            <tr>
+              <td>label</td><td><input id="node-label" value="new value" /></td>
+            </tr></table>
+          <input type="button" value="save" id="saveButton" />
+          <input type="button" value="cancel" id="cancelButton" />
+      </div>
+      <div id="graph_canvas"></div>
+    <script type="text/javascript" src="js/main.js"></script>
+    <!-- <script type="text/javascript" src="js/upload_download.js"></script> -->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>

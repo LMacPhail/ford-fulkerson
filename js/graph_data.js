@@ -39,15 +39,12 @@ var topData, resData, algTopData, algResData;
 var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
-
-function toggleNewGraphOptions() {
-    document.getElementById("newGraphOptions").classList.toggle("show");
-}
+var newNodeID, newEdgeID;
 
 /*
 Generates a graph with default valuse
 */
-function defaultGraphData(){
+function generateDefaultGraph(){
     console.log("default graph data");
     N = 6;
     T = N-1;
@@ -84,14 +81,15 @@ function defaultGraphData(){
 }
 
 function initialiseMatrices(){
-  for(var y = 0; y < N; y++){
-    topAdjMatrix[y] = [];
-    resAdjMatrix[y] = [];
-    for(var x = 0; x < N; x++){
-      topAdjMatrix[y][x] = null;
-      resAdjMatrix[y][x] = null;
+    topAdjMatrix = [], resAdjMatrix = [];
+    for(var y = 0; y < N; y++){
+        topAdjMatrix[y] = [];
+        resAdjMatrix[y] = [];
+        for(var x = 0; x < N; x++){
+            topAdjMatrix[y][x] = null;
+            resAdjMatrix[y][x] = null;
+        }
     }
-  }
 }
 
 function initialiseDataSets(nodes, edges){
@@ -116,14 +114,14 @@ is already an edge with these nodes and -1 if there is not
 */
 function findDuplicateEdges(data, from, to){
     var matrix;
-    if(data == TOP) matrix = topAdjMatrix; else matrix = data;
+    if(data == TOP) matrix = topAdjMatrix; else if(data == RES) matrix = data;
     if(matrix[from][to] != null) return 1;
     return -1;
 }
 
-function addEdge(edges, id, from, to, cap){
+function addEdge(localEdges, id, from, to, cap){
     if(cap == null) cap = Math.random() * 10 | 1
-    edges.push({
+    localEdges.push({
         id, color: {color: 'blue'},
         arrows: {to : {enabled: true}},
         font: {strokeWidth: 5},
@@ -132,62 +130,43 @@ function addEdge(edges, id, from, to, cap){
         label: 0 + '/' + cap, from, to,
         arrowStrikethrough: false,
     });
+    if((from != -1) || (to != -1)) topAdjMatrix[from][to] = id;
 
-    topAdjMatrix[from][to] = id;
-    return edges;
+    return localEdges;
 }
 
-function addNode(nodes, id, label, x, y){
+function addNode(localNodes, id, label, x, y){
     if(x == null && y == null){
-        nodes.push({
+        localNodes.push({
             id, label,
             physics: false,
         });
     } else {
-        nodes.push({
+        localNodes.push({
             id, label, x, y,
             physics: false,
         })
     }
-    return nodes;
+    return localNodes;
 }
 
-/*
-Generates a graph using N and E, such that:
-    - There is a source node S and a sink node T
-    - S is the leftmost node and T is the rightmost
-    - There are no loops or dead ends (all nodes are on a path from S to T)
-*/
-function generateGraphData(){
-    N = document.getElementById("N_picker").value;
-    E = N*2 - 3;
-    T = N-1;
-    initialiseMatrices();
-    console.log("generating graph data");
-    var i,
-        edgeID = 0,
-        nodesToSink = [], //  Nodes that are connected to T (or T itself)
-        onlyOutgoing = [];   //  Nodes that are in nodesToSink but have no incoming edges
-    nodes = [];
-    edges = [];
-
-    /* initialise nodes */
-    nodes = addNode(nodes, 0, 'S', null, null);
-    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i, null, null);
+function connectNodesToSink(edges) {
+    var nodesToSink = [], //  Nodes that are connected to T (or T itself)
+        onlyOutgoing = [],  //  Nodes that are in nodesToSink but have no incoming edges
+        rand_id;
 
     nodesToSink.push(T);
-    var rand_id, from, to;
 
     /* Construct graph from right to left, beginning at T */
     for(i = T - 1; i > 0; i--){
         if(i > T-3){    // To ensure that T has at least 2 incoming edges
-          edges = addEdge(edges, edgeID, i, T, null);
+          edges = addEdge(edges, newEdgeID, i, T, null);
         } else {
           // Connect to either T or one of the nodes already connected to T
           do rand_id = (Math.random() * nodesToSink.length | 0); while (i == nodesToSink[rand_id]);
-          edges = addEdge(edges, edgeID, i, nodesToSink[rand_id], null);
+          edges = addEdge(edges, newEdgeID, i, nodesToSink[rand_id], null);
         }
-        edgeID++;
+        newEdgeID++;
 
         onlyOutgoing.push(i);    // add 'from' node to onlyOutgoing
         if((nodesToSink[rand_id] != T) && (onlyOutgoing.indexOf(nodesToSink[rand_id]) != -1)){
@@ -196,34 +175,71 @@ function generateGraphData(){
         }
         nodesToSink.push(i);  // add node to nodesToSink
     }
+    return onlyOutgoing;
+}
 
-    /* Ensure that all nodes in onlyOutgoing have an incoming edge from S */
+function connectNodesFromSource(edges, onlyOutgoing){
+    var from;
     while(onlyOutgoing.length > 0){
-        if(edgeID == E) break;
+        if(newEdgeID == E) break;
         if(i < 2){
             // To ensure that S has at least 2 outgoing edges
-            edges = addEdge(edges, edgeID, 0, onlyOutgoing[i], null);
+            edges = addEdge(edges, newEdgeID, 0, onlyOutgoing[i], null);
         } else {
             do from = (Math.random() * T | 0); while (onlyOutgoing[i] == from);
-            edges = addEdge(edges, edgeID, from, onlyOutgoing[i], null);
+            edges = addEdge(edges, newEdgeID, from, onlyOutgoing[i], null);
 
         }
-        edgeID++;
+        newEdgeID++;
         onlyOutgoing.splice(i, 1);
     }
+}
 
-    // Once all nodes are connected, add remaining edges
-    for (i = edgeID; i < E; i++){
+function addRemainingEdges(edges, E){
+    for (i = newEdgeID; i < E; i++){
         do {  // prevents loops and duplicate parallel edges
-              from = (Math.random() * T | 0);
-              to = (Math.random() * N | 0);
+            from = (Math.random() * T | 0); to = (Math.random() * N | 0);
         } while ((from == to) || (findDuplicateEdges(TOP, from, to) == 1));
-        edges = addEdge(edges, edgeID, from, to, null);
-        edgeID++;
+        edges = addEdge(edges, newEdgeID, from, to, null);
+        newEdgeID++;
     }
+}
+
+/*
+Generates a graph using N and E, such that:
+    - There is a source node S and a sink node T
+    - S is the leftmost node and T is the rightmost
+    - There are no loops or dead ends (all nodes are on a path from S to T)
+*/
+function generateRandomGraphData(){
+    N = document.getElementById("N_picker").value;
+    E = N*2 - 3;
+    T = N-1;
+
+    newEdgeID = 0;
+    initialiseMatrices();
+
+    var i;
+    nodes = [];
+    edges = [];
+
+    /* initialise nodes */
+    nodes = addNode(nodes, 0, 'S', null, null);
+    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i, null, null);
+
+    var noIncomingEdges = connectNodesToSink(edges);
+    connectNodesFromSource(edges, noIncomingEdges);
+    addRemainingEdges(edges, E); 
+
     nodes = addNode(nodes, T, 'T', null, null);
+
     initialiseDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
+}
+
+function getMatrix(data){
+    if (data == RES) return resAdjMatrix; else if (data == TOP) return topAdjMatrix;
+    return null;
 }
 
 /*
@@ -233,19 +249,24 @@ direction = 'to' - returns array of nodeIds that node connects to
 direction = 'from' - returns array of nodeIds that connect to node
 
 */
-function getConnectedNodes(data, nodeId, direction) {
+function getConnectedNodes(data, nodeID, direction) {
     // console.log("getting connected nodes");
-    var nodeList = [], matrix;
-    if (data == RES) matrix = resAdjMatrix; else matrix = topAdjMatrix;
-    if (direction == 'from') {
-      var fromList = matrix[nodeId];
-      for(var i = 0; i < fromList.length; i++) if (fromList[i] != null) nodeList.push(i);
+    var nodeList = [], tfList = [], matrix = getMatrix(data);
+    if (direction == 'to'){
+        tfList = matrix[nodeID];
+    } else if (direction == 'from') {
+        tfList = getFromList(matrix);
     }
-    else if (direction == 'to') {
-      var toList = matrix[nodeId];
-      for(var i = 0; i < toList.length; i++) if (toList[i] != null) nodeList.push(i);
-    }
+    for(var i = 0; i < tfList.length; i++) if (tfList[i] != null) nodeList.push(i);
     return nodeList;
+}
+
+function getFromList(matrix, nodeID){
+    var toList = [];
+    for(var i = 0; i < N; i++){
+        toList.push(matrix[i][nodeID]);
+    }
+    return toList;
 }
 
 
@@ -254,8 +275,7 @@ Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
 function findEdgeID(data, node1, node2){
-    var edgeData = {}, matrix;
-    if(data == RES) matrix = resAdjMatrix; else if (data == TOP) matrix = topAdjMatrix;
+    var edgeData = {}, matrix = getMatrix(data);
     if(matrix[node1][node2] != null){
       edgeData = {id: matrix[node1][node2], direction: 1}
     } else if (matrix[node2][node1] != null){
@@ -263,3 +283,4 @@ function findEdgeID(data, node1, node2){
     }
     return edgeData;
 }
+

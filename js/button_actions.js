@@ -1,10 +1,10 @@
 function loadDefaultGraph(){
-    defaultGraphData();
+    GenerateDefaultGraph();
     setNewGraph();
 }
 
-function generateRandomGraph(){
-    generateGraphData();
+function loadRandomGraph(){
+    generateRandomGraphData();
     setNewGraph();
 }
 
@@ -40,5 +40,16 @@ function togglePlayPause(){
     } else {
         document.getElementById('play_pause_button').innerHTML = "play_arrow";
         return 0;
+    }
+}
+
+function toggleDisableDrawBtns(){
+    var drawBtnClass = document.getElementById('drawNew').className;
+    if(drawBtnClass == "waves-effect btn") {
+        document.getElementById('drawNew').className = drawBtnClass + " disabled";
+        document.getElementById('saveGraph').className = drawBtnClass;
+    } else {
+        document.getElementById('drawNew').className = "waves-effect btn";
+        document.getElementById('saveGraph').className = "waves-effect btn disabled";
     }
 }

@@ -28,7 +28,7 @@ function addEdgeToRes(id, label, from, to){
 
 var edgeID = 0;
 function buildResidualGraph(){
-    // console.log("Building residual graph");
+    console.log("Building residual graph");
     prepareOutputLine(6);
     var edges = [];
     var cap, i;
