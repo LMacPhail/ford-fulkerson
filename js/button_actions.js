@@ -1,11 +1,11 @@
 function loadDefaultGraph(){
-    toggleDisableDrawBtns()
+    toggleDisableDrawBtns();
     generateDefaultGraph();
     setNewGraph();
 }
 
 function loadRandomGraph(){
-    toggleDisableDrawBtns()
+    toggleDisableDrawBtns();
     generateRandomGraphData();
     setNewGraph();
 }
@@ -57,7 +57,8 @@ function toggleDisableDrawBtns(){
         document.getElementById('play_button').className = playbackBtnClass + " disabled";
         document.getElementById('step_forward_button').className = playbackBtnClass + " disabled";
 
-        drawingEnabled = true;
+        options.manipulation.enabled = true;
+        topGraph.setOptions(options);
     } else {
         playbackBtnClass = "waves-effect btn-flat";
         drawBtnClass = "waves-effect btn";
@@ -69,6 +70,7 @@ function toggleDisableDrawBtns(){
         document.getElementById('play_button').className = playbackBtnClass;
         document.getElementById('step_forward_button').className = playbackBtnClass;
 
-        drawingEnabled = false;
+        options.manipulation.enabled = false;
+        topGraph.setOptions(options);
     }
 }

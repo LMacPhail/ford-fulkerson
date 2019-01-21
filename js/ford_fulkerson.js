@@ -240,13 +240,10 @@ function findMinimumCut(){
         }
     }
     A = bubbleSort(A);
-    console.log(A);
-    console.log(B);
     for(i = 1; i < A.length; i++) {
         B.splice((A[i]-j), 1);
         j++;
     }
-    console.log(B);
     for(i = 0; i < A.length; i++) {
         for(j = 0; j < B.length; j++) {
             // console.log("from: " + A[i] + ", to: " + B[j]);
@@ -256,6 +253,6 @@ function findMinimumCut(){
     console.log(C);
     for(i = 0; i < C.length; i++){
         console.log("highlighting edge: " + C[i]);
-        createHighlightAnimation(TOP, C[i], 3, "red");
+        createHighlightAnimation(TOP, C[i], 8, "red");
     }
 }
