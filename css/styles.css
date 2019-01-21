@@ -40,6 +40,10 @@
     width: 100%;
 }
 
+.btn {
+    margin: 2px;
+}
+
 #drawing_instructions {
     display: none;
     height: 10px;

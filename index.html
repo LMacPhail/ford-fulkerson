@@ -35,8 +35,8 @@
                         <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
                         <div class="collapsible-body">
                             <span>
-                                <button id="load_default_graph" onclick="loadNewGraph();">Load Default Graph</button>
-                                <button onclick="generateRandomGraph();">Generate Random Graph</button>
+                                <button class="waves-effect btn" id="load_default_graph" onclick="loadDefaultGraph();">default</button>
+                                <button class="waves-effect btn" onclick="loadRandomGraph();">random</button>
                                 <div id="N_controls">
                                     <p>Number of nodes: </p>
                                     <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
@@ -47,17 +47,17 @@
                         <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
                         <div class="collapsible-body">
                             <span>
-                                <button id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                                <input type="file" id="uploadFile"></input>
+                                <button class="waves-effect btn" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                <input class="waves-effect btn" type="file" id="uploadFile"></input>
 
                             </span></div>
                     </li>
                     <li>
                         <div class="collapsible-header"><i class="material-icons">create</i>Draw/Edit Graph</div>
                         <div class="collapsible-body"><span>
-                            <button onclick="draw();">Draw New Graph</button>
+                            <button class="waves-effect btn" onclick="drawNewGraph();" id="drawNew">Draw New</button>
                             <p id="drawing_instructions">Follow instructions at top of screen</p>
-                            <button onclick="finishDrawing();">Finish drawing</button>
+                            <button class="waves-effect btn disabled" onclick="finishDrawing();" id="saveGraph">Save</button>
                         </span></div>
                     </li>
                 </ul>

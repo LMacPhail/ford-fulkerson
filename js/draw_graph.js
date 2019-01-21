@@ -1,7 +1,8 @@
 var drawingEnabled = false;
 var nodeID;
 
-function draw(){
+function drawNewGraph(){
+    toggleDisableDrawBtns();
     document.getElementById('drawing_instructions').display = 'inline-block';
     newNodeID = 1;
     newEdgeID = 0;
@@ -11,44 +12,12 @@ function draw(){
 
     edges = [];
 
-    // TODO change this to use initialiseDataSets when it works
     initialiseDataSets(nodes, edges);
     topGraph.setData(topData);
     resGraph.setData(resData);
 
-    options.manipulation = {
-        enabled: true,
-        addNode: function (data, callback) {
-            data.id = newNodeID;
-            data.label = "n" + (newNodeID).toString();
-            data.physics = false;
-            callback(data);
-            console.log(topNodes);
-            nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
-            newNodeID++;
-        },
-        addEdge: function (data, callback) {
-            data.id = newEdgeID;
-            data.arrows = {to: {enabled: true}};
-            var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
-            if(Number.isInteger(parseInt(capacity))){
-                data.label = 0 + '/' + capacity;
-                if (data.from == data.to) {
-                    var r = confirm("Do you want to connect the node to itself?");
-                    if (r == true) {
-                        callback(data);
-                        edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
-                    }
-                } else {
-                    callback(data);
-                    edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
-                }
-            }
-            newEdgeID++;
-        }
-    },
+    options.manipulation.enabled = true;
     topGraph.setOptions(options);
-    console.log(options);  
 }
 
 function finishDrawing(){
@@ -87,23 +56,5 @@ function finishDrawing(){
     options.manipulation.enabled = false;
     topGraph.setOptions(options);
     setNewGraph();
-}
-
-function saveData(data,callback) {
-    data.id = nodeID;
-    data.label = "n" + nodeID.toString();
-    nodeID++;
-    callback(data);
-}
-
-function init() {
-    setDefaultLocale();
-    draw();
-}
-
-function incrementT() {
-    var TNode = topNodes.get(T);
-    addNode(nodes, T+1, 'T', TNode.x, TNode.y);
-    T++;
-    TNode = null; 
+    toggleDisableDrawBtns();
 }
