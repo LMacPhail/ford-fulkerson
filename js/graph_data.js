@@ -81,14 +81,15 @@ function defaultGraphData(){
 }
 
 function initialiseMatrices(){
-  for(var y = 0; y < N; y++){
-    topAdjMatrix[y] = [];
-    resAdjMatrix[y] = [];
-    for(var x = 0; x < N; x++){
-      topAdjMatrix[y][x] = null;
-      resAdjMatrix[y][x] = null;
+    topAdjMatrix = [], resAdjMatrix = [];
+    for(var y = 0; y < N; y++){
+        topAdjMatrix[y] = [];
+        resAdjMatrix[y] = [];
+        for(var x = 0; x < N; x++){
+            topAdjMatrix[y][x] = null;
+            resAdjMatrix[y][x] = null;
+        }
     }
-  }
 }
 
 function initialiseDataSets(nodes, edges){

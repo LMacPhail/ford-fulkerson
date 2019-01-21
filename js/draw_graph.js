@@ -13,22 +13,21 @@ function draw(){
 
     // TODO change this to use initialiseDataSets when it works
     initialiseDataSets(nodes, edges);
-    initialiseMatrices();
     topGraph.setData(topData);
     resGraph.setData(resData);
 
     options.manipulation = {
         enabled: true,
         addNode: function (data, callback) {
-            data.id = nodeID;
-            data.label = "n" + (nodeID).toString();
+            data.id = newNodeID;
+            data.label = "n" + (newNodeID).toString();
             data.physics = false;
             callback(data);
             console.log(topNodes);
-            nodeID++;
+            nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
+            newNodeID++;
         },
         addEdge: function (data, callback) {
-            var validEdge = 0;
             data.id = newEdgeID;
             data.arrows = {to: {enabled: true}};
             var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
@@ -38,12 +37,13 @@ function draw(){
                     var r = confirm("Do you want to connect the node to itself?");
                     if (r == true) {
                         callback(data);
+                        edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
                     }
                 } else {
                     callback(data);
+                    edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
                 }
             }
-            console.log(topEdges);
             newEdgeID++;
         }
     },
@@ -63,39 +63,30 @@ function finishDrawing(){
         y: 0
     });
     T = newNodeID;
+    N = T + 1;
     E = topEdges.length;
+    initialiseMatrices();
+    
+    console.log(topAdjMatrix);
+    
     for(var i = 0; i < topEdges.length; i++){
         var edge = topEdges.get(i);
         var from = edge.from, to = edge.to;
-        if(from == -1) topEdges.update({id: i, from: T}); from = T;
-        if(to == -1) topEdges.update({id: i, to: T}); to = T;
-        topAdjMatrix[from][to] = edge.id;
+        if(from == -1){ 
+            topEdges.update({id: i, from: T}); from = T;
+        }
+        if(to == -1) {
+            topEdges.update({id: i, to: T}); to = T;
+        }
+        topAdjMatrix[from][to] = i;
     }
+    console.log(topAdjMatrix);
     topNodes.remove(-1);
     options.manipulation.enabled = false;
     topGraph.setOptions(options);
+    initialiseDataSets(nodes, edges);
     setNewGraph();
 }
-
-function destroy() {
-    if (topGraph !== null) {
-      topGraph.destroy();
-      topGraph = null;
-      resGraph.destroy();
-      resGraph = null;
-    }
-}
-function clearPopUp() {
-    document.getElementById('saveButton').onclick = null;
-    document.getElementById('cancelButton').onclick = null;
-    document.getElementById('network-popUp').style.display = 'none';
-}
-
-function cancelEdit(callback) {
-    clearPopUp();
-    callback(null);
-}
-
 
 function saveData(data,callback) {
     data.id = nodeID;
