@@ -55,36 +55,37 @@ function finishDrawing(){
     topNodes = topData.nodes;
     topEdges = topData.edges; 
     
-    topNodes.add({
-        id: newNodeID,
-        label: 'T',
-        physics: false,
-        x: 300,
-        y: 0
-    });
+    nodes = addNode(nodes, newNodeID, 'T', 300, 0);
     T = newNodeID;
     N = T + 1;
     E = topEdges.length;
+
     initialiseMatrices();
-    
-    console.log(topAdjMatrix);
     
     for(var i = 0; i < topEdges.length; i++){
         var edge = topEdges.get(i);
         var from = edge.from, to = edge.to;
         if(from == -1){ 
-            topEdges.update({id: i, from: T}); from = T;
+            topEdges.update({id: i, from: T});
+            edges[i].from = T;
+            from = T; 
         }
-        if(to == -1) {
-            topEdges.update({id: i, to: T}); to = T;
+        if(to == -1) { 
+            topEdges.update({id: i, to: T}); 
+            edges[i].to = T;
+            to = T; 
         }
         topAdjMatrix[from][to] = i;
     }
-    console.log(topAdjMatrix);
+
     topNodes.remove(-1);
+    nodes.splice(1, 1);
+
+    initialiseDataSets(nodes, edges);
+    
+
     options.manipulation.enabled = false;
     topGraph.setOptions(options);
-    initialiseDataSets(nodes, edges);
     setNewGraph();
 }
 
