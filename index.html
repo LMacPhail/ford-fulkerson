@@ -44,7 +44,7 @@
                             </span></div>
                     </li>
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                        <div class="collapsible-header disabled"><i class="material-icons">file_download</i>Upload/Download Graph</div>
                         <div class="collapsible-body">
                             <span>
                                 <button class="waves-effect btn" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
@@ -57,7 +57,7 @@
                         <div class="collapsible-body"><span>
                             <button class="waves-effect btn" onclick="drawNewGraph();" id="drawNew">Draw New</button>
                             <p id="drawing_instructions">Follow instructions at top of screen</p>
-                            <button class="waves-effect btn disabled" onclick="finishDrawing();" id="saveGraph">Save</button>
+                            <button class="waves-effect btn disabled" onclick="saveDrawnGraph();" id="saveGraph">Save</button>
                         </span></div>
                     </li>
                 </ul>
@@ -84,10 +84,10 @@
                         <div class="col s4"><div class="card" id="flow_counter">Current flow: 0</div></div>
                         <div class="col s4">
                             <div id="playback_control">
-                                <a class="waves-effect btn-flat" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
-                                <a class="waves-effect btn-flat" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
-                                <a class="waves-effect btn-flat" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
-                                <a class="waves-effect btn-flat" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                                <a class="waves-effect btn-flat" id="rewind_button" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                <a class="waves-effect btn-flat" id="step_back_button" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                <a class="waves-effect btn-flat" id="play_button" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                <a class="waves-effect btn-flat" id="step_forward_button" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
                             </div>
                         </div>
                         <div class="col" id="speed_control">
