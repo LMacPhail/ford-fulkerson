@@ -1,11 +1,11 @@
 function loadDefaultGraph(){
-    toggleDisableDrawBtns();
+    disableDrawingMode();
     generateDefaultGraph();
     setNewGraph();
 }
 
 function loadRandomGraph(){
-    toggleDisableDrawBtns();
+    disableDrawingMode();
     generateRandomGraphData();
     setNewGraph();
 }
@@ -45,7 +45,7 @@ function togglePlayPause(){
     }
 }
 
-function toggleDisableDrawBtns(){
+function enableDrawingMode() {
     var drawBtnClass = document.getElementById('drawNew').className;
     var playbackBtnClass = document.getElementById('rewind_button').className;
     if(drawBtnClass == "waves-effect btn") {
@@ -59,7 +59,14 @@ function toggleDisableDrawBtns(){
 
         options.manipulation.enabled = true;
         topGraph.setOptions(options);
-    } else {
+    }
+
+}
+
+function disableDrawingMode() {
+    var drawBtnClass = document.getElementById('drawNew').className;
+    var playbackBtnClass = document.getElementById('rewind_button').className;
+    if(drawBtnClass == "waves-effect btn disabled") {
         playbackBtnClass = "waves-effect btn-flat";
         drawBtnClass = "waves-effect btn";
         document.getElementById('drawNew').className = drawBtnClass;

@@ -2,7 +2,7 @@ var drawingEnabled = false;
 var nodeID;
 
 function drawNewGraph(){
-    toggleDisableDrawBtns();
+    enableDrawingMode();
     document.getElementById('drawing_instructions').display = 'inline-block';
     newNodeID = 1;
     newEdgeID = 0;
@@ -56,5 +56,5 @@ function saveDrawnGraph(){
     options.manipulation.enabled = false;
     topGraph.setOptions(options);
     setNewGraph();
-    toggleDisableDrawBtns();
+    disableDrawingMode();
 }
