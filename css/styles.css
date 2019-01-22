@@ -52,7 +52,7 @@
 #flow_counter {
     text-align: center;
     font-size: 24px;
-    padding: 10px;
+    /* padding: 10px; */
 }
 
 #playback_control a:hover{
@@ -77,15 +77,20 @@
     width: 40px;
 }
 
+#algorithm_info {
+}
+
 #pseudocode {
     margin: 0;
+    padding: 0;
+    height: 50%;
     padding-left: 10px;
     background-color: #ededed;
 }
 
 .pseudocode_step{
     font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .tab1 {
@@ -98,6 +103,17 @@
 
 .tab3 {
     padding-left: 20%;
+}
+
+#traceback {
+    height: 200px;
+    overflow: auto;
+}
+
+.traceback_line {
+    padding: 0;
+    margin: 0;
+    padding-left: 10px;
 }
 
 #flow_counter {

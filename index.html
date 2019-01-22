@@ -61,18 +61,23 @@
                         </span></div>
                     </li>
                 </ul>
-                <div class="section" id="pseudocode">
-                    <p class="pseudocode_step">build/update residual graph</p>
-                    <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
-                    <p class="pseudocode_step tab1">if augmenting path is found:</p>
-                    <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
-                    <p class="pseudocode_step tab3">augment flow along forwards edge</p>
-                    <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
-                    <p class="pseudocode_step tab1">else:</p>
-                    <p class="pseudocode_step tab2">maximum flow has been found</p>
-                    <p class="pseudocode_step">reveal minimum cuts</p>
+                <div id="algorithm info">
+                        <div class="section" id="pseudocode">
+                            <p class="pseudocode_step">build/update residual graph</p>
+                            <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
+                            <p class="pseudocode_step tab1">if augmenting path is found:</p>
+                            <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
+                            <p class="pseudocode_step tab3">augment flow along forwards edge</p>
+                            <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
+                            <p class="pseudocode_step tab1">else:</p>
+                            <p class="pseudocode_step tab2">maximum flow has been found</p>
+                            <p class="pseudocode_step">reveal minimum cuts</p>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="section" id="traceback">
+                            <p class="captions traceback_line">press play to begin.</p>
+                        </div>
                 </div>
-                
             </div>
             <div class="col s9" id="playback_screen">
                 <div class="section" id="network_canvas">
