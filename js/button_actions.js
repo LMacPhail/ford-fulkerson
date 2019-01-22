@@ -1,10 +1,16 @@
 function loadDefaultGraph(){
+    if(playState == PLAY){
+        togglePlayPause();
+    }
     disableDrawingMode();
     generateDefaultGraph();
     setNewGraph();
 }
 
 function loadRandomGraph(){
+    if(playState == PLAY){
+        togglePlayPause();
+    }
     disableDrawingMode();
     generateRandomGraphData();
     setNewGraph();

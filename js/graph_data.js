@@ -205,6 +205,15 @@ function addRemainingEdges(edges, E){
     }
 }
 
+function reverseEdgeIDs(edges){
+    var revEdges = [], j = 0;
+    for(i = newEdgeID-1; i >= 0; i--){
+        revEdges = addEdge(revEdges, j, edges[i].from, edges[i].to, getCapacity(edges[i].label));
+        j++;
+    }
+    return revEdges;
+}
+
 /*
 Generates a graph using N and E, such that:
     - There is a source node S and a sink node T
@@ -230,6 +239,7 @@ function generateRandomGraphData(){
     var noIncomingEdges = connectNodesToSink(edges);
     connectNodesFromSource(edges, noIncomingEdges);
     addRemainingEdges(edges, E); 
+    edges = reverseEdgeIDs(edges);
 
     nodes = addNode(nodes, T, 'T', null, null);
 

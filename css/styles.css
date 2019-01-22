@@ -13,7 +13,7 @@
     background-color: #ededed;
     position: fixed;
     left: 0;
-    height: 100%;
+    height: 100vh;
     padding: 0;
     overflow: hidden;
 }
@@ -77,9 +77,6 @@
     width: 40px;
 }
 
-#algorithm_info {
-}
-
 #pseudocode {
     margin: 0;
     padding: 0;
@@ -90,7 +87,8 @@
 
 .pseudocode_step{
     font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
+    font-size: 12px;
+    height: 7%;
 }
 
 .tab1 {
@@ -106,7 +104,7 @@
 }
 
 #traceback {
-    height: 200px;
+    height: 190px;
     overflow: auto;
 }
 
@@ -114,6 +112,7 @@
     padding: 0;
     margin: 0;
     padding-left: 10px;
+    font-size: 12px;
 }
 
 #flow_counter {

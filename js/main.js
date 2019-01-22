@@ -2,8 +2,8 @@ var mainContainer = document.getElementById('top_graph');
 var resContainer = document.getElementById('res_graph');
 
 
-generateDefaultGraph();
-// generateRandomGraph();
+// loadDefaultGraph();
+generateRandomGraphData();
 
 newNodeID = nodes.length - 1;
 newEdgeID = edges.length - 1;
@@ -68,7 +68,16 @@ function setNewGraph(){
   animationSteps = [];
   fordFulkerson();
   step = 0;
+  resetFlowCounter();
+  resetTraceback();
+}
+
+function resetFlowCounter(){
   document.getElementById("flow_counter").innerHTML = "Current flow: 0";
+}
+
+function resetTraceback(){
+  document.getElementById("traceback").innerHTML = '<p class="caption traceback_line">press play to begin.</p>';
 }
 
 topGraph.addEventListener("dragEnd",  

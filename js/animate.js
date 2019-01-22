@@ -215,7 +215,7 @@ function prepareOutputLine(outputID, outputData){
     addAnimationStep(null, null, null, null, null, null, null, null, outputID, outputData);
 }
 
-function  printTraceback(line){
+function printTraceback(line){
     var currentTB = document.getElementById('traceback').innerHTML;
     document.getElementById('traceback').innerHTML = currentTB + '<p class="caption traceback_line">' + line + '</p>';
     document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
