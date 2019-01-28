@@ -29,11 +29,8 @@ var PLAY = 1,
 */
 function animateAlgorithm(){
   var slider = document.getElementById("pb_slider");
-  slider.oninput = function() {
-    playState = PAUSE;
-    playState = PLAY;
-  }
-  var id = setInterval(frame, (1000 * (10/slider.value)));
+  
+  var id = setInterval(frame, (600 * (100/slider.value)));
 //   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
@@ -58,16 +55,11 @@ function selectNetwork(network){
 function executeAnimationStep(){
     if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         if (step > 0){
-            
-            console.log("playState is backwards, going from step = " + step);
             step--;
-            console.log("to step = " + step);
         } else {
             playState = togglePlayPause();
         }
     } 
-    console.log("executing step " + step + ", play = " + playState);
-    console.log(currentStep);
     
     var currentStep = animationSteps[step];
     var edgeID = currentStep.edgeID,
@@ -123,7 +115,7 @@ function executeAnimationStep(){
 }
 
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
-    console.log("removing edge");
+    // console.log("removing edge");
     if(playState > 0){
         currentStep.orig_edge = edges.get(edgeID);
         edges.remove(edgeID);
@@ -133,7 +125,7 @@ function executeRemoveEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
-    console.log("highlighting edge");
+    // console.log("highlighting edge");
     var edge_color;
     if(playState > 0){
         edge_color = currentStep.color;
@@ -146,7 +138,7 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeLabelEdgeStep(edges, edgeID, currentStep){
-    console.log("labeling edge");
+    // console.log("labeling edge");
     var label;
     if(playState > 0){
         currentStep.orig_edge = edges.get(edgeID);
@@ -159,7 +151,7 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeAddEdgeStep(edges, edgeID, currentStep){
-    console.log("adding edge");
+    // console.log("adding edge");
     if(playState > 0){
         var label = currentStep.label,
             from = currentStep.from,
