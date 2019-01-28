@@ -58,13 +58,16 @@ function selectNetwork(network){
 function executeAnimationStep(){
     if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         if (step > 0){
+            
+            console.log("playState is backwards, going from step = " + step);
             step--;
+            console.log("to step = " + step);
         } else {
-            playState = PAUSE;
+            playState = togglePlayPause();
         }
     } 
-    // console.log("executing step " + step + ", play = " + playState);
-    // console.log(currentStep);
+    console.log("executing step " + step + ", play = " + playState);
+    console.log(currentStep);
     
     var currentStep = animationSteps[step];
     var edgeID = currentStep.edgeID,
@@ -79,8 +82,10 @@ function executeAnimationStep(){
     if(network != null) {
         edges = selectNetwork(network);
     } else {
-        step++;
-        return;
+        if(playState > 0) {
+            step++;
+            return;
+        }
     }
 
     
@@ -113,27 +118,27 @@ function executeAnimationStep(){
 
     highlightPseudocode(pStep);
 
-    if(playState == PLAY) step++;
+    if(playState > 0) step++;
 
 }
 
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
-    // console.log("removing edge");
-    if((playState == PLAY) || (playState == STEP_FOWARD)){
+    console.log("removing edge");
+    if(playState > 0){
         currentStep.orig_edge = edges.get(edgeID);
         edges.remove(edgeID);
-    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
+    } else if (playState < 0){
         edges.add(currentStep.orig_edge);
     }
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
-    // console.log("highlighting edge");
+    console.log("highlighting edge");
     var edge_color;
-    if((playState == PLAY) || (playState == STEP_FOWARD)){
+    if(playState > 0){
         edge_color = currentStep.color;
         currentStep.orig_edge = edges.get(edgeID);
-    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
+    } else if (playState < 0){
         var orig_edge = currentStep.orig_edge;
         edge_color = orig_edge.color;      
     }
@@ -141,12 +146,12 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeLabelEdgeStep(edges, edgeID, currentStep){
-    // console.log("labeling edge");
+    console.log("labeling edge");
     var label;
-    if((playState == PLAY) || (playState == STEP_FOWARD)){
+    if(playState > 0){
         currentStep.orig_edge = edges.get(edgeID);
         label = currentStep.label;
-    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
+    } else if (playState < 0){
         var orig_edge = currentStep.orig_edge;
         label = orig_edge.label;
     }
@@ -154,8 +159,8 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeAddEdgeStep(edges, edgeID, currentStep){
-    // console.log("adding edge");
-    if((playState == PLAY) || (playState == STEP_FOWARD)){
+    console.log("adding edge");
+    if(playState > 0){
         var label = currentStep.label,
             from = currentStep.from,
             to = currentStep.to;
@@ -167,7 +172,7 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             arrows: {to: {enabled: true}},
             arrowStrikethrough: false
         });
-    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
+    } else if (playState < 0){
         edges.remove(edgeID);
     }
 }
@@ -296,6 +301,6 @@ var traceback = [
     "augmenting edge between nodes $ and $",
     "augmenting forwards edge between nodes $ and $",
     "decrementing backwards edge between nodes $ and $",
-]
+];
   
 

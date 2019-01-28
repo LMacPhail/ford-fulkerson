@@ -231,7 +231,6 @@ function findMinimumCut(){
         var node = Q.pop();
         var connected = getConnectedNodes(RES, node, "from");
         for(i in connected){
-            console.log(connected[i]);
             if(visited[connected[i]] == 0) {
                 A.push(connected[i]);
                 Q.push(connected[i]);
@@ -250,9 +249,7 @@ function findMinimumCut(){
             if(topAdjMatrix[A[i]][B[j]] != null) C.push(topAdjMatrix[A[i]][B[j]]);
         }
     }
-    console.log(C);
     for(i = 0; i < C.length; i++){
-        console.log("highlighting edge: " + C[i]);
         createHighlightAnimation(TOP, C[i], 8, "red");
     }
 }
