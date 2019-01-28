@@ -63,8 +63,10 @@ fordFulkerson();
 
 function setNewGraph(){
   topGraph.setData(topData);
+  console.log(topData);
   topGraph.storePositions();
   resGraph.setData(resData);
+  console.log(resData);
   animationSteps = [];
   fordFulkerson();
   step = 0;

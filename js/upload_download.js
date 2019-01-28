@@ -64,13 +64,14 @@ function createTxtFileFromGraph(){
     }
 
     function createGraphFromUpload(fileNodes, fileEdges){
-        disableDrawingMode()
-        initialiseMatrices();
+        disableDrawingMode();
         nodes = [], edges = [];
         var node, edge, i, label;
         N = fileNodes.length;
         T = N -1;
         E = fileEdges.length;
+        
+        initialiseMatrices();
         for(i = 0; i < N; i++){
             node = fileNodes[i];
             if(i == 0) {
@@ -88,9 +89,7 @@ function createTxtFileFromGraph(){
         }
         initialiseDataSets(nodes, edges);
         setNewGraph();
-
     }
-
     document.getElementById("uploadFile").addEventListener('change', onChange);
 
 }());
@@ -101,16 +100,12 @@ function isBetween(comp, lower, upper){
 
 function checkValidGraph(fileNodes, fileEdges){
     var nl = fileNodes.length, el = fileEdges.length;
-    if(nl == 0) {
-        alert("no nodes in file!");
-        return false;
-    } else if (el == 0) {
-        alert("no edges in file!");
-        return false;
-    }
-    var edge, invalidEdges = [], i;
-    for(i = 0; i < nl; i++) if (fileNodes[i].id != i) return false;
 
+    if(!checkNodesAndEdgesExist(nl, el)) return false;
+    if(!checkNodeIdsConsecutive(fileNodes)) return false;
+    
+    var edge, invalidEdges = [], i;
+    
     var testMatrix = [];
     for(var y = 0; y < N; y++){
         testMatrix[y] = [];
@@ -140,5 +135,24 @@ function checkValidGraph(fileNodes, fileEdges){
         return false;
     }
     return true;
+}
 
+function checkNodesAndEdgesExist(n, e){
+    if((n == 0) && (e == 0)) {
+        alert("no nodes or edges in file!");
+        return false;
+    } else if (e == 0) {
+        alert("no edges in file!");
+        return false;
+    } else if (n == 0) {
+        alert("no nodes in file!");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkNodeIdsConsecutive(nodes){
+    for(var i = 0; i < nodes.length; i++) if (nodes[i].id != i) return false;
+    return true;
 }

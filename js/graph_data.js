@@ -114,7 +114,13 @@ is already an edge with these nodes and -1 if there is not
 */
 function findDuplicateEdges(data, from, to){
     var matrix;
-    if(data == TOP) matrix = topAdjMatrix; else if(data == RES) matrix = data;
+    if(data == TOP){
+        matrix = topAdjMatrix; 
+    } else if (data == RES) {
+        matrix = resAdjMatrix;
+    } else {
+        matrix = data;
+    }
     if(matrix[from][to] != null) return 1;
     return -1;
 }
