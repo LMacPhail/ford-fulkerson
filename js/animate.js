@@ -76,8 +76,8 @@ function executeAnimationStep(){
     } else {
         if(playState > 0) {
             step++;
-            return;
         }
+        return;
     }
 
     
@@ -100,8 +100,8 @@ function executeAnimationStep(){
             break;
         
         case("updateFlow"):
+            updateFlowCounter(currentStep);
             pStep = animationSteps[step - 1].pStep;
-            document.getElementById("flow_counter").innerHTML = "Current flow: " + animationSteps[step].m;
             break;
         default:
             console.log("Error: invalid animation step");
@@ -117,10 +117,10 @@ function executeAnimationStep(){
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
     // console.log("removing edge");
     if(playState > 0){
-        currentStep.orig_edge = edges.get(edgeID);
+        currentStep.prevData = edges.get(edgeID);
         edges.remove(edgeID);
     } else if (playState < 0){
-        edges.add(currentStep.orig_edge);
+        edges.add(currentStep.prevData);
     }
 }
 
@@ -129,10 +129,10 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
     var edge_color;
     if(playState > 0){
         edge_color = currentStep.color;
-        currentStep.orig_edge = edges.get(edgeID);
+        currentStep.prevData = edges.get(edgeID);
     } else if (playState < 0){
-        var orig_edge = currentStep.orig_edge;
-        edge_color = orig_edge.color;      
+        var prevData = currentStep.prevData;
+        edge_color = prevData.color;      
     }
     edges.update([{id: edgeID, color: edge_color}]);
 }
@@ -141,11 +141,11 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
     // console.log("labeling edge");
     var label;
     if(playState > 0){
-        currentStep.orig_edge = edges.get(edgeID);
+        currentStep.prevData = edges.get(edgeID);
         label = currentStep.label;
     } else if (playState < 0){
-        var orig_edge = currentStep.orig_edge;
-        label = orig_edge.label;
+        var prevData = currentStep.prevData;
+        label = prevData.label;
     }
     edges.update([{id: edgeID, label: label}]);
 }
@@ -169,6 +169,17 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
     }
 }
 
+function updateFlowCounter(currentStep){
+    if(playState > 0) {
+        currentStep.prevData = (document.getElementById("flow_counter").innerHTML).split(' ').pop();
+        console.log(currentStep.prevData);
+        document.getElementById("flow_counter").innerHTML = "Current flow: " + currentStep.m;
+    } else if(playState < 0) {
+        var prevData = currentStep.prevData;
+        document.getElementById("flow_counter").innerHTML = "Current flow: " + prevData;
+    }
+}
+
 function highlightPseudocode(pStep){
     var pseudocode = document.getElementsByClassName("pseudocode_step");
     for(var i = 0; i < pseudocode.length; i++) {
@@ -183,7 +194,7 @@ function highlightPseudocode(pStep){
 function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, outputID, outputData){
     animationSteps.push({
         network, action, edgeID, pStep, color: {color:color},
-        label, from, to, orig_edge: null,
+        label, from, to, prevData: null,
         outputID, outputData
     });
 }

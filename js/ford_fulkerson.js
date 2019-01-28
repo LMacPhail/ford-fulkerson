@@ -195,6 +195,7 @@ function fordFulkerson(){
                 addAnimationStep(null);
                 createHighlightAnimation(RES, resID, pseudocodeStep, 'blue');
             }
+            
             totalFlow += m;
             animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
         }
