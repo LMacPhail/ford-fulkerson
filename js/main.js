@@ -46,6 +46,30 @@ var options = {
           }
       }
       newEdgeID++;
+    },
+    deleteNode: function (data, callback) {
+      var nodeIds = data.nodes, i;
+      nodes.splice(nodeIds[0] + 1, 1);
+      for(i = nodeIds[0] + 1; i < nodes.length; i++){
+        nodes[i].id = i - 1;
+        nodes[i].label = "n" + (i-1);
+        topNodes.remove(i);
+      }
+      newNodeID--;
+      topNodes.update(nodes);
+      callback(data);
+    },
+    deleteEdge: function (data, callback) {
+      var  edgeIds = data.edges, i;
+      for(i = edgeIds[0] + 1; i < edges.length; i++){
+        edges[i].id = i - 1;
+        topEdges.remove(i);
+      }
+      edges.splice(edgeIds[0], 1);
+      topEdges.update(edges);
+      newEdgeID--;
+      console.log(data);
+      callback(data);
     }
   },
   physics: {
