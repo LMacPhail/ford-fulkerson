@@ -54,7 +54,7 @@ function togglePlayPause(){
 function enableDrawingMode() {
     var drawBtnClass = document.getElementById('drawNew').className;
     var playbackBtnClass = document.getElementById('rewind_button').className;
-    if(drawBtnClass == "waves-effect btn") {
+    if(drawBtnClass == "waves-effect btn cyan") {
         document.getElementById('drawNew').className = drawBtnClass + " disabled";
         document.getElementById('saveGraph').className = drawBtnClass;
         
@@ -72,9 +72,9 @@ function enableDrawingMode() {
 function disableDrawingMode() {
     var drawBtnClass = document.getElementById('drawNew').className;
     var playbackBtnClass = document.getElementById('rewind_button').className;
-    if(drawBtnClass == "waves-effect btn disabled") {
-        playbackBtnClass = "waves-effect btn-flat";
-        drawBtnClass = "waves-effect btn";
+    if(drawBtnClass == "waves-effect btn cyan disabled") {
+        playbackBtnClass = "waves-effect waves-orange btn-flat";
+        drawBtnClass = "waves-effect btn cyan";
         document.getElementById('drawNew').className = drawBtnClass;
         document.getElementById('saveGraph').className = drawBtnClass + " disabled";
 

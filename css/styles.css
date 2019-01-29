@@ -32,16 +32,35 @@
 }
 
 #alg_title {
+    background-color: #00BCD4;
+    color: #ffffff;
     text-align: center;
     font-size: 24px;
 }
 
-.new_graph_options {
-    width: 100%;
+#new_graph_options {
+    margin: 0;
+    padding: 0;
 }
 
 .btn {
+    background-color: #0097A7;
     margin: 2px;
+}
+
+#json_example {
+    padding: 5px;
+    background-color: #ffffff;
+}
+
+#json_example p{
+    padding: 0;
+    margin: 0;
+    font-size: 11px;
+}
+
+#load_default_graph {
+    background-color: #FF9800;
 }
 
 #drawing_instructions {
@@ -56,12 +75,12 @@
 }
 
 #playback_control a:hover{
-    color:rgb(107, 107, 107);
+    color:#757575;
     background-color: white; 
 }
 
 .collapsible-header i:hover {
-    color:rgb(107, 107, 107);
+    color:#757575;
 }
 
 #N_controls { 
@@ -77,34 +96,40 @@
     width: 40px;
 }
 
+/* #algorithm_info {
+} */
+
 #pseudocode {
-    margin: 0;
-    padding: 0;
-    height: 50%;
+    margin-right: 1px;
+    border-right-color: #BDBDBD;
+    border-right-width: 1px;
     padding-left: 10px;
-    background-color: #ededed;
+    background-color: #ffffff;
 }
 
 .pseudocode_step{
     font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
-    height: 7%;
+    color: #212121;
+    font-size: 13px;
+    height: 9%;
 }
 
-.tab1 {
+.indent1 {
     padding-left: 10%;
 }
 
-.tab2 {
+.indent2 {
     padding-left: 15%;
 }
 
-.tab3 {
+.indent3 {
     padding-left: 20%;
 }
 
 #traceback {
-    height: 190px;
+    height: 150px;
+    
+    width: 100%;
     overflow: auto;
 }
 

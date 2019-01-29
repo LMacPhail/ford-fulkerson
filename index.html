@@ -30,13 +30,13 @@
                 <div class="section center-align" id="alg_title">
                     Ford Fulkerson
                 </div>
-                <ul class="collapsible">
+                <ul class="collapsible" id="new_graph_options">
                     <li>
                         <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
                         <div class="collapsible-body">
                             <span>
-                                <button class="waves-effect btn" id="load_default_graph" onclick="loadDefaultGraph();">default</button>
-                                <button class="waves-effect btn" onclick="loadRandomGraph();">random</button>
+                                <button class="waves-effect btn cyan" id="load_default_graph" onclick="loadDefaultGraph();">default</button>
+                                <button class="waves-effect btn cyan" onclick="loadRandomGraph();">random</button>
                                 <div id="N_controls">
                                     <p>Number of nodes: </p>
                                     <input type="number" class="dropdown-button" id="N_picker" value="6"></input>
@@ -47,36 +47,48 @@
                         <div class="collapsible-header disabled"><i class="material-icons">file_download</i>Upload/Download Graph</div>
                         <div class="collapsible-body">
                             <span>
-                                <button class="waves-effect btn" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
-                                <input class="waves-effect btn" type="file" id="uploadFile"></input>
+                                <p class="caption">Graphs can be stored as json files with the format:</p>
+                                <div id="json_example">
+                                    <p>{</p>
+                                    <p>"nodes" : [{ "id": 0, "x": -300, "y": 0},</p>
+                                    <p>...,{ "id": 4, "x": 300, "y": 0}],</p>
+                                    <p>"edges" : [{ "from": 0, "to": 1, "capacity": 2},</p>
+                                    <p>...,{ "from": 3, "to": 4, "capacity": 4}]</p>
+                                    <p>}</p>
+                                </div>
+                                <p class="caption">For an example, click 'download' for a json representation of the current graph.</p>
+                                <button class="waves-effect btn cyan" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
+                                <input class="waves-effect btn cyan" type="file" id="uploadFile"></input>
 
-                            </span></div>
+                            </span>
+                        </div>
                     </li>
                     <li>
                         <div class="collapsible-header"><i class="material-icons">create</i>Draw/Edit Graph</div>
                         <div class="collapsible-body"><span>
-                            <button class="waves-effect btn" onclick="drawNewGraph();" id="drawNew">Draw New</button>
+                            <button class="waves-effect btn cyan" onclick="drawNewGraph();" id="drawNew">Draw New</button>
                             <p id="drawing_instructions">Follow instructions at top of screen</p>
-                            <button class="waves-effect btn disabled" onclick="saveDrawnGraph();" id="saveGraph">Save</button>
+                            <button class="waves-effect btn cyan disabled" onclick="saveDrawnGraph();" id="saveGraph">Save</button>
                         </span></div>
                     </li>
                 </ul>
-                <div id="algorithm info">
-                        <div class="section" id="pseudocode">
-                            <p class="pseudocode_step">build/update residual graph</p>
-                            <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
-                            <p class="pseudocode_step tab1">if augmenting path is found:</p>
-                            <p class="pseudocode_step tab2">for each edge in the augmenting path:</p>
-                            <p class="pseudocode_step tab3">augment flow along forwards edge</p>
-                            <p class="pseudocode_step tab3">decrement flow along backwards edge</p>
-                            <p class="pseudocode_step tab1">else:</p>
-                            <p class="pseudocode_step tab2">maximum flow has been found</p>
-                            <p class="pseudocode_step">reveal minimum cuts</p>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="section" id="traceback">
-                            <p class="caption traceback_line">press play to begin.</p>
-                        </div>
+                
+                <div id="algorithm_info">
+                    <div class="col 12 z-depth-1" id="pseudocode">
+                        <p class="pseudocode_step">build/update residual graph</p>
+                        <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
+                        <p class="pseudocode_step indent1">if augmenting path is found:</p>
+                        <p class="pseudocode_step indent2">for each edge in the augmenting path:</p>
+                        <p class="pseudocode_step indent3">augment flow along forwards edge</p>
+                        <p class="pseudocode_step indent3">decrement flow along backwards edge</p>
+                        <p class="pseudocode_step indent1">else:</p>
+                        <p class="pseudocode_step indent2">maximum flow has been found</p>
+                        <p class="pseudocode_step">reveal minimum cuts</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="col 12" id="traceback">
+                        <p class="caption traceback_line">press play to begin.</p>
+                    </div>
                 </div>
             </div>
             <div class="col s9" id="playback_screen">
@@ -90,10 +102,10 @@
                         <div class="col s4"><div class="card" id="flow_counter">Current flow: 0</div></div>
                         <div class="col s4">
                             <div id="playback_control">
-                                <a class="waves-effect btn-flat" id="rewind_button" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
-                                <a class="waves-effect btn-flat" id="step_back_button" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
-                                <a class="waves-effect btn-flat" id="play_button" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
-                                <a class="waves-effect btn-flat" id="step_forward_button" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="rewind_button" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="step_back_button" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="play_button" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="step_forward_button" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
                             </div>
                         </div>
                         <div class="col" id="speed_control">

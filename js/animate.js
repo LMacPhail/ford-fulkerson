@@ -183,10 +183,10 @@ function updateFlowCounter(currentStep){
 function highlightPseudocode(pStep){
     var pseudocode = document.getElementsByClassName("pseudocode_step");
     for(var i = 0; i < pseudocode.length; i++) {
-        pseudocode[i].style.color = "black";
+        pseudocode[i].style.color = "#212121";
         pseudocode[i].style.fontWeight = "normal";
     }
-    pseudocode[pStep].style.color = "blue";
+    pseudocode[pStep].style.color = "#FF9800";
     pseudocode[pStep].style.fontWeight = "900";
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
 }
