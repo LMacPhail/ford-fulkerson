@@ -107,9 +107,9 @@ function checkValidGraph(fileNodes, fileEdges){
     var edge, invalidEdges = [], i;
     
     var testMatrix = [];
-    for(var y = 0; y < N; y++){
+    for(var y = 0; y < nl; y++){
         testMatrix[y] = [];
-        for(var x = 0; x < N; x++){
+        for(var x = 0; x < nl; x++){
           testMatrix[y][x] = null;
         }
     }
@@ -121,6 +121,7 @@ function checkValidGraph(fileNodes, fileEdges){
         }
         if(edge.to == edge.from) invalidEdges.push({id:i, problem: " is going to and from the same node!"});
         if(edge.capacity <= 0) invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
+        
         if(findDuplicateEdges(testMatrix, edge.from, edge.to) == 1) {
             invalidEdges.push({id: i, problem: " is a duplicate edge!"});
         }

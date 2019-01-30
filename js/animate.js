@@ -30,7 +30,7 @@ var PLAY = 1,
 function animateAlgorithm(){
   var slider = document.getElementById("pb_slider");
   
-  var id = setInterval(frame, (600 * (100/slider.value)));
+  var id = setInterval(frame, (500 * (50/slider.value)));
 //   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
@@ -242,11 +242,11 @@ function highlightAugmentingPath(path){
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation(RES, edgeID, 1, 'red', 8, [path[i-1], path[i]]);
+        createHighlightAnimation(RES, edgeID, 1, 'red'/*, 8, [path[i-1], path[i]]*/);
 
-        edgeData = findEdgeID(TOP, path[i-1], path[i]);
-        edgeID = edgeData.id;
-        createHighlightAnimation(TOP, edgeID, 1, 'red');
+            // edgeData = findEdgeID(TOP, path[i-1], path[i]);
+            // edgeID = edgeData.id;
+        // createHighlightAnimation(TOP, edgeID, 1, 'red');
     }
     addAnimationStep(null);
 }

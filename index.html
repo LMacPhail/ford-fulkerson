@@ -45,7 +45,7 @@
                     </li>
                     <li>
                         <div class="collapsible-header disabled"><i class="material-icons">file_download</i>Upload/Download Graph</div>
-                        <div class="collapsible-body">
+                        <div class="collapsible-body" id="upload_download">
                             <span>
                                 <p class="caption">Graphs can be stored as json files with the format:</p>
                                 <div id="json_example">
@@ -56,6 +56,11 @@
                                     <p>...,{ "from": 3, "to": 4, "capacity": 4}]</p>
                                     <p>}</p>
                                 </div>
+                                <!-- <ul>
+                                    <li>x and y coordinates for nodes are not necessary</li>
+                                    <li>node ids must be consecutive</li>
+                                    <li>the node with id 0 is 'S' and id N is 'T' where N is the number of nodes</li>
+                                </ul> -->
                                 <p class="caption">For an example, click 'download' for a json representation of the current graph.</p>
                                 <button class="waves-effect btn cyan" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
                                 <input class="waves-effect btn cyan" type="file" id="uploadFile"></input>

@@ -121,6 +121,8 @@ function findDuplicateEdges(data, from, to){
     } else {
         matrix = data;
     }
+    console.log(from);
+    console.log(to);
     if(matrix[from][to] != null) return 1;
     return -1;
 }

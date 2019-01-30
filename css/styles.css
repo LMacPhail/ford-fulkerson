@@ -48,6 +48,12 @@
     margin: 2px;
 }
 
+#upload_download {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+}
+
 #json_example {
     padding: 5px;
     background-color: #ffffff;
@@ -128,7 +134,7 @@
 
 #traceback {
     height: 150px;
-    
+    padding-top: 5px;
     width: 100%;
     overflow: auto;
 }
