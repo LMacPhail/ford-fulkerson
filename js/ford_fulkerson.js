@@ -228,12 +228,9 @@ function findMinimumCut(){
     visited[0] = 1;
     Q.push(0);
     A.push(0);
-    console.log("Q at start: " + Q + ", A at start: " + A);
     while(Q.length > 0) {
         var node = Q.pop();
-        console.log("node in Q being processed: " + node);
         var connected = getConnectedNodes(RES, node, "to");
-        console.log("connected nodes: " + connected);
         for(i in connected){
             if(visited[connected[i]] == 0) {
                 A.push(connected[i]);
@@ -243,19 +240,16 @@ function findMinimumCut(){
         }
     }
     A = bubbleSort(A);
-    console.log("sorted A: " + A);
     for(i = 1; i < A.length; i++) {
         B.splice((A[i]-j), 1);
         j++;
     }
-    console.log("B: " + B);
     for(i = 0; i < A.length; i++) {
         for(j = 0; j < B.length; j++) {
             console.log("from: " + A[i] + ", to: " + B[j]);
-            if(topAdjMatrix[A[i]][B[j]] != null) {console.log("not null"); C.push(topAdjMatrix[A[i]][B[j]]);}
+            if(topAdjMatrix[A[i]][B[j]] != null) C.push(topAdjMatrix[A[i]][B[j]]);
         }
     }
-    console.log("C: " + C);
     for(i = 0; i < C.length; i++){
         createHighlightAnimation(TOP, C[i], 8, "red");
     }

@@ -206,7 +206,7 @@ function connectNodesFromSource(edges, onlyOutgoing){
 function addRemainingEdges(edges, E){
     for (i = newEdgeID; i < E; i++){
         do {  // prevents loops and duplicate parallel edges
-            from = (Math.random() * T | 0); to = (Math.random() * N | 0);
+            from = (Math.random() * T | 0); to = (Math.random() * N | 1);
         } while ((from == to) || (findDuplicateEdges(TOP, from, to) == 1));
         edges = addEdge(edges, newEdgeID, from, to, null);
         newEdgeID++;
