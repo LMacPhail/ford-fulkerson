@@ -292,12 +292,12 @@ function getFromList(matrix, nodeID){
 Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
-function findEdgeID(data, node1, node2){
+function findEdgeID(data, from, to){
     var edgeData = {}, matrix = getMatrix(data);
-    if(matrix[node1][node2] != null){
-      edgeData = {id: matrix[node1][node2], direction: 1}
-    } else if (matrix[node2][node1] != null){
-      edgeData = {id: matrix[node2][node1], direction: 0}
+    if(matrix[from][to] != null){
+      edgeData = {id: matrix[from][to], direction: 1}
+    } else if (matrix[to][from] != null){
+      edgeData = {id: matrix[to][from], direction: 0}
     }
     return edgeData;
 }

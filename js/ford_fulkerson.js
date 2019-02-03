@@ -113,6 +113,7 @@ function findPath(visited){
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
                 if(visited[neighbour] == 0){
+                    createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 1, 'red');
                     visited[neighbour] = 1;
                     parents[neighbour].parent = node;
                     queue.push(neighbour);
@@ -164,7 +165,8 @@ function fordFulkerson(){
         prepareOutputLine(4);
         path = findPath(visited);
         console.log("path: " + path);
-        highlightAugmentingPath(path);
+        // highlightAugmentingPath(path);
+        leavePathHighlighted(path);
         if(path == -1){
             prepareOutputLine(5);            
             break;
@@ -175,6 +177,7 @@ function fordFulkerson(){
                 var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
                 var pseudocodeStep = 4;
+                id = topAdjMatrix[from][to];
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     pseudocodeStep = 4;
@@ -189,10 +192,8 @@ function fordFulkerson(){
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
                 createHighlightAnimation(TOP, id, pseudocodeStep, 'green');
-                // addAnimationStep(null);
                 createLabelEdgeAnimation(TOP, id, pseudocodeStep, label, 8, [path[i-1], path[i]]);
                 createHighlightAnimation(TOP, id, pseudocodeStep, 'red');
-                // addAnimationStep(null);
                 createHighlightAnimation(RES, resID, pseudocodeStep, 'blue');
             }
             

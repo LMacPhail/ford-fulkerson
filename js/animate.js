@@ -243,12 +243,23 @@ function highlightAugmentingPath(path){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
         createHighlightAnimation(RES, edgeID, 1, 'red'/*, 8, [path[i-1], path[i]]*/);
-
-            // edgeData = findEdgeID(TOP, path[i-1], path[i]);
-            // edgeID = edgeData.id;
-        // createHighlightAnimation(TOP, edgeID, 1, 'red');
     }
     addAnimationStep(null);
+}
+
+function leavePathHighlighted(path){
+    var pathEdges = [];
+    for(var i = 1; i < path.length; i++){
+        pathEdges.push(findEdgeID(RES, path[i-1], path[i]).id);
+    }
+    var resEdgeIDs = algResEdges.getIds();
+    for(i = 0; i < resEdgeIDs.length; i++ ){
+        var isInPath = false;
+        for(var j=0; j < pathEdges.length; j++){
+            if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
+        }
+        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
+    }
 }
 
 function constructTracebackLine(index, data){
