@@ -12,7 +12,7 @@ function drawNewGraph(){
 
     edges = [];
 
-    initialiseDataSets(nodes, edges);
+    assignDataSets(nodes, edges);
     topGraph.setData(topData);
     resGraph.setData(resData);
 
@@ -50,7 +50,7 @@ function saveDrawnGraph(){
     topNodes.remove(-1);
     nodes.splice(1, 1);
 
-    initialiseDataSets(nodes, edges);
+    assignDataSets(nodes, edges);
     
 
     options.manipulation.enabled = false;

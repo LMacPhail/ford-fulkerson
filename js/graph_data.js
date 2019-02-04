@@ -41,6 +41,25 @@ var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
 var newNodeID, newEdgeID;
 
+function setNewGraph(){
+    document.getElementById("top_graph").style.height = "100%";
+    document.getElementById("res_graph").style.height = "0%";
+    topGraph = new vis.Network(mainContainer, topData, options);
+    topGraph.fit();
+    topGraph.setData(topData);
+    topGraph.storePositions();
+    resGraph.setData(resData);
+    animationSteps = [];
+    fordFulkerson();
+    step = 0;
+    resetFlowCounter();
+    resetTraceback();
+    animationSteps.push({
+        network: TOP,
+        action: "reveal"
+    });
+}
+
 /*
 Generates a graph with default valuse
 */
@@ -73,11 +92,8 @@ function generateDefaultGraph(){
     addEdge(edges, 8, 4, 5, 4);
 
     // Adjacency matrix initialising
-    initialiseDataSets(nodes, edges);
-    for(var i = 0; i < edges.length; i++){
-      var from = edges[i].from, to = edges[i].to;
-      topAdjMatrix[from][to] = edges[i].id;
-    }
+    assignDataSets(nodes, edges);
+    populateTopAdjMatrix(edges);
 }
 
 function initialiseMatrices(){
@@ -92,7 +108,7 @@ function initialiseMatrices(){
     }
 }
 
-function initialiseDataSets(nodes, edges){
+function assignDataSets(nodes, edges){
     console.log("initialising data sets");
     topNodes = new vis.DataSet(nodes);
     topEdges = new vis.DataSet(edges);
@@ -106,6 +122,13 @@ function initialiseDataSets(nodes, edges){
 
     resData = { nodes: topNodes, edges: resEdges};
     algResData = {nodes: topNodes, edges: algResEdges};
+}
+
+function populateTopAdjMatrix(edges) {
+    for(var i = 0; i < edges.length; i++){
+        var from = edges[i].from, to = edges[i].to;
+        topAdjMatrix[from][to] = edges[i].id;
+    }
 }
 
 /*
@@ -251,7 +274,7 @@ function generateRandomGraphData(){
 
     nodes = addNode(nodes, T, 'T', null, null);
 
-    initialiseDataSets(nodes, edges);
+    assignDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
 }
 

@@ -80,9 +80,11 @@ function executeAnimationStep(){
         return;
     }
 
-    
-
     switch(animationSteps[step].action){
+        case("reveal"):
+            console.log("on revealing graph step");
+            revealResidualGraph();
+
         case("remove"):
             executeRemoveEdgeStep(edges, edgeID, currentStep);
             break;
@@ -229,6 +231,22 @@ function printTraceback(line){
     document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
 }
 
+
+function revealResidualGraph(){
+    console.log("revealing residual graph");
+    var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
+    top_graph.style.height = '50%';
+    res_graph.style.height = '50%';
+    
+    resGraph = new vis.Network(resContainer, resData, options);
+    topGraph = new vis.Network(mainContainer, topData, options);
+    topGraph.fit();
+    resGraph.fit();
+    step++;
+}
+
+
+
 /*
   Function: highlightAugmentingPath(path)
 
@@ -256,9 +274,12 @@ function leavePathHighlighted(path){
     for(i = 0; i < resEdgeIDs.length; i++ ){
         var isInPath = false;
         for(var j=0; j < pathEdges.length; j++){
-            if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
+            if(resEdgeIDs[i] == pathEdges[j]) {
+                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'green');
+            } else {
+                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
+            }
         }
-        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
     }
 }
 

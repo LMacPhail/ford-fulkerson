@@ -2,8 +2,8 @@ var mainContainer = document.getElementById('top_graph');
 var resContainer = document.getElementById('res_graph');
 
 
-// loadDefaultGraph();
-generateRandomGraphData();
+generateDefaultGraph();
+// generateRandomGraphData();
 
 newNodeID = nodes.length - 1;
 newEdgeID = edges.length - 1;
@@ -83,18 +83,14 @@ topGraph.storePositions();
 
 var resGraph = new vis.Network(resContainer, resData, options);
 
-fordFulkerson();
 
-function setNewGraph(){
-  topGraph.setData(topData);
-  topGraph.storePositions();
-  resGraph.setData(resData);
-  animationSteps = [];
-  fordFulkerson();
-  step = 0;
-  resetFlowCounter();
-  resetTraceback();
-}
+animationSteps.push({
+  network: TOP,
+  action: "reveal",
+  pStep: 0,
+});
+
+fordFulkerson();
 
 function resetFlowCounter(){
   document.getElementById("flow_counter").innerHTML = "Current flow: 0";

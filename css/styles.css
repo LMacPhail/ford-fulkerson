@@ -24,11 +24,11 @@
 }
 
 #top_graph {
-  height: 50%;
+    height: 100%;
 }
 
 #res_graph {
-    height: 50%;
+    height: 0%;
 }
 
 #alg_title {

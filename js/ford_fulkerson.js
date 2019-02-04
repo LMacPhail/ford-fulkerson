@@ -177,7 +177,6 @@ function fordFulkerson(){
                 var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
                 var pseudocodeStep = 4;
-                id = topAdjMatrix[from][to];
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     pseudocodeStep = 4;

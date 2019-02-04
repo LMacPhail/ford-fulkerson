@@ -87,7 +87,7 @@ function createTxtFileFromGraph(){
             edge = fileEdges[i];
             edges = addEdge(edges, i, edge.from, edge.to, edge.capacity);
         }
-        initialiseDataSets(nodes, edges);
+        assignDataSets(nodes, edges);
         setNewGraph();
     }
     document.getElementById("uploadFile").addEventListener('change', onChange);
