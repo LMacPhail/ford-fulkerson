@@ -274,12 +274,9 @@ function leavePathHighlighted(path){
     for(i = 0; i < resEdgeIDs.length; i++ ){
         var isInPath = false;
         for(var j=0; j < pathEdges.length; j++){
-            if(resEdgeIDs[i] == pathEdges[j]) {
-                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'green');
-            } else {
-                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
-            }
+            if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
         }
+        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
     }
 }
 

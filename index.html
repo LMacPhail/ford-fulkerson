@@ -10,7 +10,6 @@
     <title>Ford Fulkerson</title>
     <script type="text/javascript" src="vis-4.21.0/dist/vis.js"></script>
     <script type="text/javascript" src="js/graph_data.js"></script>
-    <!-- <script type="text/javascript" src="js/draw_graph.js"></script> -->
     <script type="text/javascript" src="js/graph_creation.js"></script>
     <script type="text/javascript" src="js/button_actions.js"></script>
     <script type="text/javascript" src="js/animate.js"></script>
@@ -75,7 +74,7 @@
                         <div class="collapsible-body"><span>
                             <button class="waves-effect btn cyan" onclick="drawNewGraph();" id="drawNew">Draw New</button>
                             <p id="drawing_instructions">Follow instructions at top of screen</p>
-                            <button class="waves-effect btn cyan disabled" onclick="saveDrawnGraph();" id="saveGraph">Save</button>
+                            <button class="waves-effect btn cyan disabled" onclick="loadNewGraph(saveDrawnGraph);" id="saveGraph">Save</button>
                         </span></div>
                     </li>
                 </ul>
