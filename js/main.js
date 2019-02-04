@@ -117,4 +117,30 @@ document.addEventListener('DOMContentLoaded', function() {
   var instances = M.Collapsible.init(elems, options);
 });
 
+(function(){
+  function onChange(event) {
+      var reader = new FileReader();
+      reader.onload = onReaderLoad;
+      reader.readAsText(event.target.files[0]);
+  }
+
+  function onReaderLoad(event) {
+      try {
+          var data = JSON.parse(event.target.result);
+      } catch(err) {
+          alert("Parsing error: " + err);
+          document.getElementById("uploadFile").val = '';
+          return;
+      }
+      var validGraph = checkValidGraph(data.nodes, data.edges);
+      if (validGraph){ 
+          loadNewGraph(createGraphFromUpload, data.nodes, data.edges);
+      } else {
+          document.getElementById("uploadFile").val = '';
+      }
+  }
+  
+  document.getElementById("uploadFile").addEventListener('change', onChange);
+
+}());
 // draw();

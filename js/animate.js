@@ -235,8 +235,8 @@ function printTraceback(line){
 function revealResidualGraph(){
     console.log("revealing residual graph");
     var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
-    top_graph.style.height = '50%';
-    res_graph.style.height = '50%';
+    top_graph.style.height = '60%';
+    res_graph.style.height = '40%';
     
     resGraph = new vis.Network(resContainer, resData, options);
     topGraph = new vis.Network(mainContainer, topData, options);
