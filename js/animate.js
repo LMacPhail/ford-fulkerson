@@ -160,7 +160,7 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             to = currentStep.to;
         edges.add({ 
             id: edgeID, label: label,
-            color: {color: 'blue'}, width: 3,
+            color: {color: '#0097A7'}, width: 3,
             from: from, to: to,
             font: {strokeWidth: 5},
             arrows: {to: {enabled: true}},
@@ -260,7 +260,7 @@ function highlightAugmentingPath(path){
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation(RES, edgeID, 1, 'red'/*, 8, [path[i-1], path[i]]*/);
+        createHighlightAnimation(RES, edgeID, 1, '#FF9800'/*, 8, [path[i-1], path[i]]*/);
     }
     addAnimationStep(null);
 }
@@ -276,7 +276,7 @@ function leavePathHighlighted(path){
         for(var j=0; j < pathEdges.length; j++){
             if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
         }
-        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
+        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, '#0097A7');
     }
 }
 

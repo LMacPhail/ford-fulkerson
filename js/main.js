@@ -24,6 +24,19 @@ var options = {
       data.id = newNodeID;
       data.label = "n" + newNodeID;
       data.physics = false;
+      data.color = {
+        background: '#00BCD4',
+        border: '#00BCD4',
+        highlight: {
+            background :'#757575',
+            border: '#212121',
+        },
+        hover: {
+            background :'#757575',
+            border: '#212121',
+        }
+      };
+      data.font = { color: '#ffffff'};
       callback(data);
       nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
       newNodeID++;
@@ -31,6 +44,9 @@ var options = {
     addEdge: function (data, callback) {
       data.id = newEdgeID;
       data.arrows = {to: {enabled: true}};
+      data.font = {strokeWidth: 5};
+      data.width = 3;
+      data.arrowStrikethrough = false;
       var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
       if(Number.isInteger(parseInt(capacity))){
           data.label = 0 + '/' + capacity;

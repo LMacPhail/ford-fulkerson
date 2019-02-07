@@ -18,7 +18,7 @@ function setFlow(label, new_flow){
 function addEdgeToRes(id, label, from, to){
   algResEdges.add({
     id:id,
-    color: {color: 'blue'},
+    color: {color: '#0097A7'},
     label: label,
     from: from, to: to,
     arrows: {to : {enabled: true}},
@@ -35,12 +35,12 @@ function buildResidualGraph(){
     // build edges
     for(i = 0; i < algTopEdges.length; i++){
         var edge = algTopEdges.get(i);
-        createHighlightAnimation(TOP, i, 0, 'red');
+        createHighlightAnimation(TOP, i, 0, '#757575');
         cap = getCapacity(edge.label);
         createAddEdgeAnimation(RES, edgeID, 0, cap, edge.from, edge.to, 2, cap);
         addEdgeToRes(edgeID, cap, edge.from, edge.to);
         edgeID++;
-        createHighlightAnimation(TOP, i, 0, 'blue');
+        createHighlightAnimation(TOP, i, 0, '#0097A7');
     }
     algResEdges.update(edges);
 }
@@ -50,7 +50,7 @@ function updateResidualGraph(path){
     prepareOutputLine(7);
   var edgeData, edge, flow, cap, forwards, backwards;
   for(i = 1; i < path.length; i++){
-    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'green');
+    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, '#FF9800');
 
     edgeData = findEdgeID(TOP, path[i-1], path[i]);
     edge = algTopEdges.get(edgeData.id);
@@ -86,8 +86,8 @@ function updateResidualGraph(path){
         }
         edgeID++;
     }
-    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, 'blue');
-    if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], 0, 'blue');
+    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, '#0097A7');
+    if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], 0, '#0097A7');
   }
   addAnimationStep(null);
 }
@@ -113,7 +113,7 @@ function findPath(visited){
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
                 if(visited[neighbour] == 0){
-                    createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 1, 'red');
+                    createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 1, '#757575');
                     visited[neighbour] = 1;
                     parents[neighbour].parent = node;
                     queue.push(neighbour);
@@ -165,8 +165,8 @@ function fordFulkerson(){
         prepareOutputLine(4);
         path = findPath(visited);
         console.log("path: " + path);
-        // highlightAugmentingPath(path);
         leavePathHighlighted(path);
+        highlightAugmentingPath(path);
         if(path == -1){
             prepareOutputLine(5);            
             break;
@@ -180,20 +180,20 @@ function fordFulkerson(){
                 id = edgeData.id;
                 if(edgeData.direction == 1){
                     pseudocodeStep = 4;
-                    createHighlightAnimation(RES, resID, pseudocodeStep, "green");
+                    createHighlightAnimation(RES, resID, pseudocodeStep, '#FF9800');
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
                 }
                 if(edgeData.direction == 0){  
                     pseudocodeStep = 5;
-                    createHighlightAnimation(RES, resID, pseudocodeStep, "green");
+                    createHighlightAnimation(RES, resID, pseudocodeStep, '#FF9800');
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) - m;
                 }
                 var label = setFlow(algTopEdges.get(id).label, flow)
                 algTopEdges.update([{id: id, label: label}]);
-                createHighlightAnimation(TOP, id, pseudocodeStep, 'green');
+                createHighlightAnimation(TOP, id, pseudocodeStep, '#FF9800');
                 createLabelEdgeAnimation(TOP, id, pseudocodeStep, label, 8, [path[i-1], path[i]]);
-                createHighlightAnimation(TOP, id, pseudocodeStep, 'red');
-                createHighlightAnimation(RES, resID, pseudocodeStep, 'blue');
+                createHighlightAnimation(TOP, id, pseudocodeStep, '#757575');
+                createHighlightAnimation(RES, resID, pseudocodeStep, '#0097A7');
             }
             
             totalFlow += m;
@@ -251,6 +251,6 @@ function findMinimumCut(){
         }
     }
     for(i = 0; i < C.length; i++){
-        createHighlightAnimation(TOP, C[i], 8, "red");
+        createHighlightAnimation(TOP, C[i], 8, '#757575');
     }
 }

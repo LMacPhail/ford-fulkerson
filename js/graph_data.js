@@ -61,7 +61,7 @@ function findDuplicateEdges(data, from, to){
 function addEdge(localEdges, id, from, to, cap){
     if(cap == null) cap = Math.random() * 10 | 1
     localEdges.push({
-        id, color: {color: 'blue'},
+        id, color: {color: '#0097A7'},
         arrows: {to : {enabled: true}},
         font: {strokeWidth: 5},
         chosen: false,
@@ -79,12 +79,42 @@ function addNode(localNodes, id, label, x, y){
         localNodes.push({
             id, label,
             physics: false,
+            color : {
+                background: '#00BCD4',
+                border: '#00BCD4',
+                highlight: {
+                    background :'#757575',
+                    border: '#212121',
+                },
+                hover: {
+                    background :'#757575',
+                    border: '#212121',
+                }
+            },
+            font: {
+                color: '#ffffff'
+            }
         });
     } else {
         localNodes.push({
             id, label, x, y,
             physics: false,
-        })
+            color : {
+                background: '#00BCD4',
+                border: '#00BCD4',
+                highlight: {
+                    background :'#757575',
+                    border: '#212121',
+                },
+                hover: {
+                    background :'#757575',
+                    border: '#212121',
+                }
+            },
+            font: {
+                color: '#ffffff'
+            }
+        });
     }
     return localNodes;
 }
