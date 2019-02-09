@@ -202,7 +202,7 @@ function fordFulkerson(){
         // break;
     }
     findMinimumCut(totalFlow);
-    addAnimationStep(TOP, "finish", 0, 7);
+    addAnimationStep(null);
 }
 
 function bubbleSort(list){
@@ -220,7 +220,6 @@ function bubbleSort(list){
 }
 
 function findMinimumCut(){
-    addAnimationStep(TOP, "hide", 0, 7);
     var A = [], B = [], C = [], Q = [], i, j = 1;
     var visited = [];
     for(i in topNodes) visited.push(0);
@@ -246,10 +245,12 @@ function findMinimumCut(){
     }
     for(i = 0; i < A.length; i++) {
         for(j = 0; j < B.length; j++) {
-            if(topAdjMatrix[A[i]][B[j]] != null) C.push(topAdjMatrix[A[i]][B[j]]);
+            if(topAdjMatrix[A[i]][B[j]] != null) {
+                C.push(topAdjMatrix[A[i]][B[j]]);
+            }
         }
     }
     for(i = 0; i < C.length; i++){
-        createHighlightAnimation(TOP, C[i], 8, '#757575');
+        createHighlightAnimation(TOP, C[i], 8, '#FF9800');
     }
 }

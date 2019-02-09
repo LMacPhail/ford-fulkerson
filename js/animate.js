@@ -82,12 +82,11 @@ function executeAnimationStep(){
 
     switch(animationSteps[step].action){
         case("reveal"):
-            executeRevealResStep();
-            break;
-
-        case("hide"):
-            console.log("hiding residual graph");
-            setNewTopGraph();
+            if(playState > 0) {
+                revealResidualGraph();
+            } else if(playState < 0) {
+                setNewTopGraph();
+            }
             break;
 
         case("remove"):
@@ -176,22 +175,6 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
     }
 }
 
-function executeRevealResStep() {
-    if(playState > 0) {
-        revealResidualGraph();
-    } else if(playState < 0) {
-        setNewTopGraph();
-    }
-}
-
-function executeHideResStep() {
-    if(playState > 0) {
-        setNewTopGraph();
-    } else if (playState < 0) {
-        revealResidualGraph();
-    }
-}
-
 function updateFlowCounter(currentStep){
     if(playState > 0) {
         currentStep.prevData = (document.getElementById("flow_counter").innerHTML).split(' ').pop();
@@ -264,12 +247,10 @@ function revealResidualGraph(){
     topGraph.fit();
     resGraph.fit();
     topGraph.addEventListener("dragEnd", function(){
-        console.log("I dragged a node!!!!!!!");
         topGraph.storePositions();
         resGraph.storePositions(); 
     });
     resGraph.addEventListener("dragEnd", function(){
-    console.log("I dragged a node!!!!!!!");
         topGraph.storePositions();
         resGraph.storePositions(); 
     });

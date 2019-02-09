@@ -107,6 +107,7 @@ function generateRandomGraph(){
 
     assignDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
+    console.log(nodes);
 }
 
 function resetCanvas(){

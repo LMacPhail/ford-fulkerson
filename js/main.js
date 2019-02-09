@@ -2,11 +2,11 @@ var mainContainer = document.getElementById('top_graph');
 var resContainer = document.getElementById('res_graph');
 
 
-generateDefaultGraph();
-// generateRandomGraphData();
+// generateDefaultGraph();
+generateRandomGraph();
 
-newNodeID = nodes.length - 1;
-newEdgeID = edges.length - 1;
+// newNodeID = nodes.length - 1;
+// newEdgeID = edges.length - 1;
 var options = {
   layout: {
     improvedLayout:true,
@@ -30,12 +30,10 @@ topGraph.storePositions();
 var resGraph = new vis.Network(resContainer, resData, options);
 
 topGraph.addEventListener("dragEnd", function(){
-  console.log("I dragged a node!!!!!!!");
     topGraph.storePositions();
     resGraph.storePositions(); 
   });
 resGraph.addEventListener("dragEnd", function(){
-  console.log("I dragged a node!!!!!!!");
     topGraph.storePositions();
     resGraph.storePositions(); 
   });
