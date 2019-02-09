@@ -82,8 +82,13 @@ function executeAnimationStep(){
 
     switch(animationSteps[step].action){
         case("reveal"):
-            console.log("on revealing graph step");
-            revealResidualGraph();
+            executeRevealResStep();
+            break;
+
+        case("hide"):
+            console.log("hiding residual graph");
+            setNewTopGraph();
+            break;
 
         case("remove"):
             executeRemoveEdgeStep(edges, edgeID, currentStep);
@@ -171,6 +176,22 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
     }
 }
 
+function executeRevealResStep() {
+    if(playState > 0) {
+        revealResidualGraph();
+    } else if(playState < 0) {
+        setNewTopGraph();
+    }
+}
+
+function executeHideResStep() {
+    if(playState > 0) {
+        setNewTopGraph();
+    } else if (playState < 0) {
+        revealResidualGraph();
+    }
+}
+
 function updateFlowCounter(currentStep){
     if(playState > 0) {
         currentStep.prevData = (document.getElementById("flow_counter").innerHTML).split(' ').pop();
@@ -235,13 +256,23 @@ function printTraceback(line){
 function revealResidualGraph(){
     console.log("revealing residual graph");
     var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
-    top_graph.style.height = '60%';
-    res_graph.style.height = '40%';
+    top_graph.style.height = '50%';
+    res_graph.style.height = '50%';
     
     resGraph = new vis.Network(resContainer, resData, options);
     topGraph = new vis.Network(mainContainer, topData, options);
     topGraph.fit();
     resGraph.fit();
+    topGraph.addEventListener("dragEnd", function(){
+        console.log("I dragged a node!!!!!!!");
+        topGraph.storePositions();
+        resGraph.storePositions(); 
+    });
+    resGraph.addEventListener("dragEnd", function(){
+    console.log("I dragged a node!!!!!!!");
+        topGraph.storePositions();
+        resGraph.storePositions(); 
+    });
     step++;
 }
 
@@ -260,7 +291,7 @@ function highlightAugmentingPath(path){
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation(RES, edgeID, 1, '#FF9800'/*, 8, [path[i-1], path[i]]*/);
+        createHighlightAnimation(RES, edgeID, 1, '#FF9800');
     }
     addAnimationStep(null);
 }

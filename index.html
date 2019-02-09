@@ -11,7 +11,6 @@
     <script type="text/javascript" src="vis-4.21.0/dist/vis.js"></script>
     <script type="text/javascript" src="js/graph_data.js"></script>
     <script type="text/javascript" src="js/graph_creation.js"></script>
-    <script type="text/javascript" src="js/button_actions.js"></script>
     <script type="text/javascript" src="js/animate.js"></script>
     <script type="text/javascript" src="js/ford_fulkerson.js"></script>
 
@@ -56,11 +55,11 @@
                                     <p>...,{ "from": 3, "to": 4, "capacity": 4}]</p>
                                     <p>}</p>
                                 </div>
-                                <!-- <ul>
-                                    <li>x and y coordinates for nodes are not necessary</li>
+                                <ul>
+                                    <li>node coordinates are not required</li>
                                     <li>node ids must be consecutive</li>
-                                    <li>the node with id 0 is 'S' and id N is 'T' where N is the number of nodes</li>
-                                </ul> -->
+                                    <li>node 0 is S, and node N is T where N is the number of nodes</li>
+                                </ul>
                                 <p class="caption">For an example, click 'download' for a json representation of the current graph.</p>
                                 <button class="waves-effect btn cyan" id="download_button" onclick="downloadGraphAsTxt('big_graph.json')">Download</button>
                                 <label class="waves-effect btn cyan" for="uploadFile">Upload</label>
@@ -134,6 +133,7 @@
 
 
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/gui.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
 
     <!-- Optional JavaScript -->

@@ -164,7 +164,6 @@ function fordFulkerson(){
         for(i in visited) visited[i] = 0;
         prepareOutputLine(4);
         path = findPath(visited);
-        console.log("path: " + path);
         leavePathHighlighted(path);
         highlightAugmentingPath(path);
         if(path == -1){
@@ -221,6 +220,7 @@ function bubbleSort(list){
 }
 
 function findMinimumCut(){
+    addAnimationStep(TOP, "hide", 0, 7);
     var A = [], B = [], C = [], Q = [], i, j = 1;
     var visited = [];
     for(i in topNodes) visited.push(0);
@@ -246,7 +246,6 @@ function findMinimumCut(){
     }
     for(i = 0; i < A.length; i++) {
         for(j = 0; j < B.length; j++) {
-            console.log("from: " + A[i] + ", to: " + B[j]);
             if(topAdjMatrix[A[i]][B[j]] != null) C.push(topAdjMatrix[A[i]][B[j]]);
         }
     }

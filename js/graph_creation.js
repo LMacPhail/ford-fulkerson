@@ -116,7 +116,7 @@ function resetCanvas(){
 
 function setNewTopGraph(){
     document.getElementById("top_graph").style.height = "100%";
-    document.getElementById("res_graph").style.height = "0%"
+    document.getElementById("res_graph").style.height = "0%";
     topGraph = new vis.Network(mainContainer, topData, options);
     topGraph.fit();
     topGraph.storePositions();
@@ -168,8 +168,6 @@ function drawNewGraph(){
     edges = [];
 
     assignDataSets(nodes, edges);
-
-    options.manipulation.enabled = true;
     setNewTopGraph();
 }
 
