@@ -24,6 +24,19 @@ var options = {
       data.id = newNodeID;
       data.label = "n" + newNodeID;
       data.physics = false;
+      data.color = {
+        background: '#00BCD4',
+        border: '#00BCD4',
+        highlight: {
+            background :'#757575',
+            border: '#212121',
+        },
+        hover: {
+            background :'#757575',
+            border: '#212121',
+        }
+      };
+      data.font = { color: '#ffffff'};
       callback(data);
       nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
       newNodeID++;
@@ -31,6 +44,9 @@ var options = {
     addEdge: function (data, callback) {
       data.id = newEdgeID;
       data.arrows = {to: {enabled: true}};
+      data.font = {strokeWidth: 5};
+      data.width = 3;
+      data.arrowStrikethrough = false;
       var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
       if(Number.isInteger(parseInt(capacity))){
           data.label = 0 + '/' + capacity;
@@ -117,4 +133,30 @@ document.addEventListener('DOMContentLoaded', function() {
   var instances = M.Collapsible.init(elems, options);
 });
 
+(function(){
+  function onChange(event) {
+      var reader = new FileReader();
+      reader.onload = onReaderLoad;
+      reader.readAsText(event.target.files[0]);
+  }
+
+  function onReaderLoad(event) {
+      try {
+          var data = JSON.parse(event.target.result);
+      } catch(err) {
+          alert("Parsing error: " + err);
+          document.getElementById("uploadFile").val = '';
+          return;
+      }
+      var validGraph = checkValidGraph(data.nodes, data.edges);
+      if (validGraph){ 
+          loadNewGraph(createGraphFromUpload, data.nodes, data.edges);
+      } else {
+          document.getElementById("uploadFile").val = '';
+      }
+  }
+  
+  document.getElementById("uploadFile").addEventListener('change', onChange);
+
+}());
 // draw();

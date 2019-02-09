@@ -41,96 +41,6 @@ var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
 var newNodeID, newEdgeID;
 
-function setNewGraph(){
-    document.getElementById("top_graph").style.height = "100%";
-    document.getElementById("res_graph").style.height = "0%";
-    topGraph = new vis.Network(mainContainer, topData, options);
-    topGraph.fit();
-    topGraph.setData(topData);
-    topGraph.storePositions();
-    resGraph.setData(resData);
-    animationSteps = [];
-    fordFulkerson();
-    step = 0;
-    resetFlowCounter();
-    resetTraceback();
-    animationSteps.push({
-        network: TOP,
-        action: "reveal"
-    });
-}
-
-/*
-Generates a graph with default valuse
-*/
-function generateDefaultGraph(){
-    console.log("default graph data");
-    N = 6;
-    T = N-1;
-
-    initialiseMatrices();
-    nodes = [];
-    // addNode(nodes, id, label, x, y);
-    addNode(nodes, 0, 'S', -300, 0);
-    addNode(nodes, 1, 'n1', -150, -140);
-    addNode(nodes, 2, 'n2', 130, -130);
-    addNode(nodes, 3, 'n3', -150, 130);
-    addNode(nodes, 4, 'n4', 150, 140);
-    addNode(nodes, 5, 'T', 300, 0);
-    //     {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
-    
-    edges = [];
-    // addEdge(edges, id, from, to, capacity)
-    addEdge(edges, 0, 0, 1, 2);
-    addEdge(edges, 1, 0, 3, 4);
-    addEdge(edges, 2, 1, 2, 1);
-    addEdge(edges, 3, 1, 4, 3);
-    addEdge(edges, 4, 3, 2, 3);
-    addEdge(edges, 5, 3, 4, 1);
-    addEdge(edges, 6, 4, 3, 1);
-    addEdge(edges, 7, 2, 5, 2);
-    addEdge(edges, 8, 4, 5, 4);
-
-    // Adjacency matrix initialising
-    assignDataSets(nodes, edges);
-    populateTopAdjMatrix(edges);
-}
-
-function initialiseMatrices(){
-    topAdjMatrix = [], resAdjMatrix = [];
-    for(var y = 0; y < N; y++){
-        topAdjMatrix[y] = [];
-        resAdjMatrix[y] = [];
-        for(var x = 0; x < N; x++){
-            topAdjMatrix[y][x] = null;
-            resAdjMatrix[y][x] = null;
-        }
-    }
-}
-
-function assignDataSets(nodes, edges){
-    console.log("initialising data sets");
-    topNodes = new vis.DataSet(nodes);
-    topEdges = new vis.DataSet(edges);
-    algTopEdges = new vis.DataSet(edges);
-
-    topData = {nodes: topNodes, edges: topEdges};
-    algTopData = {nodes: topNodes, edges: algTopEdges};
-
-    resEdges = new vis.DataSet([]);
-    algResEdges = new vis.DataSet([]);
-
-    resData = { nodes: topNodes, edges: resEdges};
-    algResData = {nodes: topNodes, edges: algResEdges};
-}
-
-function populateTopAdjMatrix(edges) {
-    for(var i = 0; i < edges.length; i++){
-        var from = edges[i].from, to = edges[i].to;
-        topAdjMatrix[from][to] = edges[i].id;
-    }
-}
-
 /*
 Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
 is already an edge with these nodes and -1 if there is not
@@ -144,8 +54,6 @@ function findDuplicateEdges(data, from, to){
     } else {
         matrix = data;
     }
-    console.log(from);
-    console.log(to);
     if(matrix[from][to] != null) return 1;
     return -1;
 }
@@ -153,7 +61,7 @@ function findDuplicateEdges(data, from, to){
 function addEdge(localEdges, id, from, to, cap){
     if(cap == null) cap = Math.random() * 10 | 1
     localEdges.push({
-        id, color: {color: 'blue'},
+        id, color: {color: '#0097A7'},
         arrows: {to : {enabled: true}},
         font: {strokeWidth: 5},
         chosen: false,
@@ -171,12 +79,42 @@ function addNode(localNodes, id, label, x, y){
         localNodes.push({
             id, label,
             physics: false,
+            color : {
+                background: '#00BCD4',
+                border: '#00BCD4',
+                highlight: {
+                    background :'#757575',
+                    border: '#212121',
+                },
+                hover: {
+                    background :'#757575',
+                    border: '#212121',
+                }
+            },
+            font: {
+                color: '#ffffff'
+            }
         });
     } else {
         localNodes.push({
             id, label, x, y,
             physics: false,
-        })
+            color : {
+                background: '#00BCD4',
+                border: '#00BCD4',
+                highlight: {
+                    background :'#757575',
+                    border: '#212121',
+                },
+                hover: {
+                    background :'#757575',
+                    border: '#212121',
+                }
+            },
+            font: {
+                color: '#ffffff'
+            }
+        });
     }
     return localNodes;
 }
@@ -245,43 +183,47 @@ function reverseEdgeIDs(edges){
     return revEdges;
 }
 
-/*
-Generates a graph using N and E, such that:
-    - There is a source node S and a sink node T
-    - S is the leftmost node and T is the rightmost
-    - There are no loops or dead ends (all nodes are on a path from S to T)
-*/
-function generateRandomGraphData(){
-    N = document.getElementById("N_picker").value;
-    E = N*2 - 3;
-    T = N-1;
-
-    newEdgeID = 0;
-    initialiseMatrices();
-
-    var i;
-    nodes = [];
-    edges = [];
-
-    /* initialise nodes */
-    nodes = addNode(nodes, 0, 'S', null, null);
-    for(i = 1; i < T; i++) nodes = addNode(nodes, i, 'n' + i, null, null);
-
-    var noIncomingEdges = connectNodesToSink(edges);
-    connectNodesFromSource(edges, noIncomingEdges);
-    addRemainingEdges(edges, E); 
-    edges = reverseEdgeIDs(edges);
-
-    nodes = addNode(nodes, T, 'T', null, null);
-
-    assignDataSets(nodes, edges);
-    topNodes.update([{id:0, x: -250},{id:T, x:300}]);
-}
-
 function getMatrix(data){
     if (data == RES) return resAdjMatrix; else if (data == TOP) return topAdjMatrix;
     return null;
 }
+
+function downloadGraphAsTxt(filename) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(createTxtFileFromGraph()));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+function createTxtFileFromGraph(){
+    var NODES = 0, EDGES = 1;
+    return "{\n\"nodes\" : [" + constructJsonArray(NODES) 
+            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES) 
+            + "\n]\n}";
+}
+
+function constructJsonArray(type) {
+    var text = "", array, i;
+    if(type == 0) array = topNodes; else if (type == 1) array = topEdges;
+    for (i = 0; i < array.length; i++){
+        text += constructJsonObject(array.get(i), i, type);
+        if(i < array.length -1) text += ",";
+    }
+    return text;
+}
+
+function constructJsonObject(data, id, type){
+    if(type == 0){
+        return "\n{ \"id\": " + id + ", \"x\": " + data.x + ", \"y\": " + data.y + "}";
+    } else if(type == 1) {
+        return "\n{ \"from\": " + data.from + ", \"to\": " 
+            + data.to + ", \"capacity\": " + getCapacity(data.label) + "}";
+    }
+}
+
 
 /*
 Given a node id and a direction:
@@ -325,3 +267,67 @@ function findEdgeID(data, from, to){
     return edgeData;
 }
 
+
+function isBetween(comp, lower, upper){
+    if((comp >= lower) && (comp < upper)) return true; else return false;
+}
+
+function checkValidGraph(fileNodes, fileEdges){
+    var nl = fileNodes.length, el = fileEdges.length;
+
+    if(!checkNodesAndEdgesExist(nl, el)) return false;
+    if(!checkNodeIdsConsecutive(fileNodes)) return false;
+    
+    var edge, invalidEdges = [], i;
+    
+    var testMatrix = [];
+    for(var y = 0; y < nl; y++){
+        testMatrix[y] = [];
+        for(var x = 0; x < nl; x++){
+          testMatrix[y][x] = null;
+        }
+    }
+    
+    for(i = 0; i < el; i++) {
+        edge = fileEdges[i];
+        if(!(isBetween(edge.to, 0, nl)) || !(isBetween(edge.from, 0, nl))) {
+            invalidEdges.push({id:i, problem: " is going to or from a node that doesn't exist!"});
+        }
+        if(edge.to == edge.from) invalidEdges.push({id:i, problem: " is going to and from the same node!"});
+        if(edge.capacity <= 0) invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
+        
+        if(findDuplicateEdges(testMatrix, edge.from, edge.to) == 1) {
+            invalidEdges.push({id: i, problem: " is a duplicate edge!"});
+        }
+        testMatrix[edge.from][edge.to] = i;
+    }
+    if(invalidEdges.length > 0) {
+        var errorMsg = "Invalid edges!\n";
+        for (i in invalidEdges){
+            errorMsg += "edge " + (invalidEdges[i].id + 1).toString() + invalidEdges[i].problem + "\n";
+        }
+        alert(errorMsg);
+        return false;
+    }
+    return true;
+}
+
+function checkNodesAndEdgesExist(n, e){
+    if((n == 0) && (e == 0)) {
+        alert("no nodes or edges in file!");
+        return false;
+    } else if (e == 0) {
+        alert("no edges in file!");
+        return false;
+    } else if (n == 0) {
+        alert("no nodes in file!");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkNodeIdsConsecutive(nodes){
+    for(var i = 0; i < nodes.length; i++) if (nodes[i].id != i) return false;
+    return true;
+}

@@ -160,7 +160,7 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             to = currentStep.to;
         edges.add({ 
             id: edgeID, label: label,
-            color: {color: 'blue'}, width: 3,
+            color: {color: '#0097A7'}, width: 3,
             from: from, to: to,
             font: {strokeWidth: 5},
             arrows: {to: {enabled: true}},
@@ -235,8 +235,8 @@ function printTraceback(line){
 function revealResidualGraph(){
     console.log("revealing residual graph");
     var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
-    top_graph.style.height = '50%';
-    res_graph.style.height = '50%';
+    top_graph.style.height = '60%';
+    res_graph.style.height = '40%';
     
     resGraph = new vis.Network(resContainer, resData, options);
     topGraph = new vis.Network(mainContainer, topData, options);
@@ -260,7 +260,7 @@ function highlightAugmentingPath(path){
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation(RES, edgeID, 1, 'red'/*, 8, [path[i-1], path[i]]*/);
+        createHighlightAnimation(RES, edgeID, 1, '#FF9800'/*, 8, [path[i-1], path[i]]*/);
     }
     addAnimationStep(null);
 }
@@ -274,12 +274,9 @@ function leavePathHighlighted(path){
     for(i = 0; i < resEdgeIDs.length; i++ ){
         var isInPath = false;
         for(var j=0; j < pathEdges.length; j++){
-            if(resEdgeIDs[i] == pathEdges[j]) {
-                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'green');
-            } else {
-                createHighlightAnimation(RES, resEdgeIDs[i], 1, 'blue');
-            }
+            if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
         }
+        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, '#0097A7');
     }
 }
 

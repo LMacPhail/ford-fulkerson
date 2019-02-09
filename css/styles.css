@@ -25,10 +25,12 @@
 
 #top_graph {
     height: 100%;
+    display: default;
 }
 
 #res_graph {
     height: 0%;
+    /* display: none; */
 }
 
 #alg_title {
@@ -116,6 +118,7 @@
     border-right-color: #BDBDBD;
     border-right-width: 1px;
     padding-left: 10px;
+    width: 100%;
     background-color: #ffffff;
 }
 
