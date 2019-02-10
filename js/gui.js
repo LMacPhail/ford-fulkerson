@@ -49,6 +49,14 @@ function enableDrawingMode() {
             enabled: true,
             initiallyActive: true,
             addNode: function (data, callback) {
+                console.log("topNodes");
+                console.log(topNodes);
+                console.log("topEdges");
+                console.log(topEdges); 
+                console.log("nodes");
+                console.log(nodes);
+                console.log("edges");
+                console.log(edges);
                 data.id = newNodeID;
                 data.label = "n" + newNodeID;
                 data.physics = false;
@@ -70,6 +78,14 @@ function enableDrawingMode() {
                 newNodeID++;
             },
             addEdge: function (data, callback) {
+                console.log("topNodes");
+                console.log(topNodes);
+                console.log("topEdges");
+                console.log(topEdges);
+                console.log("nodes");
+                console.log(nodes);
+                console.log("edges");
+                console.log(edges);
                 data.id = newEdgeID;
                 data.arrows = {to: {enabled: true}};
                 data.font = {strokeWidth: 5};
@@ -92,32 +108,62 @@ function enableDrawingMode() {
             },
             deleteNode: function (data, callback) {
                 var nodeIds = data.nodes, i;
-                nodes.splice(nodeIds[0] + 1, 1);
-                for(i = nodeIds[0] + 1; i < nodes.length; i++){
-                    nodes[i].id = i - 1;
-                    nodes[i].label = "n" + (i-1);
-                    topNodes.remove(i);
+                if((nodeIds[0] == 0) || (nodeIds[0] == -1)) {
+                    alert("cannot delete source or sink!");
+                    callback(null);
+                } else {
+                    console.log("node id: " + nodeIds[0]);
+                    nodes.splice(nodeIds[0] + 1, 1);
+                    topNodes.remove(nodeIds[0]);
+                    for(i = nodeIds[0] + 1; i < nodes.length; i++){
+                        nodes[i].id = i - 1;
+                        nodes[i].label = "n" + (i-1);
+                        topNodes.remove(i);
+                    }
+                    newNodeID--;
+                    drawDeleteEdge(data);
+                    topNodes.update(nodes);
+                    console.log("topNodes");
+                    console.log(topNodes);
+                    console.log("topEdges");
+                    console.log(topEdges);
+                    console.log("nodes");
+                    console.log(nodes);
+                    console.log("edges");
+                    console.log(edges);
+                    callback(data);
                 }
-                newNodeID--;
-                topNodes.update(nodes);
-                callback(data);
             },
             deleteEdge: function (data, callback) {
-                var  edgeIds = data.edges, i;
-                for(i = edgeIds[0] + 1; i < edges.length; i++){
-                    edges[i].id = i - 1;
-                    topEdges.remove(i);
-                }
-                edges.splice(edgeIds[0], 1);
-                topEdges.update(edges);
-                newEdgeID--;
-                console.log(data);
+                drawDeleteEdge(data);
+                console.log("topNodes");
+                console.log(topNodes);
+                console.log("topEdges");
+                console.log(topEdges);
+                console.log("nodes");
+                console.log(nodes);
+                console.log("edges");
+                console.log(edges);
+                // console.log(data);
                 callback(data);
             }
         };
         topGraph.setOptions(options);
     }
 
+}
+
+function drawDeleteEdge(data) {
+    console.log(data);
+    var  edgeIds = data.edges, i;
+    console.log(edgeIds);
+    for(i = edgeIds[0]; i < edges.length; i++){
+        edges[i].id = i - 1;
+        topEdges.remove(i);
+    }
+    edges.splice(edgeIds[0], 1);
+    topEdges.update(edges);
+    newEdgeID--;
 }
 
 function disableDrawingMode() {
