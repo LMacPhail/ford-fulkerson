@@ -49,14 +49,6 @@ function enableDrawingMode() {
             enabled: true,
             initiallyActive: true,
             addNode: function (data, callback) {
-                console.log("topNodes");
-                console.log(topNodes);
-                console.log("topEdges");
-                console.log(topEdges); 
-                console.log("nodes");
-                console.log(nodes);
-                console.log("edges");
-                console.log(edges);
                 data.id = newNodeID;
                 data.label = "n" + newNodeID;
                 data.physics = false;
@@ -123,10 +115,6 @@ function enableDrawingMode() {
                     newNodeID--;
                     drawDeleteEdge(data);
                     topNodes.update(nodes);
-                    console.log("topNodes");
-                    console.log(topNodes);
-                    console.log("topEdges");
-                    console.log(topEdges);
                     console.log("nodes");
                     console.log(nodes);
                     console.log("edges");
@@ -155,15 +143,18 @@ function enableDrawingMode() {
 
 function drawDeleteEdge(data) {
     console.log(data);
-    var  edgeIds = data.edges, i;
-    console.log(edgeIds);
-    for(i = edgeIds[0]; i < edges.length; i++){
-        edges[i].id = i - 1;
-        topEdges.remove(i);
+    var  edgeIds = data.edges, victim, i;
+    while(edgeIds.length > 0){
+        victim = edgeIds.pop();
+        edges.splice(victim, 1);
+        topEdges.remove(victim);
+        for(i = victim; i < edges.length; i++){
+            edges[i].id = edges[i].id - 1;
+            topEdges.remove(i);
+        }
+        newEdgeID--;
     }
-    edges.splice(edgeIds[0], 1);
     topEdges.update(edges);
-    newEdgeID--;
 }
 
 function disableDrawingMode() {
