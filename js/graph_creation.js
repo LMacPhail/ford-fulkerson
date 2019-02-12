@@ -5,7 +5,7 @@ function loadNewGraph(graphGenCallback, nodes, edges) {
     disableDrawingMode();
     graphGenCallback(nodes, edges);
     resetCanvas();
-    
+
     fordFulkerson();
 }
 
@@ -24,7 +24,7 @@ function generateDefaultGraph(){
     addNode(nodes, 4, 'n4', 150, 140);
     addNode(nodes, 5, 'T', 300, 0);
     //     {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
-    
+
     edges = [];
     // addEdge(edges, id, from, to, capacity)
     addEdge(edges, 0, 0, 1, 2);
@@ -85,6 +85,11 @@ Generates a graph using N and E, such that:
 */
 function generateRandomGraph(){
     N = document.getElementById("N_picker").value;
+    if(N < 4) {
+      alert("There must be at least 4 nodes!");
+      return;
+    }
+
     E = N*2 - 3;
     T = N-1;
 
@@ -100,7 +105,7 @@ function generateRandomGraph(){
     /* Connect nodes 'randomly' */
     var noIncomingEdges = connectNodesToSink(edges);
     connectNodesFromSource(edges, noIncomingEdges);
-    addRemainingEdges(edges, E); 
+    addRemainingEdges(edges, E);
     edges = reverseEdgeIDs(edges);
 
     nodes = addNode(nodes, T, 'T', null, null);
@@ -143,7 +148,7 @@ function createGraphFromUpload(fileNodes, fileEdges){
     N = fileNodes.length;
     T = N -1;
     E = fileEdges.length;
-    
+
     initialiseMatrices();
     for(i = 0; i < N; i++){
         node = fileNodes[i];
@@ -182,27 +187,27 @@ function drawNewGraph(){
 
 function saveDrawnGraph(){
     topNodes = topData.nodes;
-    topEdges = topData.edges; 
-    
+    topEdges = topData.edges;
+
     nodes = addNode(nodes, newNodeID, 'T', 300, 0);
     T = newNodeID;
     N = T + 1;
     E = topEdges.length;
 
     initialiseMatrices();
-    
+
     for(var i = 0; i < topEdges.length; i++){
         var edge = topEdges.get(i);
         var from = edge.from, to = edge.to;
-        if(from == -1){ 
+        if(from == -1){
             topEdges.update({id: i, from: T});
             edges[i].from = T;
-            from = T; 
+            from = T;
         }
-        if(to == -1) { 
-            topEdges.update({id: i, to: T}); 
+        if(to == -1) {
+            topEdges.update({id: i, to: T});
             edges[i].to = T;
-            to = T; 
+            to = T;
         }
         topAdjMatrix[from][to] = i;
     }
