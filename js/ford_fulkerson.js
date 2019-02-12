@@ -49,8 +49,10 @@ function updateResidualGraph(path){
 //   console.log("Updating residual graph");
     prepareOutputLine(7);
   var edgeData, edge, flow, cap, forwards, backwards;
+  var pseudocodeStep = 9;
   for(i = 1; i < path.length; i++){
-    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, '#FF9800');
+    createDashEdgeAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, true);
+    // createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, '#FF9800');
 
     edgeData = findEdgeID(TOP, path[i-1], path[i]);
     edge = algTopEdges.get(edgeData.id);
@@ -62,32 +64,32 @@ function updateResidualGraph(path){
     if(forwards != null){
         if((cap - flow > 0) && (flow > 0)){
             algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
-            createLabelEdgeAnimation(RES, forwards, 0, (cap - flow).toString(), 0, (cap-flow));
+            createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 0, (cap-flow));
         } else {
             algResEdges.remove(forwards);
-            createRemoveEdgeAnimation(RES, forwards, 0);
+            createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
             resAdjMatrix[path[i-1]][path[i]] = null;
         }
     } else {
         addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
-        createAddEdgeAnimation(RES, edgeID, 0, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
+        createAddEdgeAnimation(RES, edgeID, pseudocodeStep, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
         edgeID++;
     }
     if(backwards != null){
         algResEdges.update([{id: backwards, label: flow}]);
-        createLabelEdgeAnimation(RES, backwards, 0, flow, 1, flow);
+        createLabelEdgeAnimation(RES, backwards, pseudocodeStep, flow, 1, flow);
     } else {
         if(flow == 0) {
             addEdgeToRes(edgeID, cap, path[i], path[i-1]);
-            createAddEdgeAnimation(RES, edgeID, 0, cap, path[i], path[i-1], 1, flow);
+            createAddEdgeAnimation(RES, edgeID, pseudocodeStep, cap, path[i], path[i-1], 1, flow);
         } else {
             addEdgeToRes(edgeID, flow, path[i], path[i-1]);
-            createAddEdgeAnimation(RES, edgeID, 0, flow, path[i], path[i-1], 1, flow);
+            createAddEdgeAnimation(RES, edgeID, pseudocodeStep, flow, path[i], path[i-1], 1, flow);
         }
         edgeID++;
     }
-    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], 0, '#0097A7');
-    if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], 0, '#0097A7');
+    createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, '#0097A7');
+    if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], pseudocodeStep, '#0097A7');
   }
   addAnimationStep(null);
 }
@@ -113,7 +115,8 @@ function findPath(visited){
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
                 if(visited[neighbour] == 0){
-                    createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 1, '#757575');
+                    createDashEdgeAnimation(RES, resAdjMatrix[node][neighbour], 2, true);
+                    // createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 2, '#757575');
                     visited[neighbour] = 1;
                     parents[neighbour].parent = node;
                     queue.push(neighbour);
@@ -167,7 +170,7 @@ function fordFulkerson(){
         leavePathHighlighted(path);
         highlightAugmentingPath(path);
         if(path == -1){
-            prepareOutputLine(5);            
+            prepareOutputLine(5);
             break;
         } else {
             prepareOutputLine(3, path);
@@ -175,15 +178,14 @@ function fordFulkerson(){
             for(i = 1; i < path.length; i++){
                 var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
-                var pseudocodeStep = 4;
+                var pseudocodeStep = 5;
                 id = edgeData.id;
                 if(edgeData.direction == 1){
-                    pseudocodeStep = 4;
                     createHighlightAnimation(RES, resID, pseudocodeStep, '#FF9800');
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) + m;
                 }
-                if(edgeData.direction == 0){  
-                    pseudocodeStep = 5;
+                if(edgeData.direction == 0){
+                    pseudocodeStep = 6;
                     createHighlightAnimation(RES, resID, pseudocodeStep, '#FF9800');
                     var flow = parseInt(getFlow(algTopEdges.get(id).label)) - m;
                 }
@@ -194,7 +196,7 @@ function fordFulkerson(){
                 createHighlightAnimation(TOP, id, pseudocodeStep, '#757575');
                 createHighlightAnimation(RES, resID, pseudocodeStep, '#0097A7');
             }
-            
+
             totalFlow += m;
             animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
         }
@@ -251,6 +253,6 @@ function findMinimumCut(){
         }
     }
     for(i = 0; i < C.length; i++){
-        createHighlightAnimation(TOP, C[i], 8, '#FF9800');
+        createHighlightAnimation(TOP, C[i], 10, '#FF9800');
     }
 }

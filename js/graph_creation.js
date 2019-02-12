@@ -175,14 +175,6 @@ function drawNewGraph(){
 
     assignDataSets(nodes, edges);
     setNewTopGraph();
-    console.log("topNodes");
-    console.log(topNodes);
-    console.log("topEdges");
-    console.log(topEdges);
-    console.log("nodes");
-    console.log(nodes);
-    console.log("edges");
-    console.log(edges);
 }
 
 function saveDrawnGraph(){

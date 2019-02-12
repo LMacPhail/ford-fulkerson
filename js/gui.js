@@ -13,13 +13,11 @@ function playPause(){
 function stepForward(){
     playState = 2;
     executeAnimationStep();
-    step++;
 }
 
 function stepBackward(){
     playState = -2;
     executeAnimationStep();
-    step--;
 }
 
 function togglePlayPause(){
@@ -49,10 +47,6 @@ function enableDrawingMode() {
             enabled: true,
             initiallyActive: true,
             addNode: function (data, callback) {
-                console.log("nodes");
-                console.log(nodes);
-                console.log("edges");
-                console.log(edges);
                 data.id = newNodeID;
                 data.label = "n" + newNodeID;
                 data.physics = false;
@@ -105,7 +99,6 @@ function enableDrawingMode() {
                     nodes.splice(nodeIds[0] + 1, 1);
                     topNodes.remove(nodeIds[0]);
                     for(i = nodeIds[0] + 1; i < nodes.length; i++){
-                        console.log("on node " + i + ", changing to node " + (i-1));
                         nodes[i].id = i - 1;
                         nodes[i].label = "n" + (i-1);
                         updateEdgesToFrom(i);
@@ -114,17 +107,11 @@ function enableDrawingMode() {
                     newNodeID--;
                     drawDeleteEdge(data);
                     topNodes.update(nodes);
-                    console.log("node deleted, newNodeID: " + newNodeID);
-                    // console.log("nodes"); console.log(nodes);
-                    // console.log("edges"); console.log(edges);
                     callback(data);
                 }
             },
             deleteEdge: function (data, callback) {
                 drawDeleteEdge(data);
-                console.log("edge deleted, newEdgeID: " + newEdgeID);
-                // console.log("nodes"); console.log(nodes);
-                // console.log("edges"); console.log(edges);
                 callback(data);
             }
         };
