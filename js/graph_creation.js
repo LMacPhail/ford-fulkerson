@@ -1,6 +1,6 @@
 function loadNewGraph(graphGenCallback, nodes, edges) {
     if(playState == PLAY) {
-        togglePlayPause();
+        playPause();
     }
     disableDrawingMode();
     graphGenCallback(nodes, edges);
