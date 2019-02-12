@@ -48,7 +48,7 @@ is already an edge with these nodes and -1 if there is not
 function findDuplicateEdges(data, from, to){
     var matrix;
     if(data == TOP){
-        matrix = topAdjMatrix; 
+        matrix = topAdjMatrix;
     } else if (data == RES) {
         matrix = resAdjMatrix;
     } else {
@@ -69,7 +69,7 @@ function addEdge(localEdges, id, from, to, cap){
         label: 0 + '/' + cap, from, to,
         arrowStrikethrough: false,
     });
-    if((from != -1) || (to != -1)) topAdjMatrix[from][to] = id;
+    if(((from != -1) || (to != -1)) && (!options.manipulation.enabled)) topAdjMatrix[from][to] = id;
 
     return localEdges;
 }
@@ -200,8 +200,8 @@ function downloadGraphAsTxt(filename) {
 
 function createTxtFileFromGraph(){
     var NODES = 0, EDGES = 1;
-    return "{\n\"nodes\" : [" + constructJsonArray(NODES) 
-            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES) 
+    return "{\n\"nodes\" : [" + constructJsonArray(NODES)
+            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES)
             + "\n]\n}";
 }
 
@@ -219,7 +219,7 @@ function constructJsonObject(data, id, type){
     if(type == 0){
         return "\n{ \"id\": " + id + ", \"x\": " + data.x + ", \"y\": " + data.y + "}";
     } else if(type == 1) {
-        return "\n{ \"from\": " + data.from + ", \"to\": " 
+        return "\n{ \"from\": " + data.from + ", \"to\": "
             + data.to + ", \"capacity\": " + getCapacity(data.label) + "}";
     }
 }
@@ -277,9 +277,9 @@ function checkValidGraph(fileNodes, fileEdges){
 
     if(!checkNodesAndEdgesExist(nl, el)) return false;
     if(!checkNodeIdsConsecutive(fileNodes)) return false;
-    
+
     var edge, invalidEdges = [], i;
-    
+
     var testMatrix = [];
     for(var y = 0; y < nl; y++){
         testMatrix[y] = [];
@@ -287,7 +287,7 @@ function checkValidGraph(fileNodes, fileEdges){
           testMatrix[y][x] = null;
         }
     }
-    
+
     for(i = 0; i < el; i++) {
         edge = fileEdges[i];
         if(!(isBetween(edge.to, 0, nl)) || !(isBetween(edge.from, 0, nl))) {
@@ -295,7 +295,7 @@ function checkValidGraph(fileNodes, fileEdges){
         }
         if(edge.to == edge.from) invalidEdges.push({id:i, problem: " is going to and from the same node!"});
         if(edge.capacity <= 0) invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
-        
+
         if(findDuplicateEdges(testMatrix, edge.from, edge.to) == 1) {
             invalidEdges.push({id: i, problem: " is a duplicate edge!"});
         }
