@@ -49,10 +49,6 @@ function enableDrawingMode() {
             enabled: true,
             initiallyActive: true,
             addNode: function (data, callback) {
-                console.log("topNodes");
-                console.log(topNodes);
-                console.log("topEdges");
-                console.log(topEdges);
                 console.log("nodes");
                 console.log(nodes);
                 console.log("edges");
@@ -78,10 +74,6 @@ function enableDrawingMode() {
                 newNodeID++;
             },
             addEdge: function (data, callback) {
-                console.log("topNodes");
-                console.log(topNodes);
-                console.log("topEdges");
-                console.log(topEdges);
                 console.log("nodes");
                 console.log(nodes);
                 console.log("edges");
@@ -112,7 +104,6 @@ function enableDrawingMode() {
                     alert("cannot delete source or sink!");
                     callback(null);
                 } else {
-                    console.log("node id: " + nodeIds[0]);
                     nodes.splice(nodeIds[0] + 1, 1);
                     topNodes.remove(nodeIds[0]);
                     for(i = nodeIds[0] + 1; i < nodes.length; i++){
@@ -123,27 +114,17 @@ function enableDrawingMode() {
                     newNodeID--;
                     drawDeleteEdge(data);
                     topNodes.update(nodes);
-                    console.log("topNodes");
-                    console.log(topNodes);
-                    console.log("topEdges");
-                    console.log(topEdges);
-                    console.log("nodes");
-                    console.log(nodes);
-                    console.log("edges");
-                    console.log(edges);
+                    console.log("node deleted, newNodeID: " + newNodeID);
+                    console.log("nodes"); console.log(nodes);
+                    console.log("edges"); console.log(edges);
                     callback(data);
                 }
             },
             deleteEdge: function (data, callback) {
                 drawDeleteEdge(data);
-                console.log("topNodes");
-                console.log(topNodes);
-                console.log("topEdges");
-                console.log(topEdges);
-                console.log("nodes");
-                console.log(nodes);
-                console.log("edges");
-                console.log(edges);
+                console.log("edge deleted, newEdgeID: " + newEdgeID);
+                console.log("nodes"); console.log(nodes);
+                console.log("edges"); console.log(edges);
                 // console.log(data);
                 callback(data);
             }
@@ -154,20 +135,23 @@ function enableDrawingMode() {
 }
 
 function drawDeleteEdge(data) {
-    console.log(data);
     var  edgeIds = data.edges, i, victim;
     console.log(edgeIds);
     while(edgeIds.length > 0){
       victim = edgeIds.pop();
-      edges.splice(victim, 1);
-      topEdges.remove(victim);
+      console.log("victim edge: " + victim);
       for(i = victim + 1; i < edges.length; i++){
-        edges[i].id = i-1;
+        console.log("next edge: " + edges[i].id);
+        edges[i].id = edges[i].id-1;
+        console.log("updated next edge id: " + edges[i].id);
         topEdges.remove(i);
       }
+      edges.splice(victim, 1);
+      topEdges.remove(victim);
       newEdgeID--;
+      console.log("newEdgeID decremented: " + newEdgeID);
     }
-    // topEdges.update(edges);
+    topEdges.update(edges);
 }
 
 function disableDrawingMode() {
