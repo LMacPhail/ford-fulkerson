@@ -9,11 +9,9 @@
     (70)  highlightAugmentingPath(path)
 
 ******************************************************************************/
-
 var animationSteps = [];
 var playState = PLAY;
 step = 0;
-
 var PLAY = 1,
     REWIND = -1,
     STEP_FOWARD = 2,
@@ -21,7 +19,7 @@ var PLAY = 1,
     PAUSE = 0;
 
 /*
-  Function: animateGraph(steps)
+  Function: animateAlgorithm(steps)
 
   Purpose:  When given an array of animation steps, iterates through each with
             a given interval, and updates the graphs on the page
@@ -29,16 +27,13 @@ var PLAY = 1,
 */
 function animateAlgorithm(){
   var slider = document.getElementById("pb_slider");
-
   var id = setInterval(frame, (500 * (50/slider.value)));
-//   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
         clearInterval(id);
     } else if ((playState == PLAY) || (playState == REWIND)) {
         executeAnimationStep();
     }
-
   }
 }
 
@@ -54,13 +49,8 @@ function selectNetwork(network){
 
 function executeAnimationStep(){
     if ((playState == REWIND) || (playState == STEP_BACKWARD)){
-        if (step > 0){
-            step--;
-        } else {
-            playState = togglePlayPause();
-        }
+        if (step > 0) step--; else playState = togglePlayPause();
     }
-
     var currentStep = animationSteps[step];
     var edgeID = currentStep.edgeID,
         network = currentStep.network,
@@ -71,22 +61,15 @@ function executeAnimationStep(){
 
     if(outputID != null) printTraceback(constructTracebackLine(outputID, outputData));
 
-    if(network != null) {
-        edges = selectNetwork(network);
-    } else {
-        if(playState > 0) {
-            step++;
-        }
+    if(network != null) edges = selectNetwork(network);
+    else {
+        if(playState > 0) step++;
         return;
     }
 
     switch(animationSteps[step].action){
         case("reveal"):
-            if(playState > 0) {
-                revealResidualGraph();
-            } else if(playState < 0) {
-                setNewTopGraph();
-            }
+            if(playState > 0) revealResidualGraph(); else if(playState < 0) setNewTopGraph();
             break;
 
         case("remove"):
@@ -119,13 +102,11 @@ function executeAnimationStep(){
     }
 
     highlightPseudocode(pStep);
-
     if(playState > 0) step++;
 
 }
 
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
-    // console.log("removing edge");
     if(playState > 0){
         currentStep.prevData = edges.get(edgeID);
         edges.remove(edgeID);
@@ -135,7 +116,6 @@ function executeRemoveEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
-    // console.log("highlighting edge");
     var edge_color, dashBool;
     if(playState > 0){
         edge_color = currentStep.color;
@@ -156,13 +136,11 @@ function executeDashEdgeStep(edges, edgeID, currentStep){
       currentStep.prevData = edges.get(edgeID);
     } else if (playState < 0) {
       dashBool = currentStep.prevData.dashes;
-      console.log(dashBool);
     }
     edges.update([{id: edgeID, dashes: dashBool}]);
 }
 
 function executeLabelEdgeStep(edges, edgeID, currentStep){
-    // console.log("labeling edge");
     var label;
     if(playState > 0){
         currentStep.prevData = edges.get(edgeID);
@@ -175,7 +153,6 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeAddEdgeStep(edges, edgeID, currentStep){
-    // console.log("adding edge");
     if(playState > 0){
         var label = currentStep.label,
             from = currentStep.from,
@@ -216,18 +193,12 @@ function highlightPseudocode(pStep){
 
 function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, dash, outputID, outputData){
     animationSteps.push({
-        network, action, edgeID, pStep, color: {color:color},
-        label, from, to, prevData: null, dash,
-        outputID, outputData
+        network, action, edgeID, pStep, color: {color:color}, label, from, to, prevData: null, dash, outputID, outputData
     });
 }
 
 function createHighlightAnimation(network, edgeID, pStep, color, outputID, outputData){
-    if(outputID != null){
-        addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, null,outputID, outputData);
-    } else {
-        addAnimationStep(network, "highlight", edgeID, pStep, color);
-    }
+    addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, null,outputID, outputData);
 }
 
 function createDashEdgeAnimation(network, edgeID, pStep, dash, outputID, outputData){
@@ -256,9 +227,7 @@ function printTraceback(line){
     document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
 }
 
-
 function revealResidualGraph(){
-    console.log("revealing residual graph");
     var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
     top_graph.style.height = '50%';
     res_graph.style.height = '50%';
@@ -267,18 +236,20 @@ function revealResidualGraph(){
     topGraph = new vis.Network(mainContainer, topData, options);
     topGraph.fit();
     resGraph.fit();
-    topGraph.addEventListener("dragEnd", function(){
-        topGraph.storePositions();
-        resGraph.storePositions();
-    });
-    resGraph.addEventListener("dragEnd", function(){
-        topGraph.storePositions();
-        resGraph.storePositions();
-    });
+    addDragListener();
     step++;
 }
 
-
+function addDragListener() {
+  topGraph.addEventListener("dragEnd", function(){
+      topGraph.storePositions();
+      resGraph.storePositions();
+  });
+  resGraph.addEventListener("dragEnd", function(){
+      topGraph.storePositions();
+      resGraph.storePositions();
+  });
+}
 
 /*
   Function: highlightAugmentingPath(path)
@@ -289,7 +260,6 @@ function revealResidualGraph(){
 */
 function highlightAugmentingPath(path){
     var edgeID, edgeData;
-
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;

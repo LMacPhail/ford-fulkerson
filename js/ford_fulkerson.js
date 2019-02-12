@@ -155,12 +155,9 @@ function findMinimumCapacity(data, path){
     return minCap;
 }
 
-
 function fordFulkerson(){
-    console.log("Running Ford Fulkerson...");
     var path = -1, visited = [];
     var i, id, totalFlow = 0;
-    var count = 0;
     for(i in topNodes) visited.push(0);
     while(true){
         if (path == -1) buildResidualGraph(); else updateResidualGraph(path);
@@ -200,8 +197,6 @@ function fordFulkerson(){
             totalFlow += m;
             animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
         }
-        count++;
-        // break;
     }
     findMinimumCut(totalFlow);
     addAnimationStep(null);

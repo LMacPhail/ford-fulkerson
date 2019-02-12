@@ -5,12 +5,10 @@ function loadNewGraph(graphGenCallback, nodes, edges) {
     disableDrawingMode();
     graphGenCallback(nodes, edges);
     resetCanvas();
-
     fordFulkerson();
 }
 
 function generateDefaultGraph(){
-    console.log("default graph data");
     N = 6;
     T = N-1;
 
@@ -23,7 +21,6 @@ function generateDefaultGraph(){
     addNode(nodes, 3, 'n3', -150, 130);
     addNode(nodes, 4, 'n4', 150, 140);
     addNode(nodes, 5, 'T', 300, 0);
-    //     {id: 5, label: 'T', x: 300, y: 0, /*color: {border: '#308c92', background: '#c0d6ba'},*/ physics: false}
 
     edges = [];
     // addEdge(edges, id, from, to, capacity)
@@ -54,6 +51,13 @@ function initialiseMatrices(){
     }
 }
 
+function populateTopAdjMatrix(edges) {
+    for(var i = 0; i < edges.length; i++){
+        var from = edges[i].from, to = edges[i].to;
+        topAdjMatrix[from][to] = edges[i].id;
+    }
+}
+
 function assignDataSets(nodes, edges){
     console.log("initialising data sets");
     topNodes = new vis.DataSet(nodes);
@@ -70,13 +74,6 @@ function assignDataSets(nodes, edges){
     algResData = {nodes: topNodes, edges: algResEdges};
 }
 
-function populateTopAdjMatrix(edges) {
-    for(var i = 0; i < edges.length; i++){
-        var from = edges[i].from, to = edges[i].to;
-        topAdjMatrix[from][to] = edges[i].id;
-    }
-}
-
 /*
 Generates a graph using N and E, such that:
     - There is a source node S and a sink node T
@@ -89,7 +86,6 @@ function generateRandomGraph(){
       alert("There must be at least 4 nodes!");
       return;
     }
-
     E = N*2 - 3;
     T = N-1;
 
@@ -112,7 +108,6 @@ function generateRandomGraph(){
 
     assignDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
-    console.log(nodes);
 }
 
 function resetCanvas(){
@@ -124,6 +119,7 @@ function setNewTopGraph(){
     document.getElementById("top_graph").style.height = "100%";
     document.getElementById("res_graph").style.height = "0%";
     topGraph = new vis.Network(mainContainer, topData, options);
+    addDragListener();
     topGraph.fit();
     topGraph.storePositions();
 }
@@ -139,7 +135,6 @@ function resetAnimation(){
         pStep: 0
     });
 }
-
 
 function createGraphFromUpload(fileNodes, fileEdges){
     console.log("creating graph from upload");
