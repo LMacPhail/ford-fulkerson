@@ -39,7 +39,7 @@ function enableDrawingMode() {
     if(drawBtnClass == "waves-effect btn cyan") {
         document.getElementById('drawNew').className = drawBtnClass + " disabled";
         document.getElementById('saveGraph').className = drawBtnClass;
-        
+
         document.getElementById('rewind_button').className = playbackBtnClass + " disabled";
         document.getElementById('step_back_button').className = playbackBtnClass + " disabled";
         document.getElementById('play_button').className = playbackBtnClass + " disabled";
@@ -52,7 +52,7 @@ function enableDrawingMode() {
                 console.log("topNodes");
                 console.log(topNodes);
                 console.log("topEdges");
-                console.log(topEdges); 
+                console.log(topEdges);
                 console.log("nodes");
                 console.log(nodes);
                 console.log("edges");
@@ -96,7 +96,7 @@ function enableDrawingMode() {
                         var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
                         if((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0)){
                             alert("Must be a whole number!");
-                        } 
+                        }
                     } while((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0));
                     data.label = 0 + '/' + capacity;
                     callback(data);
@@ -155,15 +155,19 @@ function enableDrawingMode() {
 
 function drawDeleteEdge(data) {
     console.log(data);
-    var  edgeIds = data.edges, i;
+    var  edgeIds = data.edges, i, victim;
     console.log(edgeIds);
-    for(i = edgeIds[0]; i < edges.length; i++){
-        edges[i].id = i - 1;
+    while(edgeIds.length > 0){
+      victim = edgeIds.pop();
+      edges.splice(victim, 1);
+      topEdges.remove(victim);
+      for(i = victim + 1; i < edges.length; i++){
+        edges[i].id = i-1;
         topEdges.remove(i);
+      }
+      newEdgeID--;
     }
-    edges.splice(edgeIds[0], 1);
-    topEdges.update(edges);
-    newEdgeID--;
+    // topEdges.update(edges);
 }
 
 function disableDrawingMode() {
@@ -214,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         var validGraph = checkValidGraph(data.nodes, data.edges);
-        if (validGraph){ 
+        if (validGraph){
             loadNewGraph(createGraphFromUpload, data.nodes, data.edges);
         } else {
             document.getElementById("uploadFile").val = '';
