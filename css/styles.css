@@ -90,14 +90,14 @@
 
 #playback_control a:hover{
     color:#757575;
-    background-color: white; 
+    background-color: white;
 }
 
 .collapsible-header i:hover {
     color:#757575;
 }
 
-#N_controls { 
+#N_controls {
   display: flex;
 }
 
@@ -106,7 +106,7 @@
   text-align: center;
 }
 
-#N_picker { 
+#N_picker {
     width: 40px;
 }
 
@@ -114,10 +114,7 @@
 } */
 
 #pseudocode {
-    margin-right: 1px;
-    border-right-color: #BDBDBD;
-    border-right-width: 1px;
-    padding-left: 10px;
+    padding: 10px;
     width: 100%;
     background-color: #ffffff;
 }
@@ -126,7 +123,8 @@
     font-family: 'Courier New', Courier, monospace;
     color: #212121;
     font-size: 13px;
-    height: 9%;
+    margin: 5px;
+    padding: 0;
 }
 
 .indent1 {
@@ -139,6 +137,10 @@
 
 .indent3 {
     padding-left: 20%;
+}
+
+.indent4 {
+  padding-left: 25%;
 }
 
 #traceback {
@@ -182,5 +184,5 @@
     background: url('../media/turtle.png');
     height: 24px;
     width: 24px;
-    display: block; 
+    display: block;
 }

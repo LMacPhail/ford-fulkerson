@@ -16,7 +16,7 @@
 
     <link href="vis-4.21.0/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href=" css/styles.css" type="text/css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
       integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -77,18 +77,20 @@
                         </span></div>
                     </li>
                 </ul>
-                
+
                 <div id="algorithm_info">
                     <div class="col 12 z-depth-1" id="pseudocode">
-                        <p class="pseudocode_step">build/update residual graph</p>
-                        <p class="pseudocode_step">search for augmenting path in residual graph from S to T</p>
-                        <p class="pseudocode_step indent1">if augmenting path is found:</p>
-                        <p class="pseudocode_step indent2">for each edge in the augmenting path:</p>
-                        <p class="pseudocode_step indent3">augment flow along forwards edge</p>
-                        <p class="pseudocode_step indent3">decrement flow along backwards edge</p>
-                        <p class="pseudocode_step indent1">else:</p>
-                        <p class="pseudocode_step indent2">maximum flow has been found</p>
-                        <p class="pseudocode_step">reveal minimum cuts</p>
+                        <p class="pseudocode_step">build residual graph</p>
+                        <p class="pseudocode_step">while(maximum flow has not been found):</p>
+                        <p class="pseudocode_step indent1">search for augmenting path in residual graph from S to T</p>
+                        <p class="pseudocode_step indent2">if augmenting path is found:</p>
+                        <p class="pseudocode_step indent3">for each edge in path:</p>
+                        <p class="pseudocode_step indent4">augment flow along forwards edge</p>
+                        <p class="pseudocode_step indent4">decrement flow along backwards edge</p>
+                        <p class="pseudocode_step indent2">else:</p>
+                        <p class="pseudocode_step indent3">maximum flow has been found break;</p>
+                        <p class="pseudocode_step indent1">update residual graph</p>
+                        <p class="pseudocode_step">reveal edges in minimum cut</p>
                     </div>
                     <div class="divider"></div>
                     <div class="col 12" id="traceback">

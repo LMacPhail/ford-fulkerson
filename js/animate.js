@@ -9,11 +9,9 @@
     (70)  highlightAugmentingPath(path)
 
 ******************************************************************************/
-
 var animationSteps = [];
 var playState = PLAY;
 step = 0;
-
 var PLAY = 1,
     REWIND = -1,
     STEP_FOWARD = 2,
@@ -21,7 +19,7 @@ var PLAY = 1,
     PAUSE = 0;
 
 /*
-  Function: animateGraph(steps)
+  Function: animateAlgorithm(steps)
 
   Purpose:  When given an array of animation steps, iterates through each with
             a given interval, and updates the graphs on the page
@@ -29,23 +27,20 @@ var PLAY = 1,
 */
 function animateAlgorithm(){
   var slider = document.getElementById("pb_slider");
-  
   var id = setInterval(frame, (500 * (50/slider.value)));
-//   console.log(animationSteps.length);
   function frame() {
     if(((step == animationSteps.length - 1) && (playState == PLAY)) || (playState == PAUSE)){
         clearInterval(id);
     } else if ((playState == PLAY) || (playState == REWIND)) {
         executeAnimationStep();
     }
-
   }
 }
 
 function selectNetwork(network){
-    if(network == RES) { 
+    if(network == RES) {
         return resEdges;
-    } else if (network == TOP) { 
+    } else if (network == TOP) {
         return topEdges;
     } else if (network == null) {
         return null;
@@ -54,13 +49,8 @@ function selectNetwork(network){
 
 function executeAnimationStep(){
     if ((playState == REWIND) || (playState == STEP_BACKWARD)){
-        if (step > 0){
-            step--;
-        } else {
-            playState = togglePlayPause();
-        }
-    } 
-    
+        if (step > 0) step--; else playState = togglePlayPause();
+    }
     var currentStep = animationSteps[step];
     var edgeID = currentStep.edgeID,
         network = currentStep.network,
@@ -68,43 +58,40 @@ function executeAnimationStep(){
         outputID = currentStep.outputID,
         outputData = currentStep.outputData,
         edges;
-    
+
     if(outputID != null) printTraceback(constructTracebackLine(outputID, outputData));
-        
-    if(network != null) {
-        edges = selectNetwork(network);
-    } else {
-        if(playState > 0) {
-            step++;
-        }
+
+    if(network != null) edges = selectNetwork(network);
+    else {
+        if(playState > 0) step++;
         return;
     }
 
     switch(animationSteps[step].action){
         case("reveal"):
-            if(playState > 0) {
-                revealResidualGraph();
-            } else if(playState < 0) {
-                setNewTopGraph();
-            }
+            if(playState > 0) revealResidualGraph(); else if(playState < 0) setNewTopGraph();
             break;
 
         case("remove"):
             executeRemoveEdgeStep(edges, edgeID, currentStep);
             break;
-        
+
         case("highlight"):
             executeHighlightEdgeStep(edges, edgeID, currentStep);
             break;
-        
+
+        case("dash"):
+            executeDashEdgeStep(edges, edgeID, currentStep);
+            break;
+
         case("label"):
             executeLabelEdgeStep(edges, edgeID, currentStep);
             break;
-        
+
         case("add"):
             executeAddEdgeStep(edges, edgeID, currentStep);
             break;
-        
+
         case("updateFlow"):
             updateFlowCounter(currentStep);
             pStep = animationSteps[step - 1].pStep;
@@ -115,13 +102,11 @@ function executeAnimationStep(){
     }
 
     highlightPseudocode(pStep);
-
     if(playState > 0) step++;
 
 }
 
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
-    // console.log("removing edge");
     if(playState > 0){
         currentStep.prevData = edges.get(edgeID);
         edges.remove(edgeID);
@@ -131,20 +116,31 @@ function executeRemoveEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
-    // console.log("highlighting edge");
-    var edge_color;
+    var edge_color, dashBool;
     if(playState > 0){
         edge_color = currentStep.color;
+        dashBool = false;
         currentStep.prevData = edges.get(edgeID);
     } else if (playState < 0){
         var prevData = currentStep.prevData;
-        edge_color = prevData.color;      
+        edge_color = prevData.color;
+        dashBool = prevData.dash;
     }
-    edges.update([{id: edgeID, color: edge_color}]);
+    edges.update([{id: edgeID, color: edge_color, dashes: dashBool}]);
+}
+
+function executeDashEdgeStep(edges, edgeID, currentStep){
+    var dashBool;
+    if(playState > 0){
+      dashBool = currentStep.dash;
+      currentStep.prevData = edges.get(edgeID);
+    } else if (playState < 0) {
+      dashBool = currentStep.prevData.dashes;
+    }
+    edges.update([{id: edgeID, dashes: dashBool}]);
 }
 
 function executeLabelEdgeStep(edges, edgeID, currentStep){
-    // console.log("labeling edge");
     var label;
     if(playState > 0){
         currentStep.prevData = edges.get(edgeID);
@@ -157,12 +153,11 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeAddEdgeStep(edges, edgeID, currentStep){
-    // console.log("adding edge");
     if(playState > 0){
         var label = currentStep.label,
             from = currentStep.from,
             to = currentStep.to;
-        edges.add({ 
+        edges.add({
             id: edgeID, label: label,
             color: {color: '#0097A7'}, width: 3,
             from: from, to: to,
@@ -178,7 +173,6 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
 function updateFlowCounter(currentStep){
     if(playState > 0) {
         currentStep.prevData = (document.getElementById("flow_counter").innerHTML).split(' ').pop();
-        console.log(currentStep.prevData);
         document.getElementById("flow_counter").innerHTML = "Current flow: " + currentStep.m;
     } else if(playState < 0) {
         var prevData = currentStep.prevData;
@@ -196,37 +190,35 @@ function highlightPseudocode(pStep){
     pseudocode[pStep].style.fontWeight = "900";
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
 }
-  
-function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, outputID, outputData){
+
+function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, dash, outputID, outputData){
     animationSteps.push({
-        network, action, edgeID, pStep, color: {color:color},
-        label, from, to, prevData: null,
-        outputID, outputData
+        network, action, edgeID, pStep, color: {color:color}, label, from, to, prevData: null, dash, outputID, outputData
     });
 }
 
 function createHighlightAnimation(network, edgeID, pStep, color, outputID, outputData){
-    if(outputID != null){
-        addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, outputID, outputData);
-    } else {
-        addAnimationStep(network, "highlight", edgeID, pStep, color);
-    }
+    addAnimationStep(network, "highlight", edgeID, pStep, color, null, null, null, null,outputID, outputData);
+}
+
+function createDashEdgeAnimation(network, edgeID, pStep, dash, outputID, outputData){
+    addAnimationStep(network, "dash", edgeID, pStep, null, null, null, null, dash, outputID, outputData);
 }
 
 function createLabelEdgeAnimation(network, edgeID, pStep, label, outputID, outputData){
-    addAnimationStep(network, "label", edgeID, pStep, null, label, null, null, outputID, outputData);
+    addAnimationStep(network, "label", edgeID, pStep, null, label, null, null, null, outputID, outputData);
 }
 
 function createAddEdgeAnimation(network, edgeID, pStep, label, from, to, outputID, outputData){
-    addAnimationStep(network, "add", edgeID, pStep, null, label, from, to, outputID, outputData);
+    addAnimationStep(network, "add", edgeID, pStep, null, label, from, to, null, outputID, outputData);
 }
 
 function createRemoveEdgeAnimation(network, edgeID, pStep, outputID, outputData){
-    addAnimationStep(network, "remove", edgeID, pStep, null, null, null, null, outputID, outputData);
+    addAnimationStep(network, "remove", edgeID, pStep, null, null, null, null, null, outputID, outputData);
 }
 
 function prepareOutputLine(outputID, outputData){
-    addAnimationStep(null, null, null, null, null, null, null, null, outputID, outputData);
+    addAnimationStep(null, null, null, null, null, null, null, null, null, outputID, outputData);
 }
 
 function printTraceback(line){
@@ -235,29 +227,29 @@ function printTraceback(line){
     document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
 }
 
-
 function revealResidualGraph(){
-    console.log("revealing residual graph");
     var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
     top_graph.style.height = '50%';
     res_graph.style.height = '50%';
-    
+
     resGraph = new vis.Network(resContainer, resData, options);
     topGraph = new vis.Network(mainContainer, topData, options);
     topGraph.fit();
     resGraph.fit();
-    topGraph.addEventListener("dragEnd", function(){
-        topGraph.storePositions();
-        resGraph.storePositions(); 
-    });
-    resGraph.addEventListener("dragEnd", function(){
-        topGraph.storePositions();
-        resGraph.storePositions(); 
-    });
+    addDragListener();
     step++;
 }
 
-
+function addDragListener() {
+  topGraph.addEventListener("dragEnd", function(){
+      topGraph.storePositions();
+      resGraph.storePositions();
+  });
+  resGraph.addEventListener("dragEnd", function(){
+      topGraph.storePositions();
+      resGraph.storePositions();
+  });
+}
 
 /*
   Function: highlightAugmentingPath(path)
@@ -268,11 +260,10 @@ function revealResidualGraph(){
 */
 function highlightAugmentingPath(path){
     var edgeID, edgeData;
-
     for(i = 1; i < path.length; i++){
         edgeData = findEdgeID(RES, path[i-1], path[i]);
         edgeID = edgeData.id;
-        createHighlightAnimation(RES, edgeID, 1, '#FF9800');
+        createHighlightAnimation(RES, edgeID, 3, '#FF9800');
     }
     addAnimationStep(null);
 }
@@ -288,7 +279,7 @@ function leavePathHighlighted(path){
         for(var j=0; j < pathEdges.length; j++){
             if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
         }
-        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 1, '#0097A7');
+        if(!isInPath) createDashEdgeAnimation(RES, resEdgeIDs[i], 2, false);
     }
 }
 
@@ -317,7 +308,7 @@ function constructTracebackLine(index, data){
         } else {
             from = data[0];
         }
-        if(data[1] == 0){ 
+        if(data[1] == 0){
             to = "S";
         } else if(data[1] == T){
             to = "T";
@@ -329,7 +320,7 @@ function constructTracebackLine(index, data){
         console.log("Error: traceback index out of bounds: " + index);
     }
 }
-  
+
 var traceback = [
     "capacity - flow = $, adding forwards edge of value $",
 
@@ -346,5 +337,3 @@ var traceback = [
     "augmenting forwards edge between nodes $ and $",
     "decrementing backwards edge between nodes $ and $",
 ];
-  
-

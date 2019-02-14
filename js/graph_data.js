@@ -41,80 +41,46 @@ var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
 var newNodeID, newEdgeID;
 
+
+function getMatrix(data){
+    if (data == RES) return resAdjMatrix; else if (data == TOP) return topAdjMatrix; else return data;
+}
+
 /*
 Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
 is already an edge with these nodes and -1 if there is not
 */
 function findDuplicateEdges(data, from, to){
-    var matrix;
-    if(data == TOP){
-        matrix = topAdjMatrix; 
-    } else if (data == RES) {
-        matrix = resAdjMatrix;
-    } else {
-        matrix = data;
-    }
+    var matrix = getMatrix(data);
     if(matrix[from][to] != null) return 1;
     return -1;
 }
 
 function addEdge(localEdges, id, from, to, cap){
-    if(cap == null) cap = Math.random() * 10 | 1
+    if(cap == null) cap = Math.random() * 10 | 1;
     localEdges.push({
-        id, color: {color: '#0097A7'},
-        arrows: {to : {enabled: true}},
-        font: {strokeWidth: 5},
-        chosen: false,
-        width: 3,
-        label: 0 + '/' + cap, from, to,
+        id, color: {color: '#0097A7'}, arrows: {to : {enabled: true}},
+        font: {strokeWidth: 5}, chosen: false, width: 3, label: 0 + '/' + cap, from, to,
         arrowStrikethrough: false,
     });
-    if((from != -1) || (to != -1)) topAdjMatrix[from][to] = id;
-
+    if(((from != -1) || (to != -1)) && (!options.manipulation.enabled)) topAdjMatrix[from][to] = id;
     return localEdges;
 }
 
 function addNode(localNodes, id, label, x, y){
+    var color = {background: '#00BCD4', border: '#00BCD4',
+                highlight: { background :'#757575', border: '#212121'},
+                hover: { background :'#757575', border: '#212121'}
+    },
+    font = {color: '#ffffff'};
     if(x == null && y == null){
         localNodes.push({
-            id, label,
-            physics: false,
-            color : {
-                background: '#00BCD4',
-                border: '#00BCD4',
-                highlight: {
-                    background :'#757575',
-                    border: '#212121',
-                },
-                hover: {
-                    background :'#757575',
-                    border: '#212121',
-                }
-            },
-            font: {
-                color: '#ffffff'
-            }
+            id, label, physics: false, color, font
         });
     } else {
-        localNodes.push({
-            id, label, x, y,
-            physics: false,
-            color : {
-                background: '#00BCD4',
-                border: '#00BCD4',
-                highlight: {
-                    background :'#757575',
-                    border: '#212121',
-                },
-                hover: {
-                    background :'#757575',
-                    border: '#212121',
-                }
-            },
-            font: {
-                color: '#ffffff'
-            }
-        });
+      localNodes.push({
+          id, label, x, y, physics: false, color, font
+      });
     }
     return localNodes;
 }
@@ -183,11 +149,6 @@ function reverseEdgeIDs(edges){
     return revEdges;
 }
 
-function getMatrix(data){
-    if (data == RES) return resAdjMatrix; else if (data == TOP) return topAdjMatrix;
-    return null;
-}
-
 function downloadGraphAsTxt(filename) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(createTxtFileFromGraph()));
@@ -200,8 +161,8 @@ function downloadGraphAsTxt(filename) {
 
 function createTxtFileFromGraph(){
     var NODES = 0, EDGES = 1;
-    return "{\n\"nodes\" : [" + constructJsonArray(NODES) 
-            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES) 
+    return "{\n\"nodes\" : [" + constructJsonArray(NODES)
+            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES)
             + "\n]\n}";
 }
 
@@ -219,7 +180,7 @@ function constructJsonObject(data, id, type){
     if(type == 0){
         return "\n{ \"id\": " + id + ", \"x\": " + data.x + ", \"y\": " + data.y + "}";
     } else if(type == 1) {
-        return "\n{ \"from\": " + data.from + ", \"to\": " 
+        return "\n{ \"from\": " + data.from + ", \"to\": "
             + data.to + ", \"capacity\": " + getCapacity(data.label) + "}";
     }
 }
@@ -267,7 +228,6 @@ function findEdgeID(data, from, to){
     return edgeData;
 }
 
-
 function isBetween(comp, lower, upper){
     if((comp >= lower) && (comp < upper)) return true; else return false;
 }
@@ -277,9 +237,9 @@ function checkValidGraph(fileNodes, fileEdges){
 
     if(!checkNodesAndEdgesExist(nl, el)) return false;
     if(!checkNodeIdsConsecutive(fileNodes)) return false;
-    
+
     var edge, invalidEdges = [], i;
-    
+
     var testMatrix = [];
     for(var y = 0; y < nl; y++){
         testMatrix[y] = [];
@@ -287,7 +247,7 @@ function checkValidGraph(fileNodes, fileEdges){
           testMatrix[y][x] = null;
         }
     }
-    
+
     for(i = 0; i < el; i++) {
         edge = fileEdges[i];
         if(!(isBetween(edge.to, 0, nl)) || !(isBetween(edge.from, 0, nl))) {
@@ -295,7 +255,7 @@ function checkValidGraph(fileNodes, fileEdges){
         }
         if(edge.to == edge.from) invalidEdges.push({id:i, problem: " is going to and from the same node!"});
         if(edge.capacity <= 0) invalidEdges.push({id: i, problem: " must have a capacity greater than 0!"});
-        
+
         if(findDuplicateEdges(testMatrix, edge.from, edge.to) == 1) {
             invalidEdges.push({id: i, problem: " is a duplicate edge!"});
         }
@@ -330,4 +290,68 @@ function checkNodesAndEdgesExist(n, e){
 function checkNodeIdsConsecutive(nodes){
     for(var i = 0; i < nodes.length; i++) if (nodes[i].id != i) return false;
     return true;
+}
+
+function drawAddNode(data, callback) {
+  data.id = newNodeID, data.label = "n" + newNodeID, data.physics = false;
+  data.color = {
+      background: '#00BCD4', border: '#00BCD4',
+      highlight: { background :'#757575', border: '#212121'},
+      hover: { background :'#757575', border: '#212121'}
+  };
+  data.font = { color: '#ffffff'};
+  callback(data);
+  nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
+  newNodeID++;
+}
+
+function drawAddEdge(data, capacity, callback){
+  data.id = newEdgeID, data.arrows = {to: {enabled: true}}, data.font = {strokeWidth: 5};
+  data.width = 3, data.arrowStrikethrough = false;
+  data.label = 0 + '/' + capacity;
+  edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
+  topEdges.update(edges);
+  newEdgeID++;
+  callback(data);
+}
+
+function drawDeleteNode(data, callback){
+  var nodeIds = data.nodes, i;
+  nodes.splice(nodeIds[0] + 1, 1);
+  topNodes.remove(nodeIds[0]);
+  for(i = nodeIds[0] + 1; i < nodes.length; i++){
+      nodes[i].id = i - 1;
+      nodes[i].label = "n" + (i-1);
+      updateEdgesToFrom(i);
+      topNodes.remove(i);
+  }
+  newNodeID--;
+  drawDeleteEdge(data);
+  topNodes.update(nodes);
+  callback(data);
+}
+
+function drawDeleteEdge(data) {
+    var  edgeIds = data.edges, i, victim;
+    console.log(edgeIds);
+    while(edgeIds.length > 0){
+      victim = edgeIds.pop();
+      for(i = victim + 1; i < edges.length; i++){
+        edges[i].id = edges[i].id-1;
+        topEdges.remove(i);
+      }
+      edges.splice(victim, 1);
+      topEdges.remove(victim);
+      newEdgeID--;
+    }
+    topEdges.update(edges);
+}
+
+function updateEdgesToFrom(node){
+  var edge, i;
+  for(i = 0; i < edges.length; i++){
+    edge = edges[i];
+    if(edge.to == node) edge.to = edge.to - 1;
+    if(edge.from == node) edge.from = edge.from - 1;
+  }
 }
