@@ -38,7 +38,7 @@
                                 <button class="waves-effect btn cyan" onclick="loadNewGraph(generateRandomGraph);">random</button>
                                 <div id="N_controls">
                                     <p>Number of nodes: </p>
-                                    <input type="number" class="dropdown-button" id="N_picker" value="4"></input>
+                                    <input type="number" class="dropdown-button" id="N_picker" value="6"></input>
                                 </div>
                             </span></div>
                     </li>
@@ -83,12 +83,12 @@
                         <p class="pseudocode_step">build residual graph</p>
                         <p class="pseudocode_step">while(maximum flow has not been found):</p>
                         <p class="pseudocode_step indent1">search for augmenting path in residual graph from S to T</p>
-                        <p class="pseudocode_step indent2">if augmenting path is found:</p>
-                        <p class="pseudocode_step indent3">for each edge in path:</p>
-                        <p class="pseudocode_step indent4">augment flow along forwards edge</p>
-                        <p class="pseudocode_step indent4">decrement flow along backwards edge</p>
-                        <p class="pseudocode_step indent2">else:</p>
-                        <p class="pseudocode_step indent3">maximum flow has been found break;</p>
+                        <p class="pseudocode_step indent1">if augmenting path is found:</p>
+                        <p class="pseudocode_step indent2">for each edge in path:</p>
+                        <p class="pseudocode_step indent3">augment flow along forwards edge</p>
+                        <p class="pseudocode_step indent3">decrement flow along backwards edge</p>
+                        <p class="pseudocode_step indent1">else:</p>
+                        <p class="pseudocode_step indent2">maximum flow has been found: break;</p>
                         <p class="pseudocode_step indent1">update residual graph</p>
                         <p class="pseudocode_step">reveal edges in minimum cut</p>
                     </div>

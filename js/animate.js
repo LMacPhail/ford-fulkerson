@@ -116,6 +116,7 @@ function executeRemoveEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
+    console.log("highlighting edge, playState = " + playState);
     var edge_color, dashBool;
     if(playState > 0){
         edge_color = currentStep.color;
@@ -124,18 +125,21 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
     } else if (playState < 0){
         var prevData = currentStep.prevData;
         edge_color = prevData.color;
-        dashBool = prevData.dash;
+        dashBool = prevData.dashes;
+        console.log(dashBool);
     }
     edges.update([{id: edgeID, color: edge_color, dashes: dashBool}]);
 }
 
 function executeDashEdgeStep(edges, edgeID, currentStep){
+    console.log("dashing edge, playState = " + playState);
     var dashBool;
     if(playState > 0){
       dashBool = currentStep.dash;
-      currentStep.prevData = edges.get(edgeID);
+      currentStep.prevData = !dashBool;
     } else if (playState < 0) {
-      dashBool = currentStep.prevData.dashes;
+      dashBool = currentStep.prevData;
+      console.log(dashBool);
     }
     edges.update([{id: edgeID, dashes: dashBool}]);
 }
@@ -279,7 +283,7 @@ function leavePathHighlighted(path){
         for(var j=0; j < pathEdges.length; j++){
             if(resEdgeIDs[i] == pathEdges[j]) isInPath = true;
         }
-        if(!isInPath) createDashEdgeAnimation(RES, resEdgeIDs[i], 2, false);
+        if(!isInPath) createHighlightAnimation(RES, resEdgeIDs[i], 3, '#0097A7');
     }
 }
 
