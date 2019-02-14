@@ -116,7 +116,6 @@ function executeRemoveEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
-    console.log("highlighting edge, playState = " + playState);
     var edge_color, dashBool;
     if(playState > 0){
         edge_color = currentStep.color;
@@ -126,20 +125,17 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
         var prevData = currentStep.prevData;
         edge_color = prevData.color;
         dashBool = prevData.dashes;
-        console.log(dashBool);
     }
     edges.update([{id: edgeID, color: edge_color, dashes: dashBool}]);
 }
 
 function executeDashEdgeStep(edges, edgeID, currentStep){
-    console.log("dashing edge, playState = " + playState);
     var dashBool;
     if(playState > 0){
       dashBool = currentStep.dash;
       currentStep.prevData = !dashBool;
     } else if (playState < 0) {
       dashBool = currentStep.prevData;
-      console.log(dashBool);
     }
     edges.update([{id: edgeID, dashes: dashBool}]);
 }
