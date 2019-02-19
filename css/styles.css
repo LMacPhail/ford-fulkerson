@@ -50,6 +50,16 @@
     margin: 2px;
 }
 
+#N_controls {
+    padding: 2px;
+    display: flex;
+}
+
+#N_picker {
+    margin: 2px;
+    margin-left: 8px;
+}
+
 #upload_download {
     padding-left: 10px;
     padding-right: 10px;
