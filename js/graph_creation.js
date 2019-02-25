@@ -59,7 +59,7 @@ function populateTopAdjMatrix(edges) {
 }
 
 function assignDataSets(nodes, edges){
-    console.log("initialising data sets");
+    // console.log("initialising data sets");
     topNodes = new vis.DataSet(nodes);
     topEdges = new vis.DataSet(edges);
     algTopEdges = new vis.DataSet(edges);
@@ -81,7 +81,7 @@ Generates a graph using N and E, such that:
     - There are no loops or dead ends (all nodes are on a path from S to T)
 */
 function generateRandomGraph(){
-    N = document.getElementById("N_picker").value;
+    if(!test) N = document.getElementById("N_picker").value;
     if(N < 4) {
       alert("There must be at least 4 nodes!");
       return;

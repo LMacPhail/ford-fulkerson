@@ -28,7 +28,7 @@ function addEdgeToRes(id, label, from, to){
 
 var edgeID = 0;
 function buildResidualGraph(){
-    console.log("Building residual graph");
+    // console.log("Building residual graph");
     prepareOutputLine(6);
     var edges = [];
     var cap, i;
@@ -101,20 +101,26 @@ If successful, returns an array of node IDs (in order of the path)
 If unsuccessful, returns -1
 */
 function findPath(visited){
-    // console.log("finding path");
+    console.log("finding path");
     var i, j, parents = [], queue = [];
     var nodes = topNodes, node, neighbour;
-    for(i = 0; i < nodes.length; i++) parents.push({ node: i, parent: i});
-    for(i = 0; i < nodes.length; i++){
+    for(i = 0; i < topNodes.length; i++) parents.push({ node: i, parent: i});
+    for(i = 0; i < topNodes.length; i++){
 
         visited[i] = 1;
+        console.log("visited: " + visited);
         queue.push(i);
+        console.log("queue: " + queue);
         while(queue.length > 0){
             node = queue.shift();
+            console.log("next node: " + node);
             var neighbours = getConnectedNodes(RES, node, 'to');
+            console.log("connected nodes: " + neighbours);
             for(j = 0; j < neighbours.length; j++){
                 neighbour = neighbours[j];
+                console.log("neighbour: " + neighbour);
                 if(visited[neighbour] == 0){
+                  console.log("neighbour not visited");
                     createDashEdgeAnimation(RES, resAdjMatrix[node][neighbour], 2, true);
                     // createHighlightAnimation(RES, resAdjMatrix[node][neighbour], 2, '#757575');
                     visited[neighbour] = 1;
@@ -158,12 +164,13 @@ function findMinimumCapacity(data, path){
 function fordFulkerson(){
     var path = -1, visited = [];
     var i, id, totalFlow = 0;
-    for(i in topNodes) visited.push(0);
+    for(i = 0; i < topNodes.length; i++) visited.push(0);
     while(true){
         if (path == -1) buildResidualGraph(); else updateResidualGraph(path);
         for(i in visited) visited[i] = 0;
         prepareOutputLine(4);
         path = findPath(visited);
+        console.log("path: " + path);
         leavePathHighlighted(path);
         highlightAugmentingPath(path);
         if(path == -1){
@@ -195,10 +202,12 @@ function fordFulkerson(){
             }
 
             totalFlow += m;
+            console.log(totalFlow);
             animationSteps.push({network: TOP, edgeID: resID, action: "updateFlow", m:totalFlow});
         }
     }
-    findMinimumCut(totalFlow);
+    // console.log(totalFlow);
+    findMinimumCut();
     addAnimationStep(null);
 }
 
@@ -250,4 +259,5 @@ function findMinimumCut(){
     for(i = 0; i < C.length; i++){
         createHighlightAnimation(TOP, C[i], 10, '#FF9800');
     }
+    return C;
 }
