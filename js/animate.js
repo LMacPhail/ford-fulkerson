@@ -261,8 +261,8 @@ function addDragListener() {
 function highlightAugmentingPath(path){
     var edgeID, edgeData;
     for(i = 1; i < path.length; i++){
-        edgeData = findEdgeID(RES, path[i-1], path[i]);
-        edgeID = edgeData.id;
+        // edgeData = findEdgeID(RES, path[i-1], path[i]);
+        edgeID = resAdjMatrix[path[i-1]][path[i]]; //changed from edgeData.id;
         createHighlightAnimation(RES, edgeID, 3, '#FF9800');
     }
     addAnimationStep(null);
@@ -271,7 +271,7 @@ function highlightAugmentingPath(path){
 function leavePathHighlighted(path){
     var pathEdges = [];
     for(var i = 1; i < path.length; i++){
-        pathEdges.push(findEdgeID(RES, path[i-1], path[i]).id);
+        pathEdges.push(resAdjMatrix[path[i-1]][path[i]]);
     }
     var resEdgeIDs = algResEdges.getIds();
     for(i = 0; i < resEdgeIDs.length; i++ ){

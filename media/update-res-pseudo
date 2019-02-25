@@ -1,0 +1,34 @@
+
+
+updateResidualGraph(path) {
+    for(edge in path) { 
+	
+	capacity = edge.getCapacity()
+	flow = edge.getFlow()
+    
+        forwardsEdge = resMatrix[topEdge.to][topEdge.from]
+        backwardsEdge = resMatrix[topEdge.from][topEdge.to]
+
+        if(forwardsEdge) {
+            if(there is a flow and flow < capacity) {
+		// flow has increased but capacity remains
+		update forwardsEdge weight to (capacity - flow)
+	    } else (flow == capacity) {
+		// flow has increased to fill capacity
+		remove forwardsEdge
+	    }        
+	} else (no forwardsEdge) {
+	    add forwardsEdge to residual graph with weight (capacity - flow)	
+	}
+	
+	if(backwardsEdge) {
+	    update backwardsEdge weight to flow
+	} else (no backwardsEdge) {
+	    if(flow == 0) {
+		add backwardsEdge with weight of capacity
+	    } else (flow > 0) {
+		add backwardsEdge with weight of flow
+	    }	    
+	}
+    }
+}
