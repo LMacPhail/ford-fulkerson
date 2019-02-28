@@ -67,9 +67,22 @@ function updateResidualGraph(path){
             algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
             createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 0, (cap-flow));
         } else {
-            algResEdges.remove(forwards);
-            createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
-            resAdjMatrix[path[i-1]][path[i]] = null;
+            if(topAdjMatrix[path[i]][path[i-1]] != null){
+              var topBackwards = algTopEdges.get(topAdjMatrix[path[i]][path[i-1]]);
+              var backwardsFlow = getFlow(topBackwards.label);
+              if(backwardsFlow > 0){
+                algResEdges.update([{id:forwards, label: backwardsFlow}]);
+                createLabelEdgeAnimation(RES, forwards, pseudocodeStep, backwardsFlow, 0, (cap-flow));
+              } else {
+                algResEdges.remove(forwards);
+                createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
+                resAdjMatrix[path[i-1]][path[i]] = null;
+              }
+            } else {
+              algResEdges.remove(forwards);
+              createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
+              resAdjMatrix[path[i-1]][path[i]] = null;
+            }
         }
     } else {
         addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
@@ -85,7 +98,7 @@ function updateResidualGraph(path){
             createAddEdgeAnimation(RES, edgeID, pseudocodeStep, cap, path[i], path[i-1], 1, flow);
         } else {
             addEdgeToRes(edgeID, flow, path[i], path[i-1], true);
-            console.log(algResEdges.get(edgeID));
+            // console.log(algResEdges.get(edgeID));
             createAddEdgeAnimation(RES, edgeID, pseudocodeStep, flow, path[i], path[i-1], 1, flow);
         }
         edgeID++;
@@ -238,9 +251,13 @@ function findMinimumCut(){
     A.push(0);
     while(Q.length > 0) {
         var node = Q.pop();
+        // console.log("node in Q: " + node);
         var connected = getConnectedNodes(RES, node, "to");
-        for(i in connected){
+        // console.log("connected to this node: " + connected);
+        for(i = 0; i < connected.length; i++){
+            // console.log("on connected node: " + connected[i]);
             if(visited[connected[i]] == 0) {
+                // console.log("connected node has not been visited");
                 A.push(connected[i]);
                 Q.push(connected[i]);
                 visited[connected[i]] = 1;
