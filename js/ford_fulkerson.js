@@ -52,20 +52,35 @@ function updateResidualGraph(path){
   var edgeData, edge, flow, cap, forwards, backwards;
   var pseudocodeStep = 9;
   for(i = 1; i < path.length; i++){
-    createDashEdgeAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, true);
     // createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, '#FF9800');
 
     edgeData = findEdgeID(TOP, path[i-1], path[i]);
     edge = algTopEdges.get(edgeData.id);
+    createDashEdgeAnimation(TOP, edgeData.id, pseudocodeStep, true);
     flow = getFlow(edge.label), cap = getCapacity(edge.label);
 
-    forwards = resAdjMatrix[path[i-1]][path[i]];
-    backwards = resAdjMatrix[path[i]][path[i-1]];
+    if(edgeData.direction == 1){
+      forwards = resAdjMatrix[path[i-1]][path[i]];
+      backwards = resAdjMatrix[path[i]][path[i-1]];
+    } else {
+      forwards = resAdjMatrix[path[i]][path[i-1]];
+      backwards = resAdjMatrix[path[i-1]][path[i]];
+    }
 
     if(forwards != null){
-        if((cap - flow > 0) && (flow > 0)){
-            algResEdges.update([{id:forwards, label: (cap - flow).toString()}]);
+        if((cap - flow > 0) && (flow >= 0)){
+            var newLabel;
+            if(flow == 0) {
+              algResEdges.remove(backwards);
+              createRemoveEdgeAnimation(RES, backwards, pseudocodeStep);
+              resAdjMatrix[path[i-1]][path[i]] = null;
+              newLabel = cap;
+            } else {
+              newLabel = (cap - flow).toString();
+            }
+            algResEdges.update([{id:forwards, label: newLabel}]);
             createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 0, (cap-flow));
+
         } else {
             if(topAdjMatrix[path[i]][path[i-1]] != null){
               var topBackwards = algTopEdges.get(topAdjMatrix[path[i]][path[i-1]]);

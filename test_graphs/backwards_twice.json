@@ -1,0 +1,24 @@
+{
+"nodes" : [
+{ "id": 0, "x": -300, "y": 0},
+{ "id": 1, "x": -54, "y": -4},
+{ "id": 2, "x": -68, "y": -94},
+{ "id": 3, "x": -76, "y": -236},
+{ "id": 4, "x": 106, "y": -128},
+{ "id": 5, "x": 113, "y": 109},
+{ "id": 6, "x": 300, "y": 0}
+],
+"edges" : [
+{ "from": 0, "to": 1, "capacity": 3},
+{ "from": 1, "to": 4, "capacity": 7},
+{ "from": 1, "to": 5, "capacity": 7},
+{ "from": 0, "to": 2, "capacity": 3},
+{ "from": 2, "to": 3, "capacity": 5},
+{ "from": 2, "to": 4, "capacity": 1},
+{ "from": 0, "to": 3, "capacity": 3},
+{ "from": 3, "to": 4, "capacity": 9},
+{ "from": 4, "to": 6, "capacity": 3},
+{ "from": 5, "to": 6, "capacity": 9},
+{ "from": 0, "to": 5, "capacity": 5}
+]
+}
