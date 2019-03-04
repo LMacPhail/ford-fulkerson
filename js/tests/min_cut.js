@@ -1,9 +1,9 @@
 function testFF(iter){
   // N = 26;
-  var FFMaxFlow, cutMaxFlow, cut = [], incorrect = 0;
+  var FFMaxFlow, cutMaxFlow, cut = [], incorrect = 0, i;
   var notBroken = true;
   var topEdgeText, resEdgeText;
-  while(notBroken){
+  for(i = 0; i < iter; i++){
     generateRandomGraph();
     FFMaxFlow = fordFulkerson();
     cut = findMinimumCut();
@@ -18,10 +18,12 @@ function testFF(iter){
       console.log(algTopEdges);
       console.log(algResEdges);
       console.log(resAdjMatrix);
-      notBroken = false;
+      // notBroken = false;
+      incorrect++;
     }
+    // notBroken = false;
   }
-  // $('body').append('<p>Percentage incorrect = ' + (incorrect / iter)*100 + '</p>');
+  $('body').append('<p>Percentage incorrect = ' + (incorrect / iter)*100 + '</p>');
 }
 
 function removeEdgesInCut(cut) {

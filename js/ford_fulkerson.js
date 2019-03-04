@@ -50,73 +50,84 @@ function updateResidualGraph(path){
 //   console.log("Updating residual graph");
     prepareOutputLine(7);
   var edgeData, edge, flow, cap, forwards, backwards;
+  var from, to;
   var pseudocodeStep = 9;
   for(i = 1; i < path.length; i++){
     // createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, '#FF9800');
-
-    edgeData = findEdgeID(TOP, path[i-1], path[i]);
+    from = path[i-1], to = path[i];
+    edgeData = findEdgeID(TOP, from, path[i]);
     edge = algTopEdges.get(edgeData.id);
     createDashEdgeAnimation(TOP, edgeData.id, pseudocodeStep, true);
     flow = getFlow(edge.label), cap = getCapacity(edge.label);
 
+    forwards = resAdjMatrix[from][to];
+    backwards = resAdjMatrix[to][from];
+
     if(edgeData.direction == 1){
-      forwards = resAdjMatrix[path[i-1]][path[i]];
-      backwards = resAdjMatrix[path[i]][path[i-1]];
-    } else {
-      forwards = resAdjMatrix[path[i]][path[i-1]];
-      backwards = resAdjMatrix[path[i-1]][path[i]];
-    }
-
-    if(forwards != null){
-        if((cap - flow > 0) && (flow >= 0)){
-            var newLabel;
-            if(flow == 0) {
-              algResEdges.remove(backwards);
-              createRemoveEdgeAnimation(RES, backwards, pseudocodeStep);
-              resAdjMatrix[path[i-1]][path[i]] = null;
-              newLabel = cap;
-            } else {
-              newLabel = (cap - flow).toString();
-            }
-            algResEdges.update([{id:forwards, label: newLabel}]);
-            createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 0, (cap-flow));
-
+      forwards = resAdjMatrix[from][to];
+      backwards = resAdjMatrix[to][from];
+      if(cap - flow > 0) {
+        // update forwards label to cap - flow
+        algResEdges.update([{id: forwards, label: (cap - flow).toString()}]);
+        createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 1, (cap - flow));
+      } else {
+        if(topAdjMatrix[to][from] != null) {
+          var oppDirEdge = algTopEdges.get(topAdjMatrix[to][from]);
+          var oppFlow = getFlow(oppDirEdge.label);
+          if(oppFlow > 0){
+            algResEdges.update([{id: forwards, label: oppFlow}]);
+            createLabelEdgeAnimation(RES, forwards, pseudocodeStep, oppFlow, 1, oppFlow);
+          } else {
+            algResEdges.remove(forwards);
+            createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
+            resAdjMatrix[from][to] = null;
+          }
         } else {
-            if(topAdjMatrix[path[i]][path[i-1]] != null){
-              var topBackwards = algTopEdges.get(topAdjMatrix[path[i]][path[i-1]]);
-              var backwardsFlow = getFlow(topBackwards.label);
-              if(backwardsFlow > 0){
-                algResEdges.update([{id:forwards, label: backwardsFlow}]);
-                createLabelEdgeAnimation(RES, forwards, pseudocodeStep, backwardsFlow, 0, (cap-flow));
-              } else {
-                algResEdges.remove(forwards);
-                createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
-                resAdjMatrix[path[i-1]][path[i]] = null;
-              }
-            } else {
-              algResEdges.remove(forwards);
-              createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
-              resAdjMatrix[path[i-1]][path[i]] = null;
-            }
+          algResEdges.remove(forwards);
+          createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
+          resAdjMatrix[from][to] = null;
         }
-    } else {
-        addEdgeToRes(edgeID, (cap - flow).toString(), path[i-1], path[i]);
-        createAddEdgeAnimation(RES, edgeID, pseudocodeStep, (cap-flow).toString(),path[i-1], path[i], 0, (cap - flow));
-        edgeID++;
-    }
-    if(backwards != null){
+      }
+      if(backwards != null) {
         algResEdges.update([{id: backwards, label: flow}]);
         createLabelEdgeAnimation(RES, backwards, pseudocodeStep, flow, 1, flow);
-    } else {
-        if(flow == 0) {
-            addEdgeToRes(edgeID, cap, path[i], path[i-1], true);
-            createAddEdgeAnimation(RES, edgeID, pseudocodeStep, cap, path[i], path[i-1], 1, flow);
-        } else {
-            addEdgeToRes(edgeID, flow, path[i], path[i-1], true);
-            // console.log(algResEdges.get(edgeID));
-            createAddEdgeAnimation(RES, edgeID, pseudocodeStep, flow, path[i], path[i-1], 1, flow);
-        }
+      } else {
+        addEdgeToRes(edgeID, flow, to, from, true);
+        createAddEdgeAnimation(RES, edgeID, pseudocodeStep, flow, to, from, 1, flow);
         edgeID++;
+      }
+    } else {
+      backwards = resAdjMatrix[from][to];
+      forwards = resAdjMatrix[to][from];
+      if(flow == 0) {
+        if(topAdjMatrix[from][to]) {
+          var oppDirEdge = algTopEdges.get(topAdjMatrix[from][to]);
+          var oppFlow = getFlow(oppDirEdge.label), oppCap = getCapacity(oppDirEdge.label);
+          if(oppCap - oppFlow > 0) {
+            algResEdges.update([{id: backwards, label: (oppCap - oppFlow).toString()}]);
+            createLabelEdgeAnimation(RES, backwards, pseudocodeStep, (oppCap - oppFlow).toString(), 1, oppCap - oppFlow);
+          } else {
+            algResEdges.remove(backwards);
+            createRemoveEdgeAnimation(RES, backwards, pseudocodeStep);
+            resAdjMatrix[from][to] = null;
+          }
+        } else {
+          algResEdges.remove(backwards);
+          createRemoveEdgeAnimation(RES, backwards, pseudocodeStep);
+          resAdjMatrix[from][to] = null;
+        }
+      } else {
+        algResEdges.update([{id: backwards, label:flow}]);
+        createLabelEdgeAnimation(RES, backwards, pseudocodeStep, flow, 1, flow);
+      }
+      if(forwards != null) {
+        algResEdges.update([{id: forwards, label: (cap - flow).toString()}]);
+        createLabelEdgeAnimation(RES, forwards, pseudocodeStep, (cap - flow).toString(), 1, (cap - flow));
+      } else {
+        addEdgeToRes(edgeID, (cap - flow).toString(), to, from, false);
+        createAddEdgeAnimation(RES, edgeID, pseudocodeStep, (cap - flow).toString(), to, from, 1, (cap - flow));
+        edgeID++;
+      }
     }
     createHighlightAnimation(TOP, topAdjMatrix[path[i-1]][path[i]], pseudocodeStep, '#0097A7');
     if(topAdjMatrix[path[i]][path[i-1]] != null) createHighlightAnimation(TOP, topAdjMatrix[path[i]][path[i-1]], pseudocodeStep, '#0097A7');
@@ -210,6 +221,7 @@ function fordFulkerson(){
             prepareOutputLine(3, path);
             var m = findMinimumCapacity(algResData, path);
             for(i = 1; i < path.length; i++){
+                // console.log(path[i-1], path[i]);
                 var edgeData = findEdgeID(TOP, path[i-1], path[i]);
                 var resID = resAdjMatrix[path[i-1]][path[i]];
                 var pseudocodeStep = 5;

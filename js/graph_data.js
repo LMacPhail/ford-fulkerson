@@ -220,7 +220,9 @@ direction 0 if backwards, 1 if forwards
 */
 function findEdgeID(data, from, to){
     var edgeData = {}, matrix = getMatrix(data);
+    // console.log(matrix);
     var resEdge = algResEdges.get(resAdjMatrix[from][to]);
+    // console.log(resEdge.backwards);
     if(resEdge.backwards == null){
       edgeData = {id: matrix[from][to], direction: 1}
     } else if (resEdge.backwards){
