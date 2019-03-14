@@ -29,7 +29,7 @@
 
     (270)      getConnectedNodes(data, nodeId, direction)
 
-    (300)      findEdgeID(data, node1, node2)
+    (300)      getEdgeData(data, node1, node2)
 
 ******************************************************************************/
 
@@ -218,7 +218,7 @@ function getFromList(matrix, nodeID){
 Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
-function findEdgeID(data, from, to){
+function getEdgeData(data, from, to){
     var edgeData = {}, matrix = getMatrix(data);
     // console.log(matrix);
     var resEdge = algResEdges.get(resAdjMatrix[from][to]);

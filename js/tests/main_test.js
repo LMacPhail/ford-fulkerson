@@ -14,5 +14,5 @@ var options = {
 //   $('body').append('<p>With '+ N + ' nodes:</p>');
 //   testFF(100);
 // }
-N = 40;
-testFF(5000);
+N = 30;
+testFF(7000);

@@ -261,7 +261,7 @@ function addDragListener() {
 function highlightAugmentingPath(path){
     var edgeID, edgeData;
     for(i = 1; i < path.length; i++){
-        // edgeData = findEdgeID(RES, path[i-1], path[i]);
+        // edgeData = getEdgeData(RES, path[i-1], path[i]);
         edgeID = resAdjMatrix[path[i-1]][path[i]]; //changed from edgeData.id;
         createHighlightAnimation(RES, edgeID, 3, '#FF9800');
     }
