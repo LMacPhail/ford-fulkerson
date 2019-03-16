@@ -85,6 +85,9 @@ function generateRandomGraph(){
     if(N < 4) {
       alert("There must be at least 4 nodes!");
       return;
+    } else if((N > 50) && !test){
+      alert(N + " is far too many nodes, the algorithm will be unreadable!");
+      return;
     }
     E = N*2 - 3;
     T = N-1;
