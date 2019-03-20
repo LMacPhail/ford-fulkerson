@@ -92,6 +92,10 @@ function updateResidualGraph(path){
           updateResLabel(forwards, oppFlow);
         } else if ((dir == 0) && (oppCap - oppFlow > 0)){
           updateResLabel(forwards, (oppCap - oppFlow).toString());
+        } else {
+            algResEdges.remove(forwards);
+            createRemoveEdgeAnimation(RES, forwards, pseudocodeStep);
+            resAdjMatrix[from][to] = null;
         }
       } else {
         algResEdges.remove(forwards);
