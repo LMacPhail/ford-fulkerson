@@ -1,12 +1,10 @@
 /* *************************************************************************
- * 
+ *
  * Main javascript for the html file 'text_env.html'
- * 
+ *
  * Executes the test with the specified numebr of nodes and iterations
  * 
- * 
- * 
- * 
+ *
  ***************************************************************************/
 
 // checked in some functions so that you can run graphs not usually allowed
@@ -19,8 +17,8 @@ var options = {
 
 /**
  * Here you can run the test with the desired number of nodes N and iterations
- * testFF(x, y) where x = N and y = iterations 
- * 
+ * testFF(x, y) where x = N and y = iterations
+ *
  * !! You may run out of memory if they're too high (N~=50 && iter = 10000) !!
  * !!  Recommend running this several times if testing on high values of N  !!
  */
@@ -79,7 +77,7 @@ function removeEdgesInCut(cut) {
 function findPathInTop(){
   var i, j, parents = [], queue = [], visited = [];
   var nodes = topNodes, node, neighbour;
-  for(i = 0; i < topNodes.length; i++){ 
+  for(i = 0; i < topNodes.length; i++){
     visited[i] = 0;
     parents.push({ node: i, parent: i});
   }

@@ -40,9 +40,7 @@ var traceback = [
 ];
 
 /*
-  Function: animateAlgorithm(steps)
-
-  Purpose:  When given an array of animation steps, iterates and executes each
+  When given an array of animation steps, iterates and executes each
             step with a specified time interval between
 */
 function animateAlgorithm(){
@@ -58,10 +56,9 @@ function animateAlgorithm(){
 }
 
 /*
-    Function:   selectNetworkEdges(networkID)
-    Purpose:    Given a networkID (TOP or RES), returns topEdges or resEdges for
-                manipulation. If networkID is null the edges aren't being manipulated
-                at this stage, so returns null.
+    Given a networkID (TOP or RES), returns topEdges or resEdges for
+            manipulation. If networkID is null the edges aren't being manipulated
+            at this stage, so returns null.
 */
 function selectNetworkEdges(networkID){
     if(networkID == RES) {
@@ -74,8 +71,7 @@ function selectNetworkEdges(networkID){
 }
 
 /*
-    Function:   executeAnimationStep()
-    Purpose:    Extracts data from the current animation step, and executes the action
+    Extracts data from the current animation step, and executes the action
                 for that step. Increments or decrements the animationSteps index, depending
                 on playState.
 */
@@ -102,7 +98,7 @@ function executeAnimationStep(){
     switch(animationSteps[step].action){
         case("reveal"):
             if((playState == PLAY) || (playState == STEP_FORWARD)) {
-                revealResidualGraph(); 
+                revealResidualGraph();
             } else if ((playState == REWIND) || (playState == STEP_BACKWARD)) {
                 resetCanvas();
             }
@@ -256,12 +252,12 @@ function printTraceback(line){
     End of execution functions
     ==============================================================================================
 
-    Step creation functions:    All individual functions format their arguments to call 
+    Step creation functions:    All individual functions format their arguments to call
                                 addAnimationStep, which pushes the arguments to the animationSteps
                                 array as an object.
 
-                                highlightAugmentingPath(), leavePathHighlighted(), and 
-                                constructTracebackLine() use the individual functions to push 
+                                highlightAugmentingPath(), leavePathHighlighted(), and
+                                constructTracebackLine() use the individual functions to push
                                 larger groups of steps to the array.
 
 */
@@ -297,9 +293,7 @@ function prepareOutputLine(outputID, outputData){
 }
 
 /*
-  Function: highlightAugmentingPath(path)
-
-  Purpose:  Given an array of nodes which form the augmenting path, pushes a
+  Given an array of nodes which form the augmenting path, pushes a
             new animation step to highlight the edges between the nodes
 
 */
@@ -330,7 +324,6 @@ function leavePathHighlighted(path){
 
 function constructTracebackLine(index, data){
     var txt;
-    // console.log("index: " + index);
     switch(true){
         case(index == 0):
         txt = traceback[index].split("$");

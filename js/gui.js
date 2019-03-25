@@ -1,3 +1,30 @@
+/*****************************************************************************
+
+  All functions handling interaction from the user.
+
+  Functions:
+
+    ()  rewind()
+    ()  playPause()
+    ()  stepForward()
+    ()  stepBackward()
+    ()  togglePlayPause()
+
+    ()  toggleDrawingButtonsActive(activate)
+    ()  enableDrawingMode()
+    ()  disableDrawingMode()
+
+    ()  resetFlowCounter()
+    ()  resetTraceback()
+
+    ()  on file upload
+
+******************************************************************************/
+
+/*
+  When the rewind button is clicked.
+  Sets playState to -1 (REWIND), and changes the play/pause button to pause
+*/
 function rewind(){
     playState = -1;
     animateAlgorithm();
@@ -5,21 +32,34 @@ function rewind(){
     if(state == "play_arrow") document.getElementById('play_pause_button').innerHTML = "pause";
 }
 
+/*
+  When play/pause button is pressed. If the play button is currently
+      a "play" icon, the animation runs. If it is "pause", it stops.
+*/
 function playPause(){
     playState = togglePlayPause();
     animateAlgorithm();
 }
 
+/*
+  When the step forward button is clicked. Executes the next step in the animation.
+*/
 function stepForward(){
     playState = 2;
     executeAnimationStep();
 }
 
+/*
+  When the step forward button is clicked. Restores the previous step in the animation.
+*/
 function stepBackward(){
     playState = -2;
     executeAnimationStep();
 }
 
+/*
+  Toggles between play and pause. Returns a value for the playState of 0 or 1 (PAUSE or PLAY).
+*/
 function togglePlayPause(){
     var state = document.getElementById('play_pause_button').innerHTML;
     if(state == "play_arrow"){
@@ -31,14 +71,19 @@ function togglePlayPause(){
     }
 }
 
+/*
+  When drawing mode is enabled, the user may not run the animation. The playback buttons
+      are deactivated, and the "save" button is activated.
+  Drawing mode is disabled by pressing save or generating a new graph in another way.
+      Then the playback buttons are reactivated and the "save" button deactivated.
+*/
 function toggleDrawingButtonsActive(activate){
     var drawBtnClass = document.getElementById('drawNew').className;
     var playbackBtnClass = document.getElementById('rewind_button').className;
-    if(activate) {
+    if(!activate) {
       playbackBtnClass = "waves-effect waves-orange btn-flat";
       drawBtnClass = "waves-effect btn cyan disabled";
-    } else if (!activate) {
-      console.log("deactivate");
+    } else if (activate) {
       playbackBtnClass = "waves-effect waves-orange btn-flat disabled";
       drawBtnClass = "waves-effect btn cyan";
     }
@@ -49,8 +94,12 @@ function toggleDrawingButtonsActive(activate){
     document.getElementById('step_forward_button').className = playbackBtnClass;
 }
 
+/*
+  Disables the playback buttons, then allows manipulation of the graph by changing
+      the graph options.
+*/
 function enableDrawingMode() {
-    toggleDrawingButtonsActive(false);
+    toggleDrawingButtonsActive(true);
     options.manipulation = {
         enabled: true,
         initiallyActive: true,
@@ -85,20 +134,33 @@ function enableDrawingMode() {
     topGraph.setOptions(options);
 }
 
+/*
+  Enables the playback buttons, and disables the manipulation of the graph.
+*/
 function disableDrawingMode() {
-    toggleDrawingButtonsActive(true);
+    toggleDrawingButtonsActive(false);
     options.manipulation.enabled = false;
     topGraph.setOptions(options);
 }
 
+/*
+  Sets the value in the flow counter to 0
+*/
 function resetFlowCounter(){
     document.getElementById("flow_counter").innerHTML = "Current flow: 0";
 }
 
+/*
+  Empties the execution trace panel except for "Press play to begin.".
+*/
 function resetTraceback(){
     document.getElementById("traceback").innerHTML = '<p class="caption traceback_line">press play to begin.</p>';
 }
 
+/*
+  Executes when "Upload graph" is clicked. Checks that the file is valid and correctly
+      formatted, then creates the graph from the file.
+*/
 document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems, options);

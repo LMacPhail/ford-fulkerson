@@ -22,9 +22,7 @@
 ******************************************************************************/
 
 /*
-  Functions: getCapacity, getFlow, getNewFlow
-
-  Purpose:  Use the label of an edge to get the desired information
+  Use the label of an edge to get the desired information
 */
 function getCapacity(label){
     var capacity = label.split('/')[1];
@@ -43,9 +41,7 @@ function getNewFlow(label, newFlow){
 }
 
 /*
-  Function: AddEdgeToRes
-
-  Purpose:  Adds an edge with the data from the arguments to algResEdges,
+  Adds an edge with the data from the arguments to algResEdges,
             then updates the resAdjMatrix with the new edge.
  */
 function addEdgeToRes(id, label, from, to, backwards){
@@ -62,10 +58,8 @@ function addEdgeToRes(id, label, from, to, backwards){
 
 
 /*
-  Function: buildResidualGraph
-
-  Purpose:  For each edge in the top graph, adds its corresponding edge
-            to the residual graph. 
+  For each edge in the top graph, adds its corresponding edge
+            to the residual graph.
  */
 function buildResidualGraph(){
     edgeID = 0;
@@ -85,9 +79,7 @@ function buildResidualGraph(){
 }
 
 /*
-  Function: updateResLabel
-
-  Purpose:  Either updates a label for an existing edge in the residual graph,
+  Either updates a label for an existing edge in the residual graph,
             or creates a new edge with the label.
  */
 function updateResLabel(id, label, to, from){
@@ -102,9 +94,7 @@ function updateResLabel(id, label, to, from){
 }
 
 /*
-  Function: updateResidualGraph
-
-  Purpose:  After the top graph has been augmented, this function takes each 
+  After the top graph has been augmented, this function takes each
             edge of the augmenting path and updates the residual graph
             accordingly.
  */
@@ -164,11 +154,9 @@ function updateResidualGraph(path){
 }
 
 /*
-  Function: findPath
-
-  Purpose:  Find a path from S to T.
-            If successful, returns an array of node IDs (in order of the path).
-            If unsuccessful, returns -1.
+  Find a path from S to T.
+        If successful, returns an array of node IDs (in order of the path).
+        If unsuccessful, returns -1.
 */
 function findPath(visited){
     var i, j, parents = [], queue = [];
@@ -208,9 +196,7 @@ function findPath(visited){
 }
 
 /*
-  Function: findMinimumCapacity
-
-  Purpose:  Searchs for the minimum available slack (capacity - flow)  for each edge
+  Searchs for the minimum available slack (capacity - flow)  for each edge
             along the augmenting path.
 */
 function findMinimumCapacity(data, path){
@@ -227,9 +213,7 @@ function findMinimumCapacity(data, path){
 }
 
 /*
-  Function: fordFulkerson
-
-  Purpose:  Runs the Ford-Fulkerson algorithm on the network until no augmenting path can 
+  Runs the Ford-Fulkerson algorithm on the network until no augmenting path can
             be found. Then finds the minimum cut of the network, and returns the total flow
             found.
 */
@@ -282,9 +266,7 @@ function fordFulkerson(){
 }
 
 /*
-  Function: sortNodeIDs
-
-  Purpose:  Sorts node ids of set A (in findMinimumCut) so that set B can be found.
+  Sorts node ids of set A (in findMinimumCut) using bubble-sort so that set B can be found.
 */
 function sortNodeIDs(list){
     var i, j;
@@ -301,9 +283,7 @@ function sortNodeIDs(list){
 }
 
 /*
-  Function: findMinimumCut
-
-  Purpose:  Finds and returns the set of edges that make up a minimum cut of the graph.
+  Finds and returns the set of edges that make up a minimum cut of the graph.
 */
 function findMinimumCut(){
     var A = [], B = [], C = [], Q = [], i, j = 1;

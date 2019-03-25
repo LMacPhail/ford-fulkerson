@@ -2,7 +2,7 @@
 
   Contains higher level functions to create graphs, one of the default
     graph, a random graph, uploading a graph, or drawing a graph. Also handles
-    most of the functions relating to actions on the graph canvas. 
+    most of the functions relating to actions on the graph canvas.
     graph_data.js contains the more detailed functions used often in this file.
 
   Functions:
@@ -24,8 +24,7 @@
 ******************************************************************************/
 
 /*
-    Function:   loadNewGraph
-    Purpose:    Whenever a new graph is created or uploaded, this function is 
+     Whenever a new graph is created or uploaded, this function is
                 called to reset the interface so it is suitable to run the animation
                 for the new graph.
 */
@@ -41,8 +40,7 @@ function loadNewGraph(graphGenCallback, nodes, edges) {
 }
 
 /*
-    Function:   resetCanvas
-    Purpose:    Resizes the top graph to take up 100% of the canvas
+    Resizes the top graph to take up 100% of the canvas
 */
 function resetCanvas(){
     document.getElementById("top_graph").style.height = "100%";
@@ -54,8 +52,7 @@ function resetCanvas(){
 }
 
 /*
-    Function:   resetAnimation
-    Purpose:    Empties animationStep array, sets the index to 0, and resets other elements to their
+    Empties animationStep array, sets the index to 0, and resets other elements to their
                 starting state. Pushes the step which reveals the residual graph onto the array.
 */
 function resetAnimation(){
@@ -72,8 +69,7 @@ function resetAnimation(){
 
 
 /*
-    Function:   initialiseMatrices
-    Purpose:    Creates empty adjacency matrices for top graph and residual graph with NxN nodes
+    Creates empty adjacency matrices for top graph and residual graph with NxN nodes
 */
 function initialiseMatrices(){
     topAdjMatrix = [], resAdjMatrix = [];
@@ -88,8 +84,7 @@ function initialiseMatrices(){
 }
 
 /*
-    Function:   populateTopAdjMatrix
-    Purpose:    Populates topAdjMatrix with the data from topEdges
+    Populates topAdjMatrix with the data from topEdges
 */
 function populateTopAdjMatrix(edges) {
     for(var i = 0; i < edges.length; i++){
@@ -99,8 +94,7 @@ function populateTopAdjMatrix(edges) {
 }
 
 /*
-    Function:   assignDataSets
-    Purpose:    Takes arrays 'nodes' and 'edges' and creates vis.DataSets with them.
+    Takes arrays 'nodes' and 'edges' and creates vis.DataSets with them.
 */
 function assignDataSets(nodes, edges){
     topNodes = new vis.DataSet(nodes);
@@ -118,8 +112,7 @@ function assignDataSets(nodes, edges){
 }
 
 /*
-    Function:   addDragListener
-    Purpose:    So that if a node is dragged in the top graph, its movement is copied in the 
+    So that if a node is dragged in the top graph, its movement is copied in the
                 residual graph, and vice versa.
 */
 function addDragListener() {
@@ -134,8 +127,7 @@ function addDragListener() {
 }
 
 /*
-    Function:   generateDefaultGraph
-    Purpose:    Creates a graph with hard-coded arrays of nodes and edges. Sets this graph as 
+    Creates a graph with hard-coded arrays of nodes and edges. Sets this graph as
                 the top graph.
 */
 function generateDefaultGraph(){
@@ -170,8 +162,7 @@ function generateDefaultGraph(){
 }
 
 /*
-    Function:   generateRandomGraph
-    Purpose:    Generates a graph such that:
+    Generates a graph such that:
                 - There is a source node S and a sink node T
                 - S is the leftmost node and T is the rightmost
                 - There are no loops or dead ends (all nodes are on a path from S to T)
@@ -213,8 +204,7 @@ function generateRandomGraph(){
 }
 
 /*
-    Function:   connectNodesToSink
-    Purpose:    Stage 1 of generating a random graph. Connects all nodes except for S
+  Stage 1 of generating a random graph. Connects all nodes except for S
                 so that they are all connected to, or on a path to, T.
 
 */
@@ -247,8 +237,7 @@ function connectNodesToSink(edges) {
 }
 
 /*
-    Function:   connectNodesFromSource
-    Purpose:    Stage 2 of generating a random graph. Connects nodes with no incoming
+    Stage 2 of generating a random graph. Connects nodes with no incoming
                 from, or on a path from, S. All nodes at the end of this stage are now
                 on a path from S to T.
 
@@ -271,8 +260,7 @@ function connectNodesFromSource(edges, onlyOutgoing){
 }
 
 /*
-    Function:   addRemainingEdges
-    Purpose:    Stage 3 of generating a random graph. Adds edges randomly between nodes
+    Stage 3 of generating a random graph. Adds edges randomly between nodes
                 until the number of edges == E.
 
 */
@@ -287,8 +275,7 @@ function addRemainingEdges(edges, E){
 }
 
 /*
-    Function:   createGraphFromUpload
-    Purpose:    Called after a json file uploaded by the user has been found to be correctly
+    Called after a json file uploaded by the user has been found to be correctly
                 formatted. Creates a graph using the nodes and edges in the file.
 
 */
@@ -313,9 +300,8 @@ function createGraphFromUpload(fileNodes, fileEdges){
 }
 
 /*
-    Function:   drawNewGraph
-    Purpose:    Adds S and T on the left and right of a blank canvas. Enables drawing mode,
-                which allows the user to draw the rest of the graph. 
+    Adds S and T on the left and right of a blank canvas. Enables drawing mode,
+                which allows the user to draw the rest of the graph.
 
 */
 function drawNewGraph(){
@@ -334,8 +320,7 @@ function drawNewGraph(){
 }
 
 /*
-    Function:   saveDrawnGraph
-    Purpose:    When a user has pressed "save" after drawing their graph, this makes the id
+    When a user has pressed "save" after drawing their graph, this makes the id
                 of T equal to N-1, and updates the edges connecting to T accordingly. The DataSets
                 are saved, and the drawing mode is disabled.
 

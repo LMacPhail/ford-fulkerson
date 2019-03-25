@@ -3,7 +3,7 @@
   File for generating data to populate graphs with
 
   Variables:
-    nodes:    array to temporarily store nodes
+    nodes:    array to temporarily store nodes (may edit and then update DataSet)
     edges:    array to temporarily store edges
 
     topNodes: vis DataSet representing the nodes in the top and residual graph
@@ -16,20 +16,37 @@
     algTopData: A copy of top data for the algorithm to run on
     algResData: A copy of the residual data for the algorithm to run on
 
+    topAdjMatrix, resAdjMatrix: Adjacency martix representations for the top
+                                and residual graphs.
+
     N:  int, number of nodes in the graph (when generated)
     E:  int, number of edges in the graph (when generated)
+    T:  int, N-1
+
 
   Functions:
+    General graph data functions:
+    (65)  getMatrix(networkID)
+    (75)  findDuplicateEdges(networkID, from, to)
+    (85)  addEdge(localEdges, id, from, to, cap)
+    (100)  addNode(localNodes, id, label, x, y)
+    (125)  getConnectedNodes(networkID, nodeID, direction)
+    (145)  getEdgeData(data, from, to)
+    (165)  reverseEdgeIDs(edges)
 
-    (40)    defaultGraphData()
 
-    (100)   findDuplicateEdges(edges, from, to)
+    Downloading graph data functions:
+    (180)  downloadGraphAsTxt(filename)
+    (195)  createTxtFileFromGraph()
+    (205)  constructJsonArray(type)
+    (216)  constructJsonObject(obj, id, type)
 
-    (110)      generateGraphData()
+    Uploading graph data functions:
+    (230)  checkValidGraph(fileNodes, fileEdges)
+    (275)  checkNodesAndEdgesExist(n, e)
+    (295)  checkNodeIdsConsecutive(nodes)
 
-    (270)      getConnectedNodes(data, nodeId, direction)
-
-    (300)      getEdgeData(data, node1, node2)
+    (305-380)  drawing add/delete node/edge functions
 
 ******************************************************************************/
 
@@ -41,21 +58,27 @@ var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
 var newNodeID, newEdgeID, edgeID;
 
-
-function getMatrix(data){
-    if (data == RES) return resAdjMatrix; else if (data == TOP) return topAdjMatrix; else return data;
+/*
+  Returns the adjacency matrix of the network specified by networkID.
+*/
+function getMatrix(networkID){
+    if (networkID == RES) return resAdjMatrix; else if (networkID == TOP) return topAdjMatrix; else return networkID;
 }
 
 /*
-Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
-is already an edge with these nodes and -1 if there is not
+  Given a set of edges and an id of the nodes 'from' and 'to', returns 1 if there
+  is already an edge with these nodes and -1 if there is not
 */
-function findDuplicateEdges(data, from, to){
-    var matrix = getMatrix(data);
+function findDuplicateEdges(networkID, from, to){
+    var matrix = getMatrix(networkID);
     if(matrix[from][to] != null) return 1;
     return -1;
 }
 
+/*
+  Adds an edge to the array localEdges, and returns the array. Also includes the new
+    edge in the top adjacency matrix.
+*/
 function addEdge(localEdges, id, from, to, cap){
     if(cap == null) cap = Math.random() * 10 | 1;
     localEdges.push({
@@ -67,6 +90,9 @@ function addEdge(localEdges, id, from, to, cap){
     return localEdges;
 }
 
+/*
+  Adds a node to the array localNodes, and returns the array.
+*/
 function addNode(localNodes, id, label, x, y){
     var color = {background: '#00BCD4', border: '#00BCD4',
                 highlight: { background :'#757575', border: '#212121'},
@@ -85,107 +111,6 @@ function addNode(localNodes, id, label, x, y){
     return localNodes;
 }
 
-function connectNodesToSink(edges) {
-    var nodesToSink = [], //  Nodes that are connected to T (or T itself)
-        onlyOutgoing = [],  //  Nodes that are in nodesToSink but have no incoming edges
-        rand_id;
-
-    nodesToSink.push(T);
-
-    /* Construct graph from right to left, beginning at T */
-    for(i = T - 1; i > 0; i--){
-        if(i > T-3){    // To ensure that T has at least 2 incoming edges
-          edges = addEdge(edges, newEdgeID, i, T, null);
-        } else {
-          // Connect to either T or one of the nodes already connected to T
-          do rand_id = (Math.random() * nodesToSink.length | 0); while (i == nodesToSink[rand_id]);
-          edges = addEdge(edges, newEdgeID, i, nodesToSink[rand_id], null);
-        }
-        newEdgeID++;
-
-        onlyOutgoing.push(i);    // add 'from' node to onlyOutgoing
-        if((nodesToSink[rand_id] != T) && (onlyOutgoing.indexOf(nodesToSink[rand_id]) != -1)){
-            // if 'to' not != T remove it from onlyOutgoing
-            onlyOutgoing.splice(onlyOutgoing.indexOf(nodesToSink[rand_id]), 1);
-        }
-        nodesToSink.push(i);  // add node to nodesToSink
-    }
-    return onlyOutgoing;
-}
-
-function connectNodesFromSource(edges, onlyOutgoing){
-    var from;
-    while(onlyOutgoing.length > 0){
-        if(newEdgeID == E) break;
-        if(i < 2){
-            // To ensure that S has at least 2 outgoing edges
-            edges = addEdge(edges, newEdgeID, 0, onlyOutgoing[i], null);
-        } else {
-            do from = (Math.random() * T | 0); while (onlyOutgoing[i] == from);
-            edges = addEdge(edges, newEdgeID, from, onlyOutgoing[i], null);
-
-        }
-        newEdgeID++;
-        onlyOutgoing.splice(i, 1);
-    }
-}
-
-function addRemainingEdges(edges, E){
-    for (i = newEdgeID; i < E; i++){
-        do {  // prevents loops and duplicate parallel edges
-            from = (Math.random() * T | 0); to = (Math.random() * N | 1);
-        } while ((from == to) || (findDuplicateEdges(TOP, from, to) == 1));
-        edges = addEdge(edges, newEdgeID, from, to, null);
-        newEdgeID++;
-    }
-}
-
-function reverseEdgeIDs(edges){
-    var revEdges = [], j = 0;
-    for(i = newEdgeID-1; i >= 0; i--){
-        revEdges = addEdge(revEdges, j, edges[i].from, edges[i].to, getCapacity(edges[i].label));
-        j++;
-    }
-    return revEdges;
-}
-
-function downloadGraphAsTxt(filename) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(createTxtFileFromGraph()));
-    element.setAttribute('download', filename);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-}
-
-function createTxtFileFromGraph(){
-    var NODES = 0, EDGES = 1;
-    return "{\n\"nodes\" : [" + constructJsonArray(NODES)
-            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES)
-            + "\n]\n}";
-}
-
-function constructJsonArray(type) {
-    var text = "", array, i;
-    if(type == 0) array = topNodes; else if (type == 1) array = topEdges;
-    for (i = 0; i < array.length; i++){
-        text += constructJsonObject(array.get(i), i, type);
-        if(i < array.length -1) text += ",";
-    }
-    return text;
-}
-
-function constructJsonObject(data, id, type){
-    if(type == 0){
-        return "\n{ \"id\": " + id + ", \"x\": " + data.x + ", \"y\": " + data.y + "}";
-    } else if(type == 1) {
-        return "\n{ \"from\": " + data.from + ", \"to\": "
-            + data.to + ", \"capacity\": " + getCapacity(data.label) + "}";
-    }
-}
-
-
 /*
 Given a node id and a direction:
 
@@ -193,9 +118,9 @@ direction = 'to' - returns array of nodeIds that node connects to
 direction = 'from' - returns array of nodeIds that connect to node
 
 */
-function getConnectedNodes(data, nodeID, direction) {
+function getConnectedNodes(networkID, nodeID, direction) {
     // console.log("getting connected nodes");
-    var nodeList = [], tfList = [], matrix = getMatrix(data);
+    var nodeList = [], tfList = [], matrix = getMatrix(networkID);
     if (direction == 'to'){
         tfList = matrix[nodeID];
     } else if (direction == 'from') {
@@ -213,13 +138,12 @@ function getFromList(matrix, nodeID){
     return toList;
 }
 
-
 /*
 Takes 2 node ids and finds the id of the edge between them and its direction
 direction 0 if backwards, 1 if forwards
 */
-function getEdgeData(data, from, to){
-    var edgeData = {}, matrix = getMatrix(data);
+function getEdgeData(networkID, from, to){
+    var edgeData = {}, matrix = getMatrix(networkID);
     // console.log(matrix);
     var resEdge = algResEdges.get(resAdjMatrix[from][to]);
     // console.log(resEdge.backwards);
@@ -231,10 +155,75 @@ function getEdgeData(data, from, to){
     return edgeData;
 }
 
-function isBetween(comp, lower, upper){
-    if((comp >= lower) && (comp < upper)) return true; else return false;
+/*
+  Reverses the ids of the edges in the top graph when the graph has been randomly generated.
+    This is because the graph builds backwards from T, so the order of the residual graph
+    being built looks confusing. It doesn't solve the issue, but mitigates it.
+*/
+function reverseEdgeIDs(edges){
+    var revEdges = [], j = 0;
+    for(i = newEdgeID-1; i >= 0; i--){
+        revEdges = addEdge(revEdges, j, edges[i].from, edges[i].to, getCapacity(edges[i].label));
+        j++;
+    }
+    return revEdges;
 }
 
+/*
+  =================================================================================
+  Downloading graph data functions. Constructs and downloads a graph as a text file`
+
+  Creates a file, adds a json representation of the graph to it, then downloads it.
+*/
+function downloadGraphAsTxt(filename) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(createTxtFileFromGraph()));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+/*
+  Constructs a string of the graph as a json file.
+*/
+function createTxtFileFromGraph(){
+    var NODES = 0, EDGES = 1;
+    return "{\n\"nodes\" : [" + constructJsonArray(NODES)
+            + "\n],\n\"edges\" : [" + constructJsonArray(EDGES)
+            + "\n]\n}";
+}
+
+/*
+  Constructs and returns a string of a json array of nodes or edges (depending on type).
+*/
+function constructJsonArray(type) {
+    var text = "", array, i;
+    if(type == 0) array = topNodes; else if (type == 1) array = topEdges;
+    for (i = 0; i < array.length; i++){
+        text += constructJsonObject(array.get(i), i, type);
+        if(i < array.length -1) text += ",";
+    }
+    return text;
+}
+
+/*
+  Constructs a json object to be added into the array.
+*/
+function constructJsonObject(obj, id, type){
+    if(type == 0){
+        return "\n{ \"id\": " + id + ", \"x\": " + obj.x + ", \"y\": " + obj.y + "}";
+    } else if(type == 1) {
+        return "\n{ \"from\": " + obj.from + ", \"to\": "
+            + obj.to + ", \"capacity\": " + getCapacity(obj.label) + "}";
+    }
+}
+
+/*
+  =================================================================================
+  Uploading graph data functions. These are to validate an uploaded file contents.
+*/
 function checkValidGraph(fileNodes, fileEdges){
     var nl = fileNodes.length, el = fileEdges.length;
 
@@ -275,51 +264,76 @@ function checkValidGraph(fileNodes, fileEdges){
     return true;
 }
 
+function isBetween(comp, lower, upper){
+    if((comp >= lower) && (comp < upper)) return true; else return false;
+}
+
+/*
+  Ensures that there is a at least one edge and two nodes (S and T) in the file.
+*/
 function checkNodesAndEdgesExist(n, e){
-    if((n == 0) && (e == 0)) {
-        alert("no nodes or edges in file!");
+    if((n < 2) && (e == 0)) {
+        alert("not enough nodes, and no edges in file!");
         return false;
     } else if (e == 0) {
         alert("no edges in file!");
         return false;
-    } else if (n == 0) {
-        alert("no nodes in file!");
+    } else if (n < 2) {
+        alert("not enough nodes in file!");
         return false;
     } else {
         return true;
     }
 }
 
+/*
+  Node IDs must be consecutive, as specified in the instructions.
+*/
 function checkNodeIdsConsecutive(nodes){
     for(var i = 0; i < nodes.length; i++) if (nodes[i].id != i) return false;
     return true;
 }
 
-function drawAddNode(data, callback) {
-  data.id = newNodeID, data.label = "n" + newNodeID, data.physics = false;
-  data.color = {
+/*
+  =================================================================================
+  Drawing graph data functions. For the addition and deletion of nodes and edges.
+
+
+  Adds a node in the correct`style and format.
+*/
+function drawAddNode(nodeData, callback) {
+  nodeData.id = newNodeID, nodeData.label = "n" + newNodeID, nodeData.physics = false;
+  nodeData.color = {
       background: '#00BCD4', border: '#00BCD4',
       highlight: { background :'#757575', border: '#212121'},
       hover: { background :'#757575', border: '#212121'}
   };
-  data.font = { color: '#ffffff'};
-  callback(data);
-  nodes = addNode(nodes, newNodeID, data.label, data.x, data.y);
+  nodeData.font = { color: '#ffffff'};
+  callback(nodeData);
+  nodes = addNode(nodes, newNodeID, nodeData.label, nodeData.x, nodeData.y);
   newNodeID++;
 }
 
-function drawAddEdge(data, capacity, callback){
-  data.id = newEdgeID, data.arrows = {to: {enabled: true}}, data.font = {strokeWidth: 5};
-  data.width = 3, data.arrowStrikethrough = false;
-  data.label = 0 + '/' + capacity;
-  edges = addEdge(edges, newEdgeID, data.from, data.to, capacity);
+/*
+  Adds an edge in the correct style and format
+*/
+function drawAddEdge(edgeData, capacity, callback){
+  edgeData.id = newEdgeID, edgeData.arrows = {to: {enabled: true}}, edgeData.font = {strokeWidth: 5};
+  edgeData.width = 3, edgeData.arrowStrikethrough = false;
+  edgeData.label = 0 + '/' + capacity;
+  edges = addEdge(edges, newEdgeID, edgeData.from, edgeData.to, capacity);
   topEdges.update(edges);
   newEdgeID++;
-  callback(data);
+  callback(edgeData);
 }
 
-function drawDeleteNode(data, callback){
-  var nodeIds = data.nodes, i;
+/*
+  Deletes a node, decrements each node ID greater than the deleted node's (so that)
+      they remain consecutive), and updates the labels.
+      Calls updateEdgesToFrom(i) so that edges remain connected to the correct nodes.
+*/
+function drawDeleteNode(nodeData, callback){
+  var nodeIds = nodeData.nodes, i;
   nodes.splice(nodeIds[0] + 1, 1);
   topNodes.remove(nodeIds[0]);
   for(i = nodeIds[0] + 1; i < nodes.length; i++){
@@ -329,13 +343,17 @@ function drawDeleteNode(data, callback){
       topNodes.remove(i);
   }
   newNodeID--;
-  drawDeleteEdge(data);
+  drawDeleteEdge(nodeData);
   topNodes.update(nodes);
-  callback(data);
+  callback(nodeData);
 }
 
-function drawDeleteEdge(data) {
-    var  edgeIds = data.edges, i, victim;
+/*
+  Multiple edges may be deleted at a time. This goes through the list of edges being
+      deleted, and treats them in much the same way as deleted nodes.
+*/
+function drawDeleteEdge(edgeData) {
+    var  edgeIds = edgeData.edges, i, victim;
     while(edgeIds.length > 0){
       victim = edgeIds.pop();
       for(i = victim + 1; i < edges.length; i++){
@@ -357,4 +375,3 @@ function updateEdgesToFrom(node){
     if(edge.from == node) edge.from = edge.from - 1;
   }
 }
-
