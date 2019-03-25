@@ -7,19 +7,19 @@
 
   Functions:
 
-    () loadNewGraph(graphGenCallBack, nodes, edges)
-    () initialiseMatrices()
-    () populateTopAdjMatrix(edges)
-    () assignDataSets(nodes, edges)
-    () resetCanvas()
-    () resetAnimation()
-    () addDragListener()
+    (30) loadNewGraph(graphGenCallBack, nodes, edges)
+    (45) resetCanvas()
+    (60) resetAnimation()
+    (80) initialiseMatrices()
+    (95) populateTopAdjMatrix(edges)
+    (105) assignDataSets(nodes, edges)
+    (125) addDragListener()
 
-    () generateDefaultGraph()
-    () generateRandomGraph()
-    () createGraphFromUpload(fileNodes, fileEdges)
-    () drawNewGraph()
-    () saveDrawnGraph()
+    (140) generateDefaultGraph()
+    (180) generateRandomGraph()
+    (220) createGraphFromUpload(fileNodes, fileEdges)
+    (320) drawNewGraph()
+    (340) saveDrawnGraph()
 
 ******************************************************************************/
 
@@ -210,6 +210,80 @@ function generateRandomGraph(){
 
     assignDataSets(nodes, edges);
     topNodes.update([{id:0, x: -250},{id:T, x:300}]);
+}
+
+/*
+    Function:   connectNodesToSink
+    Purpose:    Stage 1 of generating a random graph. Connects all nodes except for S
+                so that they are all connected to, or on a path to, T.
+
+*/
+function connectNodesToSink(edges) {
+    var nodesToSink = [], //  Nodes that are connected to T (or T itself)
+        onlyOutgoing = [],  //  Nodes that are in nodesToSink but have no incoming edges
+        rand_id;
+
+    nodesToSink.push(T);
+
+    /* Construct graph from right to left, beginning at T */
+    for(i = T - 1; i > 0; i--){
+        if(i > T-3){    // To ensure that T has at least 2 incoming edges
+          edges = addEdge(edges, newEdgeID, i, T, null);
+        } else {
+          // Connect to either T or one of the nodes already connected to T
+          do rand_id = (Math.random() * nodesToSink.length | 0); while (i == nodesToSink[rand_id]);
+          edges = addEdge(edges, newEdgeID, i, nodesToSink[rand_id], null);
+        }
+        newEdgeID++;
+
+        onlyOutgoing.push(i);    // add 'from' node to onlyOutgoing
+        if((nodesToSink[rand_id] != T) && (onlyOutgoing.indexOf(nodesToSink[rand_id]) != -1)){
+            // if 'to' not != T remove it from onlyOutgoing
+            onlyOutgoing.splice(onlyOutgoing.indexOf(nodesToSink[rand_id]), 1);
+        }
+        nodesToSink.push(i);  // add node to nodesToSink
+    }
+    return onlyOutgoing;
+}
+
+/*
+    Function:   connectNodesFromSource
+    Purpose:    Stage 2 of generating a random graph. Connects nodes with no incoming
+                from, or on a path from, S. All nodes at the end of this stage are now
+                on a path from S to T.
+
+*/
+function connectNodesFromSource(edges, onlyOutgoing){
+    var from;
+    while(onlyOutgoing.length > 0){
+        if(newEdgeID == E) break;
+        if(i < 2){
+            // To ensure that S has at least 2 outgoing edges
+            edges = addEdge(edges, newEdgeID, 0, onlyOutgoing[i], null);
+        } else {
+            do from = (Math.random() * T | 0); while (onlyOutgoing[i] == from);
+            edges = addEdge(edges, newEdgeID, from, onlyOutgoing[i], null);
+
+        }
+        newEdgeID++;
+        onlyOutgoing.splice(i, 1);
+    }
+}
+
+/*
+    Function:   addRemainingEdges
+    Purpose:    Stage 3 of generating a random graph. Adds edges randomly between nodes
+                until the number of edges == E.
+
+*/
+function addRemainingEdges(edges, E){
+    for (i = newEdgeID; i < E; i++){
+        do {  // prevents loops and duplicate parallel edges
+            from = (Math.random() * T | 0); to = (Math.random() * N | 1);
+        } while ((from == to) || (findDuplicateEdges(TOP, from, to) == 1));
+        edges = addEdge(edges, newEdgeID, from, to, null);
+        newEdgeID++;
+    }
 }
 
 /*

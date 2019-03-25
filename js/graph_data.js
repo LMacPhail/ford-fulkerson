@@ -39,7 +39,7 @@ var topData, resData, algTopData, algResData;
 var N, E, T;
 var resAdjMatrix = [], topAdjMatrix = [];
 var TOP = 0, RES = 1;
-var newNodeID, newEdgeID;
+var newNodeID, newEdgeID, edgeID;
 
 
 function getMatrix(data){

@@ -60,7 +60,6 @@ function addEdgeToRes(id, label, from, to, backwards){
   resAdjMatrix[from][to] = id;
 }
 
-var edgeID = 0;
 
 /*
   Function: buildResidualGraph
@@ -69,6 +68,7 @@ var edgeID = 0;
             to the residual graph. 
  */
 function buildResidualGraph(){
+    edgeID = 0;
     prepareOutputLine(6);
     var edges = [];
     var cap, i;
