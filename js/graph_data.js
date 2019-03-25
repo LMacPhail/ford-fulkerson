@@ -336,7 +336,6 @@ function drawDeleteNode(data, callback){
 
 function drawDeleteEdge(data) {
     var  edgeIds = data.edges, i, victim;
-    console.log(edgeIds);
     while(edgeIds.length > 0){
       victim = edgeIds.pop();
       for(i = victim + 1; i < edges.length; i++){
@@ -358,3 +357,4 @@ function updateEdgesToFrom(node){
     if(edge.from == node) edge.from = edge.from - 1;
   }
 }
+

@@ -4,9 +4,13 @@
 
   Functions:
 
-    (20)  animateGraph(steps)
+    (55)  animateAlgorithm(steps)
 
-    (70)  highlightAugmentingPath(path)
+    (75)  selectNetworkEdges(networkID)
+    (90)  executeAnimationStep()
+    (155 - 260)  step execution functions
+
+    (275 - 370)  step creation/preparation functions
 
 ******************************************************************************/
 var animationSteps = [];
@@ -14,16 +18,32 @@ var playState = PLAY;
 step = 0;
 var PLAY = 1,
     REWIND = -1,
-    STEP_FOWARD = 2,
+    STEP_FORWARD = 2,
     STEP_BACKWARD = -2,
     PAUSE = 0;
+
+var traceback = [
+    "capacity - flow = $, adding forwards edge of value $",
+
+    "flow > 0, adding backwards edge of value $",
+    "adding forwards edge of value $",
+    "augmenting path found: $",
+
+    "searching for augmenting path...",
+    "no augmenting path found",
+    "Building residual graph...",
+    "Updating residual graph...",
+
+    "augmenting edge between nodes $ and $",
+    "augmenting forwards edge between nodes $ and $",
+    "decrementing backwards edge between nodes $ and $",
+];
 
 /*
   Function: animateAlgorithm(steps)
 
-  Purpose:  When given an array of animation steps, iterates through each with
-            a given interval, and updates the graphs on the page
-
+  Purpose:  When given an array of animation steps, iterates and executes each
+            step with a specified time interval between
 */
 function animateAlgorithm(){
   var slider = document.getElementById("pb_slider");
@@ -37,16 +57,28 @@ function animateAlgorithm(){
   }
 }
 
-function selectNetwork(network){
-    if(network == RES) {
+/*
+    Function:   selectNetworkEdges(networkID)
+    Purpose:    Given a networkID (TOP or RES), returns topEdges or resEdges for
+                manipulation. If networkID is null the edges aren't being manipulated
+                at this stage, so returns null.
+*/
+function selectNetworkEdges(networkID){
+    if(networkID == RES) {
         return resEdges;
-    } else if (network == TOP) {
+    } else if (networkID == TOP) {
         return topEdges;
-    } else if (network == null) {
+    } else if (networkID == null) {
         return null;
     }
 }
 
+/*
+    Function:   executeAnimationStep()
+    Purpose:    Extracts data from the current animation step, and executes the action
+                for that step. Increments or decrements the animationSteps index, depending
+                on playState.
+*/
 function executeAnimationStep(){
     if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         if (step > 0) step--; else playState = togglePlayPause();
@@ -61,15 +93,19 @@ function executeAnimationStep(){
 
     if(outputID != null) printTraceback(constructTracebackLine(outputID, outputData));
 
-    if(network != null) edges = selectNetwork(network);
+    if(network != null) edges = selectNetworkEdges(network);
     else {
-        if(playState > 0) step++;
+        if((playState == PLAY) || (playState == STEP_FORWARD)) step++;
         return;
     }
 
     switch(animationSteps[step].action){
         case("reveal"):
-            if(playState > 0) revealResidualGraph(); else if(playState < 0) setNewTopGraph();
+            if((playState == PLAY) || (playState == STEP_FORWARD)) {
+                revealResidualGraph(); 
+            } else if ((playState == REWIND) || (playState == STEP_BACKWARD)) {
+                resetCanvas();
+            }
             break;
 
         case("remove"):
@@ -102,26 +138,32 @@ function executeAnimationStep(){
     }
 
     highlightPseudocode(pStep);
-    if(playState > 0) step++;
+    if((playState == PLAY) || (playState == STEP_FORWARD)) step++;
 
 }
 
+/**
+ * ========================================================================================
+ *  Execution functions: One for each action an animation step may contain, as well as
+ *                       two for highlighting the relevant line of pseudocode and printing
+ *                       a line for the execution trace.
+ */
 function executeRemoveEdgeStep(edges, edgeID, currentStep){
-    if(playState > 0){
+    if((playState == PLAY) || (playState == STEP_FORWARD)){
         currentStep.prevData = edges.get(edgeID);
         edges.remove(edgeID);
-    } else if (playState < 0){
+    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         edges.add(currentStep.prevData);
     }
 }
 
 function executeHighlightEdgeStep(edges, edgeID, currentStep){
     var edge_color, dashBool;
-    if(playState > 0){
+    if((playState == PLAY) || (playState == STEP_FORWARD)){
         edge_color = currentStep.color;
         dashBool = false;
         currentStep.prevData = edges.get(edgeID);
-    } else if (playState < 0){
+    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         var prevData = currentStep.prevData;
         edge_color = prevData.color;
         dashBool = prevData.dashes;
@@ -131,10 +173,10 @@ function executeHighlightEdgeStep(edges, edgeID, currentStep){
 
 function executeDashEdgeStep(edges, edgeID, currentStep){
     var dashBool;
-    if(playState > 0){
+    if((playState == PLAY) || (playState == STEP_FORWARD)){
       dashBool = currentStep.dash;
       currentStep.prevData = !dashBool;
-    } else if (playState < 0) {
+    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)) {
       dashBool = currentStep.prevData;
     }
     edges.update([{id: edgeID, dashes: dashBool}]);
@@ -142,10 +184,10 @@ function executeDashEdgeStep(edges, edgeID, currentStep){
 
 function executeLabelEdgeStep(edges, edgeID, currentStep){
     var label;
-    if(playState > 0){
+    if((playState == PLAY) || (playState == STEP_FORWARD)){
         currentStep.prevData = edges.get(edgeID);
         label = currentStep.label;
-    } else if (playState < 0){
+    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         var prevData = currentStep.prevData;
         label = prevData.label;
     }
@@ -153,7 +195,7 @@ function executeLabelEdgeStep(edges, edgeID, currentStep){
 }
 
 function executeAddEdgeStep(edges, edgeID, currentStep){
-    if(playState > 0){
+    if((playState == PLAY) || (playState == STEP_FORWARD)){
         var label = currentStep.label,
             from = currentStep.from,
             to = currentStep.to;
@@ -165,19 +207,32 @@ function executeAddEdgeStep(edges, edgeID, currentStep){
             arrows: {to: {enabled: true}},
             arrowStrikethrough: false
         });
-    } else if (playState < 0){
+    } else if ((playState == REWIND) || (playState == STEP_BACKWARD)){
         edges.remove(edgeID);
     }
 }
 
 function updateFlowCounter(currentStep){
-    if(playState > 0) {
+    if((playState == PLAY) || (playState == STEP_FORWARD)) {
         currentStep.prevData = (document.getElementById("flow_counter").innerHTML).split(' ').pop();
         document.getElementById("flow_counter").innerHTML = "Current flow: " + currentStep.m;
-    } else if(playState < 0) {
+    } else if((playState == REWIND) || (playState == STEP_BACKWARD)) {
         var prevData = currentStep.prevData;
         document.getElementById("flow_counter").innerHTML = "Current flow: " + prevData;
     }
+}
+
+function revealResidualGraph(){
+    var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
+    top_graph.style.height = '50%';
+    res_graph.style.height = '50%';
+
+    resGraph = new vis.Network(resContainer, resData, options);
+    topGraph = new vis.Network(mainContainer, topData, options);
+    topGraph.fit();
+    resGraph.fit();
+    addDragListener();
+    step++;
 }
 
 function highlightPseudocode(pStep){
@@ -190,6 +245,26 @@ function highlightPseudocode(pStep){
     pseudocode[pStep].style.fontWeight = "900";
     if(pStep == 3) document.getElementById("flow_counter").innerHTML.replace("Current", "Maximum");
 }
+
+function printTraceback(line){
+    var currentTB = document.getElementById('traceback').innerHTML;
+    document.getElementById('traceback').innerHTML = currentTB + '<p class="caption traceback_line">' + line + '</p>';
+    document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
+}
+
+/*
+    End of execution functions
+    ==============================================================================================
+
+    Step creation functions:    All individual functions format their arguments to call 
+                                addAnimationStep, which pushes the arguments to the animationSteps
+                                array as an object.
+
+                                highlightAugmentingPath(), leavePathHighlighted(), and 
+                                constructTracebackLine() use the individual functions to push 
+                                larger groups of steps to the array.
+
+*/
 
 function addAnimationStep(network, action, edgeID, pStep, color, label, from, to, dash, outputID, outputData){
     animationSteps.push({
@@ -219,36 +294,6 @@ function createRemoveEdgeAnimation(network, edgeID, pStep, outputID, outputData)
 
 function prepareOutputLine(outputID, outputData){
     addAnimationStep(null, null, null, null, null, null, null, null, null, outputID, outputData);
-}
-
-function printTraceback(line){
-    var currentTB = document.getElementById('traceback').innerHTML;
-    document.getElementById('traceback').innerHTML = currentTB + '<p class="caption traceback_line">' + line + '</p>';
-    document.getElementById('traceback').scrollTop = document.getElementById('traceback').scrollHeight;
-}
-
-function revealResidualGraph(){
-    var top_graph = document.getElementById("top_graph"), res_graph = document.getElementById("res_graph");
-    top_graph.style.height = '50%';
-    res_graph.style.height = '50%';
-
-    resGraph = new vis.Network(resContainer, resData, options);
-    topGraph = new vis.Network(mainContainer, topData, options);
-    topGraph.fit();
-    resGraph.fit();
-    addDragListener();
-    step++;
-}
-
-function addDragListener() {
-  topGraph.addEventListener("dragEnd", function(){
-      topGraph.storePositions();
-      resGraph.storePositions();
-  });
-  resGraph.addEventListener("dragEnd", function(){
-      topGraph.storePositions();
-      resGraph.storePositions();
-  });
 }
 
 /*
@@ -321,19 +366,7 @@ function constructTracebackLine(index, data){
     }
 }
 
-var traceback = [
-    "capacity - flow = $, adding forwards edge of value $",
-
-    "flow > 0, adding backwards edge of value $",
-    "adding forwards edge of value $",
-    "augmenting path found: $",
-
-    "searching for augmenting path...",
-    "no augmenting path found",
-    "Building residual graph...",
-    "Updating residual graph...",
-
-    "augmenting edge between nodes $ and $",
-    "augmenting forwards edge between nodes $ and $",
-    "decrementing backwards edge between nodes $ and $",
-];
+/**
+ *  End of step creation functions
+ *  ===============================================================================================
+ */
