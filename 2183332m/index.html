@@ -1,0 +1,147 @@
+    <!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+
+    <title>Ford Fulkerson</title>
+    <script type="text/javascript" src="js/vis.js"></script>
+    <script type="text/javascript" src="js/graph_data.js"></script>
+    <script type="text/javascript" src="js/graph_creation.js"></script>
+    <script type="text/javascript" src="js/animate.js"></script>
+    <script type="text/javascript" src="js/ford_fulkerson.js"></script>
+
+    <link href="css/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href=" css/styles.css" type="text/css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+        <div class="row" id="content">
+            <div class="col s3" id="info_bar">
+                <div class="section center-align" id="alg_title">
+                    Ford Fulkerson
+                </div>
+                <ul class="collapsible" id="new_graph_options">
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">add</i>Generate New Graph</div>
+                        <div class="collapsible-body">
+                            <span>
+                                <button class="waves-effect btn cyan" id="load_default_graph" onclick="loadNewGraph(generateDefaultGraph);">default</button>
+                                <button class="waves-effect btn cyan" onclick="loadNewGraph(generateRandomGraph);">random</button>
+                                <div id="N_controls">
+                                    <p>Number of nodes in random graph: </p>
+                                    <input type="number" class="dropdown-button" id="N_picker" value="6"></input>
+                                </div>
+                            </span></div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header disabled"><i class="material-icons">file_download</i>Upload/Download Graph</div>
+                        <div class="collapsible-body" id="upload_download">
+                            <span>
+                                <p class="caption">Graphs can be stored as json files with the format:</p>
+                                <div id="json_example">
+                                    <p>{</p>
+                                    <p>"nodes" : [{ "id": 0, "x": -300, "y": 0},</p>
+                                    <p>...,{ "id": 4, "x": 300, "y": 0}],</p>
+                                    <p>"edges" : [{ "from": 0, "to": 1, "capacity": 2},</p>
+                                    <p>...,{ "from": 3, "to": 4, "capacity": 4}]</p>
+                                    <p>}</p>
+                                </div>
+                                <ul>
+                                    <li class="graph-rule">node coordinates are not required</li>
+                                    <li class="graph-rule">node ids must be consecutive</li>
+                                    <li class="graph-rule">node 0 is S, and node N is T where N is the number of nodes</li>
+                                </ul>
+                                <p class="caption">For an example, click 'download' for a json representation of the current graph.</p>
+                                <button class="waves-effect btn cyan" id="download_button" onclick="downloadGraphAsTxt('FFgraph.json')">Download</button>
+                                <label class="waves-effect btn cyan" for="uploadFile">Upload</label>
+                                <input type="file" id="uploadFile"></input>
+
+                            </span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">create</i>Draw New Graph</div>
+                        <div class="collapsible-body"><span>
+                            <button class="waves-effect btn cyan" onclick="drawNewGraph();" id="drawNew">Draw New</button>
+                            <p id="drawing_instructions">Follow instructions at top of screen</p>
+                            <button class="waves-effect btn cyan disabled" onclick="loadNewGraph(saveDrawnGraph);" id="saveGraph">Save</button>
+                        </span></div>
+                    </li>
+                </ul>
+
+                <div id="algorithm_info">
+                    <div class="col 12 z-depth-1" id="pseudocode">
+                        <p class="pseudocode_step">build residual graph</p>
+                        <p class="pseudocode_step">while(maximum flow has not been found):</p>
+                        <p class="pseudocode_step indent1">search for augmenting path in residual graph from S to T</p>
+                        <p class="pseudocode_step indent1">if augmenting path is found:</p>
+                        <p class="pseudocode_step indent2">for each edge in path:</p>
+                        <p class="pseudocode_step indent3">augment flow along forwards edge</p>
+                        <p class="pseudocode_step indent3">decrement flow along backwards edge</p>
+                        <p class="pseudocode_step indent1">else:</p>
+                        <p class="pseudocode_step indent2">maximum flow has been found: break;</p>
+                        <p class="pseudocode_step indent1">update residual graph</p>
+                        <p class="pseudocode_step">reveal edges in minimum cut</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="col 12" id="traceback">
+                        <p class="caption traceback_line">press play to begin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s9" id="playback_screen">
+                <div id="network_canvas">
+                    <div id="top_graph"></div>
+                    <div id="res_graph"></div>
+                    <!-- <div class="row" id="top_graph"></div>
+                    <div class="row" id="res_graph"></div> -->
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="playback">
+                    <div class="row">
+                        <div class="col s4"><div class="card" id="flow_counter">Current flow: 0</div></div>
+                        <div class="col s4">
+                            <div id="playback_control">
+                                <a class="waves-effect waves-orange btn-flat" id="rewind_button" onclick="rewind()"><i class="material-icons center">fast_rewind</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="step_back_button" onclick="stepBackward();"><i class="material-icons">skip_previous</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="play_button" onclick="playPause();"><i class="material-icons" id="play_pause_button">play_arrow</i></a>
+                                <a class="waves-effect waves-orange btn-flat" id="step_forward_button" onclick="stepForward();"><i class="material-icons">skip_next</i></a>
+                            </div>
+                        </div>
+                        <div class="col" id="speed_control">
+                            <div class="speed-control-icon center-align"><i class="turtle"></i></div>
+                            <div class="speed-control-item center-align">
+                                <form action="Change Speed">
+                                    <p class="range-field">
+                                        <input type="range" id="pb_slider" min="1" max="100" />
+                                    </p>
+                                </form>
+                            </div>
+                            <div class="speed-control-icon center-align"><i class="hare center-align"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/gui.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+  </body>
+</html>

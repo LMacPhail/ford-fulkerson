@@ -110,8 +110,12 @@ function enableDrawingMode() {
             if (!(data.from == data.to)){
                 do {
                     var capacity = prompt("Please enter capacity of new edge (whole number)", 4);
-                    if((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0))  alert("Must be a whole number!");
-                } while((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0));
+                    if((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0)){  
+                        alert("Must be a whole number!");
+                    } else if (capacity < 0) {
+                        alert("Capacity must be above 0");
+                    }
+                } while((!Number.isInteger(parseInt(capacity))) || (capacity % 1 != 0) || (capacity < 0));
                 drawAddEdge(data, capacity, callback);
             } else {
                 alert("Cannot connect node to itself!");

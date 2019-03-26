@@ -1,0 +1,18 @@
+{
+"nodes" : [
+{ "id": 0, "x": -275, "y": 15},
+{ "id": 1, "x": -115, "y": -108},
+{ "id": 2, "x": -5, "y": -47},
+{ "id": 3, "x": -8, "y": 78},
+{ "id": 4, "x": 275, "y": 66}
+],
+"edges" : [
+{ "from": 3, "to": 4, "capacity": 9},
+{ "from": 2, "to": 4, "capacity": 5},
+{ "from": 1, "to": 2, "capacity": 1},
+{ "from": 0, "to": 3, "capacity": 3},
+{ "from": 0, "to": 1, "capacity": 7},
+{ "from": 0, "to": 4, "capacity": 7},
+{ "from": 0, "to": 2, "capacity": 3}
+]
+}
