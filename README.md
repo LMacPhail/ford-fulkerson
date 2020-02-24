@@ -1,1 +1,1 @@
-# Aniamtion of the ford-fulkerson algorithm
+# Animation of the ford-fulkerson algorithm
