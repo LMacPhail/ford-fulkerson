@@ -1,1 +1,1 @@
-# l4_project
+# Animation of the ford-fulkerson algorithm
